@@ -1,0 +1,123 @@
+{
+  "anims": {
+    "hero_idle": {
+      "frameWidth": 155,
+      "frameHeight": 110,
+      "frames": 5
+    },
+    "hero_walk": {
+      "frameWidth": 155,
+      "frameHeight": 110,
+      "frames": 6
+    },
+    "hero_jump": {
+      "frameWidth": 155,
+      "frameHeight": 110,
+      "frames": 6
+    },
+    "hero_interact": {
+      "frameWidth": 155,
+      "frameHeight": 110,
+      "frames": 5
+    },
+    "hero_light": {
+      "frameWidth": 155,
+      "frameHeight": 110,
+      "frames": 5
+    },
+    "hero_death": {
+      "frameWidth": 155,
+      "frameHeight": 110,
+      "frames": 6
+    },
+    "shadow_idle": {
+      "frameWidth": 213,
+      "frameHeight": 125,
+      "frames": 4
+    },
+    "shadow_move": {
+      "frameWidth": 213,
+      "frameHeight": 125,
+      "frames": 4
+    },
+    "shadow_hurt": {
+      "frameWidth": 213,
+      "frameHeight": 125,
+      "frames": 4
+    },
+    "shadow_dissolve": {
+      "frameWidth": 213,
+      "frameHeight": 125,
+      "frames": 2
+    },
+    "fire_unlit": {
+      "frameWidth": 136,
+      "frameHeight": 113,
+      "frames": 2
+    },
+    "fire_ignite": {
+      "frameWidth": 136,
+      "frameHeight": 113,
+      "frames": 6
+    },
+    "fire_burning": {
+      "frameWidth": 136,
+      "frameHeight": 113,
+      "frames": 5
+    },
+    "fire_fading": {
+      "frameWidth": 136,
+      "frameHeight": 113,
+      "frames": 6
+    },
+    "fx_burst": {
+      "frameWidth": 223,
+      "frameHeight": 178,
+      "frames": 5
+    },
+    "fx_embers": {
+      "frameWidth": 149,
+      "frameHeight": 191,
+      "frames": 5
+    },
+    "fx_dissolve": {
+      "frameWidth": 190,
+      "frameHeight": 190,
+      "frames": 5
+    }
+  },
+  "images": {
+    "ui_key_e": {
+      "width": 78,
+      "height": 76
+    },
+    "ui_eye": {
+      "width": 113,
+      "height": 94
+    },
+    "ui_spark": {
+      "width": 71,
+      "height": 73
+    },
+    "item_drawing": {
+      "width": 315,
+      "height": 261
+    },
+    "item_photo": {
+      "width": 298,
+      "height": 248
+    },
+    "item_teddy": {
+      "width": 187,
+      "height": 233
+    },
+    "ui_timer_full": {
+      "width": 363,
+      "height": 176
+    },
+    "ui_timer_empty": {
+      "width": 342,
+      "height": 90
+    }
+  }
+}
