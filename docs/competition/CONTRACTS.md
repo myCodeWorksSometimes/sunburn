@@ -263,3 +263,4 @@ called directly rather than subscribed through a separate event dispatcher.
 - Region `art` is the wanted key; `fallback` + `paintGround` describe the borrowed painting until `bg_${art}_dark` exists.
   New art: walk line at 62% of the image height.
 - `public/bg/manifest.json` (written by `tools/process_backgrounds.py`) lists every background; Boot loads them all.
+- Region `continues: true`: when this region and the previous both use their own art, the painting is placed at `prev.x + prev.width * 0.65` with `prev.scale` (OVERLAP 0.35, matching `tools/make_continuation.py` and the processor).
