@@ -670,6 +670,6 @@ So the canal and the tower courtyard stop requiring the ember, the tower interio
 | 11 Last afternoon | **Done (17 Oct):** unlocked by finding Eli; cellar passage leads to the market. | — |
 | 12 Tower mechanisms | Done (three bells) | No. |
 | 13 Bell Warden | Done (wards variant, 4 hits) | No (counterweight phase is polish). |
-| 14 What remains | Mostly done (rescue, fade, Eli stays, home coda) | Small: viewing-platform line, Nia's acknowledgement. |
+| 14 What remains | **Done (17 Oct):** silent rescue moment, viewing platform ("You can see our house."), Old Road back to the refuge with Nia's acknowledgement, walk home, sit by the hearth, Eli taps twice and the player answers, credits. | — |
 
 Core systems (movement, health/flame/oil, sweep, restoration, rest, inventory, map/journal, autosave, checkpoints) are complete and unaffected by this campaign.

@@ -3,6 +3,31 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 17 October 2026 — Act 3 ending completed and played end to end
+
+### Implemented (CAMPAIGN.md Scene 14)
+
+- The rescue moment is silent: the daylight fades and Eli stays.
+- A viewing platform beside the upper landing: "You can see our house." / "Yes."
+- The Old Road now takes the brothers back to the Bridge Refuge, where Nia sees
+  Eli ("You rang the bell. We heard it, and we ran."). Mara sends them home.
+- At home: sit by the hearth, Eli taps twice, the player answers with E, credits.
+- Eli follows Rowan on arrival in any area and between the floors at home.
+
+### Verification and limits
+
+- `npm test` 18 passing (1 new). `npm run build` passed.
+- Browser run with real key events from the tower courtyard (state set to "ember
+  in hand") to the credits: court fire → ledges → bell 1; Crawler defeated with
+  sweeps; rest; mechanisms fire → three steps → bell 2; Pouncer defeated; crown
+  fire → bell 3 → Warden woke; Warden defeated in 4 sweeps (one oil); steps → hold
+  E with Eli → rescue; viewing platform lines; Old Road → refuge (Eli beside
+  Rowan); Nia's lines; market passage → home; ladder (Eli followed); sit → taps →
+  E → Credits.
+- In that run the old "ACT 1" banner cut off Nia's lines because the test skipped
+  Acts 1–2; replaying with it cleared showed all lines. Not a real-play issue.
+- Not done: a full run from New game; Act 3 art (still reused); Five-Hand.
+
 ## 17 October 2026 — MVP art briefs (documentation only)
 
 - Audit: Acts 2 and 3 reuse Act 1 paintings (playground = garden, treehouse =

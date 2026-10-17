@@ -29,8 +29,8 @@ the earlier story order. MVP work, in order (details in CAMPAIGN.md → "MVP sta
    hearth, Old Road west gate; placeholder art). See TEST-LOG for checks.
 2. ~~Route reorder~~ **Done 17 Oct** (three knocks, Old Road, ember after Eli).
 3. Five-Hand (simplified: one tracking round) at the market exit.
-4. Small text fixes: cup inscription removed, drawing text, viewing-platform line,
-   Nia's acknowledgement, opening taps.
+4. Small text fixes: ~~cup inscription, drawing text, viewing-platform line, Nia's
+   acknowledgement~~ done 17 Oct; opening taps still to do.
 5. If time allows: Braced Shadow and gears at the bridge, canal lift, Nia's bird.
 
 ## Ownership / next action

@@ -107,7 +107,9 @@ export class Pause extends Phaser.Scene {
         ['hearth-spent', 'I took our hearth’s last memory. Its ember can bring Eli into the present.'],
         ['sluice-open', 'The canal crossing is secured. The tower’s bells hold back the corruption.'],
         ['act-3', 'Three bells will break the guardian’s wards. Then I can reach Eli.'],
-        ['rescue', 'The night returned. Eli stayed. We are taking the old road home.'],
+        ['rescue', 'The daylight faded. Eli stayed.'],
+        ['view-platform', 'We stood at the tower arches. You can see our house from up there.'],
+        ['nia-eli', 'Nia saw Eli at the refuge. The children he saved are safe.'],
         ['home-together', 'I came this time. No more later.'],
       ].filter(([id]) => run.completedStory[id]);
       if (!entries.length) entries.push(['start', 'Find Grandfather’s lantern in the cellar. E interacts; W/S climbs.']);

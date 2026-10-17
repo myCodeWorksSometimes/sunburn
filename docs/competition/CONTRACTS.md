@@ -5,7 +5,20 @@ production interactions. No uninterrupted new full run is claimed. Browser-local
 autosave is implemented; the original module proposals and earlier interfaces
 below are supplemented/superseded by this current chapter contract.
 
-## Campaign route reorder contract (17 October 2026, latest)
+## Campaign ending contract (17 October 2026, latest)
+
+- After `rescue()`: no dialogue (story `rescue` completed silently). A permanent
+  viewing ledge (x 17670–17940, y 380, shown after the rescue) triggers
+  `view-platform` at x > 17760. The crown's Old Road door (16500) now travels to
+  World `oldRoadWest` (refuge) instead of the Hearth. Near Nia after the rescue,
+  `nia-eli` plays once. Goals: arches → refuge → "Walk home together" (Hearth).
+- On any World build after the rescue, Eli (`s.brother`) starts beside Rowan.
+  In the Hearth, Eli spawns at Rowan's floor and follows him between floors.
+- Ending: hold E at the hearth → caption, then "… tap, tap …"; notice "E: tap
+  twice back"; E sets `completed`, emits `game:completed {endingId:'three-acts-home'}`
+  and goes to Credits after 3.8s.
+
+## Campaign route reorder contract (17 October 2026)
 
 - Order: playground cup → canal (no ember needed) → tower courtyard: Eli at the
   inspection window, three knocks, Old Road release → Old Road to the refuge →

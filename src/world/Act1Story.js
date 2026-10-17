@@ -135,6 +135,12 @@ export function tickAct1Story(s, delta) {
   for (const npc of s.npcs) npc.tick(delta, s.player);
   s.refuge.talkMara.x = s.refuge.mara.x;
 
+  // Coming home with Eli: Nia sees him (CAMPAIGN Scene 14).
+  if (run.rescuedEli && Math.abs(x - REFUGE.nia) < 260 && s.story('nia-eli',
+    { speaker: 'Nia', text: 'Eli! You came back!' }, { speaker: 'Eli', text: 'Rowan came for me.' },
+    { speaker: 'Nia', text: 'You rang the bell. We heard it, and we ran.' },
+    { speaker: 'Mara', text: 'Go home, you two. Your hearth is waiting.' })) saveSession(s);
+
   // Knocking draws Rowan to the stall before he has spoken to Mara.
   if (!run.maraFreed && !run.completedStory['mara-knock'] && Math.abs(x - STALL.shutter) < 450) {
     s.knockClock -= delta;

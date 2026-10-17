@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import { Adventure } from './Adventure.js';
 import { placeProp } from '../presentation/Scenery.js';
 import { saveSession } from '../world/WorldState.js';
@@ -63,21 +64,47 @@ export class Hearth extends Adventure {
     if (!this.run.completedStory['wake']) this.time.delayedCall(450, () => this.story('wake', { speaker: 'Rowan', text: 'Eli?' }, { text: 'A/D: move · E: interact · W/S: climb', color: '#ebd5b0', hold: 1200 }));
     if (this.run.rescuedEli) {
       this.hearth.lit = true; this.hearth.light.on = true; this.hearth.sprite.play('fire-burning'); this.hearth.embers.start();
-      this.eli = this.add.sprite(this.player.x + 65, 430, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
+      this.eli = this.add.sprite(this.player.x + 65, this.player.y, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
       this.story('home-together', { speaker: 'Eli', text: 'You came this time.' }, { speaker: 'Rowan', text: 'No more later.' });
       this.addInteract({ id: 'home-ending', x: 530, floor: 430, hold: 1000, priority: 30,
-        label: 'Hold E: sit by the hearth together', when: () => !this.run.completed,
+        label: 'Hold E: sit by the hearth together', when: () => !this.run.completed && !this.sitting,
         use: () => {
-          this.run.completed = true; this.player.frozen = true; saveSession(this);
-          this.captions.clear(); this.captions.say({ text: 'Outside, the night remains. Inside, two knocks receive an answer.', hold: 800 });
-          this.audio.cue('knock'); this.events.emit('game:completed', { endingId: 'three-acts-home' });
-          this.time.delayedCall(3500, () => this.goTo('Credits'));
+          // CAMPAIGN Scene 14: the hearth can't replay their afternoon. Eli taps
+          // twice, and the player answers.
+          this.sitting = true; this.player.frozen = true; this.player.setVelocityX(0);
+          this.captions.clear(); this.captions.say({ text: 'The hearth can’t bring back that afternoon. It just keeps them warm.', hold: 1000 });
+          this.time.delayedCall(3200, () => {
+            this.audio.cue('knock'); this.captions.say({ text: '… tap, tap …', color: '#ffe1a1', hold: 1600 });
+            this.awaitingAnswer = true;
+          });
         } });
     }
   }
 
   tick(delta) {
     if (!this.eli) return;
+    if (this.awaitingAnswer) {
+      this.notice('E: tap twice back');
+      if (Phaser.Input.Keyboard.JustDown(this.keys.use)) {
+        this.awaitingAnswer = false;
+        this.audio.cue('knock'); this.time.delayedCall(300, () => this.audio.cue('knock'));
+        this.run.completed = true; saveSession(this);
+        this.captions.clear(); this.captions.say({ text: 'Outside, the night remains. Inside, two knocks are answered.', hold: 1200 });
+        this.events.emit('game:completed', { endingId: 'three-acts-home' });
+        this.time.delayedCall(3800, () => this.goTo('Credits'));
+      }
+      return;
+    }
+    // Eli follows between floors: once Rowan is off the ladder on another floor,
+    // he appears at the ladder on that floor.
+    const floor = (feet) => feet < 540 ? 430 : 650;
+    if (!this.player.climbing && !this.eliMoving && floor(this.player.feet) !== this.eli.y) {
+      this.eliMoving = true;
+      this.tweens.add({ targets: this.eli, alpha: 0, duration: 200, onComplete: () => {
+        this.eli.setPosition(this.ladders[0].x - 50, floor(this.player.feet));
+        this.tweens.add({ targets: this.eli, alpha: 1, duration: 250, onComplete: () => { this.eliMoving = false; } });
+      } });
+    }
     const dx = this.player.x + (this.player.flipX ? 65 : -65) - this.eli.x;
     this.eli.x += Math.sign(dx) * Math.min(Math.abs(dx), delta * .22);
     this.eli.setFlipX(dx < 0).play(Math.abs(dx) > 10 ? 'brother-run' : 'brother-idle', true);

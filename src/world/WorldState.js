@@ -126,7 +126,9 @@ export class WorldState {
     if (!this.hasLantern) return goal('Find the lantern in the cellar', 'Hearth', 650, 650);
     if (!this.completedStory['home-first-memory']) return goal('Climb upstairs and remember the hearth', 'Hearth', 530, 430);
     if (this.completed) return goal('Together, at last', 'Hearth', 530, 430);
-    if (this.rescuedEli) return goal('Take the old road home together', 'World', 16500);
+    if (this.rescuedEli && !this.completedStory['view-platform']) return goal('Walk out to the tower arches with Eli', 'World', 17860, 380);
+    if (this.rescuedEli && !this.completedStory['nia-eli']) return goal('Take the old road to the refuge together', 'World', 16500);
+    if (this.rescuedEli) return goal('Walk home together', 'Hearth', 530, 430);
     // Older saves opened the market without Mara; they skip straight to the bridge.
     if (!this.maraFreed && !this.villageGateOpen) return this.completedStory['mara-knock']
       ? goal('Act 1: restore the market; climb the steps to the stall roof release', 'World', MARA_STALL.release, MARA_STALL.roof)

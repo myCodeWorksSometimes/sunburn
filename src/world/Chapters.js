@@ -91,6 +91,10 @@ export function buildChapters(s) {
   s.warden = enemy(s, { id: 'bell-warden', x: 17120, floor: GROUND, minX: 16880, maxX: 17430, regionId: 'tower-crown', kind: 'warden', dormant: run.relayCount < 3 });
   s.bossText = s.addLabel(17120, 360, 'BELL WARDEN · 3 WARDS', '#e0bd9a', 16);
   s.brother = s.add.sprite(17600, 380, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
+  // After the rescue Eli walks with Rowan, so he starts beside him on any arrival.
+  if (run.rescuedEli) s.brother.setPosition(s.player.x - 60, s.player.y);
+  // The viewing platform in front of the tower's open arches (CAMPAIGN Scene 14).
+  s.addSurface(17670, 17940, 380, { regionId: 'tower-crown', restoredOnly: true, permanent: () => run.rescuedEli });
   s.add.image(17565, 370, 'ball-final').setDisplaySize(20, 20).setDepth(24);
   s.brotherLabel = s.addLabel(17600, 265, '… tap, tap …', '#d6be89', 17);
   s.addInteract({ id: 'rescue-eli', x: 17600, floor: 380, range: 85, priority: 10, hold: 1000,
@@ -101,9 +105,10 @@ export function buildChapters(s) {
       s.memory.activate({ id: 'rescue-memory', regionId: 'tower-crown', duration: 10000 }); s.audio.cue('rescue');
     } });
   placeProp(s, 'door', 16500, GROUND, 75, 120);
-  s.homeRoadLabel = s.addLabel(16500, 395, 'OLD ROAD HOME', '#d3bc91', 14).setVisible(run.rescuedEli);
+  s.homeRoadLabel = s.addLabel(16500, 395, 'OLD ROAD', '#d3bc91', 14).setVisible(run.rescuedEli);
+  // The Old Road leads back to the Bridge Refuge, where Nia is waiting.
   s.addInteract({ id: 'old-road-home', x: 16500, floor: GROUND, priority: 20, when: () => run.rescuedEli,
-    label: 'E: take the old road home together', use: () => { run.setCheckpoint('Hearth', 'front'); s.goTo('Hearth', 'front'); } });
+    label: 'E: take the old road to the refuge together', use: () => s.goTo('World', 'oldRoadWest') });
 }
 
 export function tickChapters(s, delta) {
@@ -147,10 +152,15 @@ export function tickChapters(s, delta) {
       if (run.rescue()) {
         s.player.frozen = false; s.memory.cancel('rescue');
         s.enemies.forEach(e => e.active && e.disperse());
-        s.story('rescue', { speaker: 'Eli', text: 'Is it still night?' }, { speaker: 'Rowan', text: 'Yes. But you’re here.' }, { speaker: 'Eli', text: 'Then stay close.' }, { speaker: 'Rowan', text: 'We’re going home. Together.' });
+        // The daylight fades and Eli stays. Let that moment play without dialogue.
+        run.completeStory('rescue'); s.captions.clear(); s.events.emit('story:completed', { storyId: 'rescue' });
         saveSession(s);
       } else s.player.frozen = false;
     }
+  }
+  if (run.rescuedEli && x > 17760 && s.player.feet < 400) {
+    if (s.story('view-platform', { speaker: 'Eli', text: 'You can see our house.' }, { speaker: 'Rowan', text: 'Yes.' },
+      { speaker: 'Rowan', text: 'Come on. Let’s go home.' })) saveSession(s);
   }
   if (run.rescuedEli) {
     s.homeRoadLabel.setVisible(true);

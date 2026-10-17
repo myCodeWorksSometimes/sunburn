@@ -342,3 +342,17 @@ Browser (Vite dev, `?test`, 1280×720, real key events), progress set by script 
 
 Not checked: bells/Warden/rescue in this pass (code unchanged), full new-game
 route, walking home on foot.
+
+## 17 October 2026 — Act 3 end to end (courtyard to credits)
+
+`npm test` 18 passing; build passed. Browser (Vite dev, `?test`, 1280×720, real
+key events), state set to "Eli found, Old Road open, ember in hand":
+court fire, two ledge jumps (feet 483, 429), bell 1 → court Crawler defeated
+(2 sweeps) → rest at mechanisms fire (flame 100) → light, three jumps (489, 435,
+369), bell 2 → Pouncer defeated (health 3→2) → rest at crown fire → light, jump,
+bell 3 ("The third bell breaks…"), Warden awake → Warden defeated in four sweeps
+with one oil, health 3 → three jumps to Eli, hold E → `rescuedEli` → viewing
+ledge: "You can see our house." / "Yes." → Old Road door → refuge (x 4935, Eli at
+4875) → `nia-eli` lines (verified in full on a replay) → market passage → Hearth
+cellar (Eli on Rowan's floor) → ladder (Eli followed to y 430) → hold E sit →
+"… tap, tap …" + "E: tap twice back" → E → `completed` → Credits.

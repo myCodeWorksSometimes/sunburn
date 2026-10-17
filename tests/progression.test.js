@@ -233,3 +233,16 @@ test('old-route saves that already hold the ember count as having found Eli', ()
     assert.equal(decodeSave(JSON.stringify(s)).checkpoint.spawnId, id);
   }
 });
+
+test('after the rescue: viewing platform, then the refuge with Nia, then home', () => {
+  const state = new WorldState();
+  state.hasLantern = true; state.completedStory['home-first-memory'] = true;
+  state.findDrawing(); state.findEli(); state.takeHearthEmber();
+  for (const r of RELAYS) state.ringRelay(r.id);
+  state.clearEncounter('bell-warden'); assert.equal(state.rescue(), true);
+  assert.match(state.objective, /arches/); assert.equal(state.goal.y, 380);
+  state.completeStory('view-platform');
+  assert.match(state.objective, /refuge/);
+  state.completeStory('nia-eli');
+  assert.equal(state.goal.scene, 'Hearth'); assert.match(state.objective, /home together/);
+});
