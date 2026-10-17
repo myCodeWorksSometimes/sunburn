@@ -50,3 +50,9 @@ User explicitly requires a commit/push after each completed prompt. Root WHAT_IS
 - Legacy Home/Yard/A1 scenes remain development references, outside the current main route.
 
 Earlier baseline/core/polish evidence is retained chronologically in TEST-LOG.md; it does not certify the expanded build's full uninterrupted route.
+
+## Active scope — 18 Oct, Act 3 art wiring (Claude)
+Owns Act 3 whole-area paintings: `tools/import_act3.py`, `bg_a3_*` assets, Act 3 region
+widths/coordinates (`A3`, RELAYS, tower fires/spawns, window, Old Road east) in layout,
+Act 3 blocks of Chapters/TowerStory/WorldState goals, whole-painting placement in
+Backdrop/World. Act 3 areas are now 1290px each (world ends at 17470).

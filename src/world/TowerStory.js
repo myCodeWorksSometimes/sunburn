@@ -22,13 +22,16 @@ export function buildTowerStory(s) {
   frame.fillStyle(0x2a2630).fillRect(WIN.x - 54, WIN.y - 72, 108, 124);
   frame.fillStyle(0x0d0c12).fillRect(WIN.x - 40, WIN.y - 58, 80, 96);
   frame.fillStyle(0x3b3540).fillRect(WIN.x - 62, WIN.y + 50, 124, 10);
+  // The courtyard painting has its own stone window; only the bars and Eli are drawn.
+  const painted = s.textures.exists('bg_a3_courtyard_dark');
+  frame.setVisible(!painted);
   const eli = s.add.sprite(WIN.x, WIN.y + 38, 'brother').setOrigin(0.5, 1).setScale(0.8).setDepth(19).play('brother-idle')
     .setTint(run.eliFound ? 0xffffff : 0x8a8274).setAlpha(run.eliFound ? 1 : 0.75).setVisible(!run.rescuedEli);
   const bars = s.add.graphics().setDepth(20).lineStyle(4, 0x8f7a5c);
   for (let x = WIN.x - 30; x <= WIN.x + 30; x += 15) bars.lineBetween(x, WIN.y - 58, x, WIN.y + 38);
   for (let y = WIN.y - 36; y <= WIN.y + 30; y += 22) bars.lineBetween(WIN.x - 40, y, WIN.x + 40, y);
   bars.strokeRect(WIN.x - 40, WIN.y - 58, 80, 96);
-  s.addLabel(WIN.x, WIN.y - 92, 'INSPECTION WINDOW', '#a59f9a', 12);
+  s.addLabel(WIN.x, WIN.y - 92, 'INSPECTION WINDOW', '#a59f9a', 12).setVisible(!painted);
   // A faint light in the window so Eli reads against the night.
   const glow = s.lighting.add({ x: WIN.x, y: WIN.y - 8, radius: 120, intensity: run.eliFound ? 0.8 : 0.5, flicker: 0.04, on: !run.rescuedEli });
   s.tower = { eli, glow, stepped: false, tapClock: 0 };

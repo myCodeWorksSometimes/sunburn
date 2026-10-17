@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WorldState, decodeSave } from '../src/world/WorldState.js';
 import { MemorySystem } from '../src/systems/MemorySystem.js';
-import { REGIONS, SPAWNS, WORLD_WIDTH, GAPS, RELAYS } from '../src/world/layout.js';
+import { REGIONS, SPAWNS, WORLD_WIDTH, GAPS, RELAYS, A3 } from '../src/world/layout.js';
 import { BALANCE } from '../src/world/balance.js';
 
 test('hearth exchange is atomic and cannot lose/reissue the quest ember', () => {
@@ -248,7 +248,7 @@ test('after the rescue: viewing platform, then the refuge with Nia, then home', 
   state.findDrawing(); state.findEli(); state.takeHearthEmber();
   for (const r of RELAYS) state.ringRelay(r.id);
   state.clearEncounter('bell-warden'); assert.equal(state.rescue(), true);
-  assert.match(state.objective, /arches/); assert.equal(state.goal.y, 380);
+  assert.match(state.objective, /arches/); assert.equal(state.goal.y, A3.gallery[2]);
   state.completeStory('view-platform');
   assert.match(state.objective, /refuge/);
   state.completeStory('nia-eli');

@@ -74,6 +74,7 @@ export function buildBackdrop(scene, regions) {
   const skylinePast = scene.add.tileSprite(0, 40, VIEW, 720, looped(scene, 'bg_skyline_restored')).setOrigin(0).setScrollFactor(0).setDepth(-9).setAlpha(0);
   const paintings = new Map();
   regions.forEach((r, i) => {
+    if (isWhole(scene, r)) { paintings.set(r.id, wholePainting(scene, r)); return; }
     const { art, groundY: legacyGround } = regionArt(scene, r);
     const dark = `bg_${art}_dark`, past = `bg_${art}_restored`;
     const tex = scene.textures.get(dark).getSourceImage();
@@ -99,6 +100,19 @@ export function buildBackdrop(scene, regions) {
     paintings.set(r.id, { x, y, scale, art, width: tex.width * scale, dark: darkImage, past: pastImage });
   });
   return { sky, skyPast, skyline, skylinePast, paintings };
+}
+
+// Act 3 areas are one painting each that moves with Rowan, ledges and all; only
+// their green (sky, windows, arches) shows the slow layers behind.
+export function isWhole(scene, r) { return !!r.whole && scene.textures.exists(`bg_${r.art}_dark`); }
+
+function wholePainting(scene, r) {
+  const dark = `bg_${r.art}_dark`, past = `bg_${r.art}_restored`;
+  const tex = scene.textures.get(dark).getSourceImage();
+  const scale = r.width / tex.width, x = r.x, y = GROUND - r.feet * scale;
+  const darkImage = scene.add.image(x, y, dark).setOrigin(0).setScale(scale).setDepth(-5).setName(`scenery-${r.id}`);
+  const pastImage = scene.add.image(x, y, past).setOrigin(0).setScale(scale).setDepth(-4).setAlpha(0);
+  return { x, y, scale, art: r.art, width: r.width, dark: darkImage, past: pastImage, whole: true };
 }
 
 // Point (px, py) in a painting's own pixels → where it is drawn on the painting layer.

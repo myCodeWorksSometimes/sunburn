@@ -1,5 +1,5 @@
 import { BALANCE } from './balance.js';
-import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE, TOWER_WINDOW, OLD_ROAD_EAST, BRIDGE_WORKS } from './layout.js';
+import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE, TOWER_WINDOW, OLD_ROAD_EAST, BRIDGE_WORKS, A3, WORLD_WIDTH } from './layout.js';
 
 export const SAVE_KEY = 'embers-before-three-acts-v1';
 
@@ -138,8 +138,8 @@ export class WorldState {
     if (!this.hasLantern) return goal('Find the lantern in the cellar', 'Hearth', 650, 650);
     if (!this.completedStory['home-first-memory']) return goal('Climb upstairs and remember the hearth', 'Hearth', 530, 430);
     if (this.completed) return goal('Together, at last', 'Hearth', 530, 430);
-    if (this.rescuedEli && !this.completedStory['view-platform']) return goal('Walk out to the tower arches with Eli', 'World', 18460, 380);
-    if (this.rescuedEli && !this.completedStory['nia-eli']) return goal('Take the old road to the refuge together', 'World', 17100);
+    if (this.rescuedEli && !this.completedStory['view-platform']) return goal('Walk out to the tower arches with Eli', 'World', A3.gallery[1] - 80, A3.gallery[2]);
+    if (this.rescuedEli && !this.completedStory['nia-eli']) return goal('Take the old road to the refuge together', 'World', A3.oldRoadHome);
     if (this.rescuedEli) return goal('Walk home together', 'Hearth', 530, 430);
     // Older saves opened the market without Mara; they skip straight to the bridge.
     if (!this.maraFreed && !this.villageGateOpen) return this.completedStory['mara-knock']
@@ -161,8 +161,8 @@ export class WorldState {
     const next = RELAYS.find(r => !this.litFinaleLamps[r.id]);
     if (next) return goal(this.relayCount ? `Act 3: ring bell ${RELAYS.indexOf(next) + 1} in remembered time (${this.relayCount}/3 complete)`
       : `Act 3: back to the tower by the Old Road — ring bell ${RELAYS.indexOf(next) + 1} in remembered time`, 'World', next.x, next.floor);
-    if (!this.clearedEncounters['bell-warden']) return goal('Act 3: the wards are broken — defeat the Bell Warden', 'World', 17720);
-    return goal('Act 3: climb to Eli; hold E to give him the hearth ember', 'World', 18200, 380);
+    if (!this.clearedEncounters['bell-warden']) return goal('Act 3: the wards are broken — defeat the Bell Warden', 'World', A3.warden.x);
+    return goal('Act 3: climb to Eli; hold E to give him the hearth ember', 'World', A3.eli, A3.gallery[2]);
   }
 
   get objective() { return this.goal.text; }
@@ -178,7 +178,7 @@ export function decodeSave(text) {
     for (const key of Object.keys(run)) {
       if (typeof run[key] === 'boolean') run[key] = data[key] === true;
     }
-    for (const [key, cap] of [['health', 3], ['flame', 100], ['oil', 1], ['deaths', 999999], ['maxXReached', 18600]]) {
+    for (const [key, cap] of [['health', 3], ['flame', 100], ['oil', 1], ['deaths', 999999], ['maxXReached', WORLD_WIDTH]]) {
       if (Number.isFinite(data[key])) run[key] = Math.max(key === 'health' ? 1 : 0, Math.min(cap, Math.floor(data[key])));
     }
     for (const key of ['completedStory', 'clearedEncounters']) {

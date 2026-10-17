@@ -412,3 +412,28 @@ bridge fire → flame 100; relight → deck enabled; walked to 6723 (feet 560),
 - Backtrack after all memories faded: crossed canal westward and stood at x9967
   (inside swing gap) on feet 560 — permanent crossings hold. No console errors.
 - Not covered: arriving from Act 1 by keys, death mid-Act 2, human difficulty.
+
+## 18 October 2026 — Act 3 whole-area paintings wired in
+
+- Art: six delivered images (`newimages/`) imported by `tools/import_act3.py` as
+  `bg_a3_{courtyard,mechanisms,landing}_{dark,restored}`; keyed to 1290×720.
+- Layout: Act 3 areas now 1290px each (13600 / 14890 / 16180, world ends 17470);
+  paintings at full speed, feet line py 580 → world 560. Ledges, steps, bells and
+  gallery measured on the restored paintings (only walkable in remembered time).
+- `npm test` 19/19, build pass — also on an index-only snapshot (HEAD + these
+  changes, without the parallel Act 1 agent's uncommitted edits).
+- Browser, key events only (dev server, then static snapshot on :4190 because the
+  parallel agent's edits kept hot-reloading the dev server):
+  - Courtyard: Old Road door sits in the painted gateway, bars + Eli in the painted
+    window. Fire → steps 495 → 410 → 300 → rang bell 1 (1/3).
+  - Mechanisms: fire → treads 520 → 477 → platform 430 → rang bell 2 (2/3).
+  - Landing: Pouncer killed; rest + fire → ledge 452 → rang bell 3; Warden woke.
+  - Warden: four sweeps from the floor during its windups → defeated (took 1 hit).
+    Stair treads appeared → 485 → 415 → gallery 345 → held E at Eli → rescued.
+    Walked out along the gallery → "You can see our house." story fired.
+  - Old Road door on the landing → refuge (oldRoadWest) with Eli following.
+  - Fresh canal-bank save: knock at window → Eli found; lever → Old Road open;
+    door → refuge.
+- Not covered: a full keyboard run from Act 2 into Act 3, death and respawn
+  inside Act 3, human difficulty. The Warden ignores Rowan while he is on the
+  bell ledge (it only aggros on the same level) — unchanged behaviour.

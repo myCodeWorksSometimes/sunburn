@@ -1,6 +1,6 @@
 import { Crawler } from '../entities/Crawler.js';
 import { placeProp } from '../presentation/Scenery.js';
-import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, regionAt } from './layout.js';
+import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, A3, regionAt } from './layout.js';
 import { saveSession } from './WorldState.js';
 import { buildAct1Story, tickAct1Story } from './Act1Story.js';
 import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
@@ -92,47 +92,55 @@ export function buildChapters(s) {
   // ACT 3: Eli at the tower window, the Old Road, then three relays and the Warden.
   buildTowerStory(s);
   gate(s, 13640, () => run.canalGateOpen, 'Restore the canal and turn its sluice wheel before entering the tower.');
-  s.addSurface(14110, 14220, 500, { regionId: 'tower-court', restoredOnly: true });
-  s.addSurface(14240, 14450, 440, { regionId: 'tower-court', restoredOnly: true });
-  steps(s, 'tower-base', 15700);
-  s.addSurface(17300, 17480, 500, { regionId: 'tower-crown', restoredOnly: true });
-  s.eliStairs = steps(s, 'tower-crown', 17800, () => run.relayCount === 3 && !!run.clearedEncounters['bell-warden']);
+  // The tower's ledges, stairs and gallery are painted; their placeholder stone is hidden.
+  const act3Art = s.textures.exists('bg_a3_courtyard_dark');
+  const painted = (surface) => { if (act3Art) { surface.block.setAlpha(0); surface.edge.setAlpha(0); } return surface; };
+  for (const [x1, x2, y] of A3.courtSteps) painted(s.addSurface(x1, x2, y, { regionId: 'tower-court', restoredOnly: true }));
+  for (const [x1, x2, y] of A3.baseSteps) painted(s.addSurface(x1, x2, y, { regionId: 'tower-base', restoredOnly: true }));
+  painted(s.addSurface(...A3.crownLedge, { regionId: 'tower-crown', restoredOnly: true }));
+  // Only the restored landing paints the stair to Eli, so its treads stay visible once raised.
+  const eliReachable = () => run.relayCount === 3 && !!run.clearedEncounters['bell-warden'];
+  s.eliStairs = A3.eliSteps.map(([x1, x2, y]) => s.addSurface(x1, x2, y, { regionId: 'tower-crown', restoredOnly: true, permanent: eliReachable }));
+  // The gallery leads from Eli out to the open arches (CAMPAIGN Scene 14).
+  s.eliStairs.push(painted(s.addSurface(...A3.gallery, { regionId: 'tower-crown', restoredOnly: true, permanent: () => eliReachable() || run.rescuedEli })));
   s.relaySprites = [];
   for (const [index, relay] of RELAYS.entries()) {
     const sprite = placeProp(s, 'item-lantern', relay.x, relay.floor, 38, 48, 23).setTint(run.litFinaleLamps[relay.id] ? 0xffffff : 0x716b7d);
-    s.relaySprites.push({ sprite, relay });
+    const [bx, by] = A3.bells[relay.id];
+    const glow = act3Art ? s.lighting.add({ x: bx, y: by, radius: 140, intensity: .9, flicker: .05, on: !!run.litFinaleLamps[relay.id] }) : null;
+    sprite.setVisible(!act3Art);
+    s.relaySprites.push({ sprite, relay, glow });
     s.addLabel(relay.x, relay.floor - 75, `BELL ${index + 1}`, '#d3bc91', 13);
     s.addInteract({ id: relay.id, x: relay.x, floor: relay.floor, hold: 650,
       label: `Hold E: ring bell ${index + 1}`, when: () => !run.litFinaleLamps[relay.id] && run.hasHearthEmber && s.memory.isRestored(relay.regionId),
       use: () => {
         if (!run.ringRelay(relay.id)) return;
-        sprite.clearTint(); s.audio.cue('rescue');
+        sprite.clearTint(); if (s.relaySprites[index].glow) s.relaySprites[index].glow.on = true; s.audio.cue('rescue');
         s.story(relay.id, { text: run.relayCount === 3 ? 'The third bell breaks the Warden’s last ward.' : `Bell ${index + 1} answers. A ward breaks.` });
         if (run.relayCount === 3) { s.warden?.wake(); s.warden && (s.warden.state = 'recovery', s.warden.elapsed = -900); }
       } });
   }
-  enemy(s, { id: 'court-crawler', x: 14900, floor: GROUND, minX: 14630, maxX: 15130, regionId: 'tower-court' });
-  enemy(s, { id: 'tower-pouncer', x: 16500, floor: GROUND, minX: 16280, maxX: 16780, regionId: 'tower-base', kind: 'pouncer' });
-  s.warden = enemy(s, { id: 'bell-warden', x: 17720, floor: GROUND, minX: 17480, maxX: 18030, regionId: 'tower-crown', kind: 'warden', dormant: run.relayCount < 3 });
-  s.bossText = s.addLabel(17720, 360, 'BELL WARDEN · 3 WARDS', '#e0bd9a', 16);
-  s.brother = s.add.sprite(18200, 380, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
+  enemy(s, { id: 'court-crawler', x: 14650, floor: GROUND, minX: 14250, maxX: 14800, regionId: 'tower-court' });
+  enemy(s, { id: 'tower-pouncer', x: 15900, floor: GROUND, minX: 15670, maxX: 16090, regionId: 'tower-base', kind: 'pouncer' });
+  const W = A3.warden, top = A3.gallery[2];
+  s.warden = enemy(s, { id: 'bell-warden', x: W.x, floor: GROUND, minX: W.minX, maxX: W.maxX, regionId: 'tower-crown', kind: 'warden', dormant: run.relayCount < 3 });
+  s.bossText = s.addLabel(W.x, 360, 'BELL WARDEN · 3 WARDS', '#e0bd9a', 16);
+  s.brother = s.add.sprite(A3.eli, top, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
   // After the rescue Eli walks with Rowan, so he starts beside him on any arrival.
   if (run.rescuedEli) s.brother.setPosition(s.player.x - 60, s.player.y);
-  // The viewing platform in front of the tower's open arches (CAMPAIGN Scene 14).
-  s.addSurface(18270, 18540, 380, { regionId: 'tower-crown', restoredOnly: true, permanent: () => run.rescuedEli });
-  s.add.image(18165, 370, 'ball-final').setDisplaySize(20, 20).setDepth(24);
-  s.brotherLabel = s.addLabel(18200, 265, '… tap, tap …', '#d6be89', 17);
-  s.addInteract({ id: 'rescue-eli', x: 18200, floor: 380, range: 85, priority: 10, hold: 1000,
+  s.add.image(A3.eli - 35, top - 10, 'ball-final').setDisplaySize(20, 20).setDepth(24);
+  s.brotherLabel = s.addLabel(A3.eli, top - 115, '… tap, tap …', '#d6be89', 17);
+  s.addInteract({ id: 'rescue-eli', x: A3.eli, floor: top, range: 85, priority: 10, hold: 1000,
     label: 'Hold E: give the hearth ember to Eli',
     when: () => run.hasHearthEmber && run.relayCount === 3 && !!run.clearedEncounters['bell-warden'] && s.transferRemaining == null,
     use: () => {
       s.transferRemaining = 2000; s.player.frozen = true; s.player.setVelocity(0); s.player.cancelAction();
       s.memory.activate({ id: 'rescue-memory', regionId: 'tower-crown', duration: 10000 }); s.audio.cue('rescue');
     } });
-  placeProp(s, 'door', 17100, GROUND, 75, 120);
-  s.homeRoadLabel = s.addLabel(17100, 395, 'OLD ROAD', '#d3bc91', 14).setVisible(run.rescuedEli);
+  placeProp(s, 'door', A3.oldRoadHome, GROUND, 75, 120);
+  s.homeRoadLabel = s.addLabel(A3.oldRoadHome, 395, 'OLD ROAD', '#d3bc91', 14).setVisible(run.rescuedEli);
   // The Old Road leads back to the Bridge Refuge, where Nia is waiting.
-  s.addInteract({ id: 'old-road-home', x: 17100, floor: GROUND, priority: 20, when: () => run.rescuedEli,
+  s.addInteract({ id: 'old-road-home', x: A3.oldRoadHome, floor: GROUND, priority: 20, when: () => run.rescuedEli,
     label: 'E: take the old road to the refuge together', use: () => s.goTo('World', 'oldRoadWest') });
 }
 
@@ -171,7 +179,7 @@ export function tickChapters(s, delta) {
   if (s.warden?.active && s.warden.alive) s.bossText.setPosition(s.warden.x, GROUND - 165).setText(run.relayCount < 3 ? `BELL WARDEN · ${3 - run.relayCount} WARDS` : `BELL WARDEN · ${s.warden.health} / 4`);
   else s.bossText.setVisible(false);
   if (run.relayCount === 3 && run.clearedEncounters['bell-warden']) for (const stair of s.eliStairs) s.refreshSurface(stair);
-  if (x > 17920 && !run.rescuedEli) {
+  if (x > A3.eliSteps[1][0] && !run.rescuedEli) {
     if (s.story('eli-landing', { text: '… tap, tap …', color: '#ffe1a1' }, { speaker: 'Rowan', text: 'Eli. I brought it. I’m here.' })) s.audio.cue('knock');
   }
   if (s.transferRemaining != null) {
@@ -187,7 +195,7 @@ export function tickChapters(s, delta) {
       } else s.player.frozen = false;
     }
   }
-  if (run.rescuedEli && x > 18360 && s.player.feet < 400) {
+  if (run.rescuedEli && x > A3.view && s.player.feet < A3.gallery[2] + 20) {
     if (s.story('view-platform', { speaker: 'Eli', text: 'You can see our house.' }, { speaker: 'Rowan', text: 'Yes.' },
       { speaker: 'Rowan', text: 'Come on. Let’s go home.' })) saveSession(s);
   }
@@ -196,7 +204,9 @@ export function tickChapters(s, delta) {
     s.brother.clearTint().setAlpha(1);
     const target = s.player.x + (s.player.flipX ? 60 : -60), dx = target - s.brother.x;
     s.brother.x += Math.sign(dx) * Math.min(Math.abs(dx), delta * .24);
-    const floor = s.brother.x > 18040 ? 380 : s.brother.x > 17920 ? 440 : s.brother.x > 17800 ? 500 : GROUND;
+    // Eli follows Rowan's floor: gallery, stair treads, or the landing.
+    const tread = [A3.gallery, ...A3.eliSteps.slice().reverse()].find(([x1]) => s.brother.x > x1);
+    const floor = tread ? tread[2] : GROUND;
     s.brother.y = Math.min(floor, s.brother.y + delta * .45);
     s.brother.setFlipX(dx < 0).play(Math.abs(dx) > 10 ? 'brother-run' : 'brother-idle', true);
     s.brotherLabel.setText('ELI').setPosition(s.brother.x, s.brother.y - 100);

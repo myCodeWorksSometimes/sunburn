@@ -2,7 +2,7 @@ import { Adventure } from './Adventure.js';
 import { REGIONS, SPAWNS, FIRES, GROUND, WORLD_WIDTH, regionAt, BRIDGE_GAP, YARD_GAP, GAPS } from '../world/layout.js';
 import { buildChapters, tickChapters, memoryChapter } from '../world/Chapters.js';
 import { addOutdoorAtmosphere, placeProp } from '../presentation/Scenery.js';
-import { buildBackdrop, tickBackdrop, onPainting, PAINTING_SPEED } from '../presentation/Backdrop.js';
+import { buildBackdrop, tickBackdrop, onPainting, isWhole, PAINTING_SPEED } from '../presentation/Backdrop.js';
 
 export class World extends Adventure {
   constructor() { super('World'); }
@@ -19,8 +19,8 @@ export class World extends Adventure {
       const waterPast = this.add.graphics().setDepth(-8).setAlpha(0);
       if (r.id === 'bridge') waterPast.fillGradientStyle(0x38575e, 0x38575e, 0x111c2b, 0x111c2b).fillRect(BRIDGE_GAP.x1, GROUND, BRIDGE_GAP.x2 - BRIDGE_GAP.x1, 160);
       this.regionVisuals.set(r.id, [this.backdrop.paintings.get(r.id).past, waterPast]);
-      // Connectors contain actual scenery and clear travel markings.
-      placeProp(this, 'marker', r.x + r.width - 140, GROUND, 52, 65);
+      // Connectors contain actual scenery and clear travel markings (whole paintings have their own doorways).
+      if (!isWhole(this, r)) placeProp(this, 'marker', r.x + r.width - 140, GROUND, 52, 65);
     }
     const solidIntervals = [];
     let cursor = 0;
@@ -28,7 +28,10 @@ export class World extends Adventure {
     solidIntervals.push([cursor, WORLD_WIDTH]);
     for (const region of REGIONS) for (const [a, b] of solidIntervals) {
       const x1 = Math.max(a, region.x), x2 = Math.min(b, region.x + region.width);
-      if (x2 > x1) this.addSurface(x1, x2, GROUND, { regionId: region.id });
+      if (x2 <= x1) continue;
+      const floor = this.addSurface(x1, x2, GROUND, { regionId: region.id });
+      // A whole painting includes its own floor.
+      if (isWhole(this, region)) { floor.block.setAlpha(0); floor.edge.setAlpha(0); }
     }
     this.addSurface(YARD_GAP.x1, YARD_GAP.x2, GROUND, { restoredOnly: true, regionId: 'yard', material: 'timber' });
     // The deck only returns once the bridge works' brake is set (CAMPAIGN Scene 7).

@@ -3,6 +3,24 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 3 built with the delivered paintings
+
+- Six delivered Act 3 images (`newimages/`) are in the game as whole-area
+  paintings that move with Rowan; green windows, arches and sky show the slow
+  sky/skyline layers behind (`tools/import_act3.py`, `Backdrop.js`).
+- Act 3 areas shrank to the paintings' width (1290px each); the world now ends at
+  17470. Every Act 3 object moved onto its painted feature: Old Road door in the
+  courtyard gateway, Eli behind the painted window, steps/ledges/platforms and
+  bells as painted, Warden arena, the post-fight stair up to the painted gallery,
+  Eli and the arches view (`layout.js` `A3`, Chapters, TowerStory, goals).
+- Walkable geometry follows the restored paintings, since those surfaces only
+  exist in remembered time; the dark versions differ a little and simply
+  crossfade. Placeholder stone/frames are hidden when the art is present; rung
+  bells glow at the painted bell.
+- Verified in the browser: every Act 3 beat from the window knock to the road home.
+  `npm test` 19 passing, build passed. Committed only Act 3 changes; the parallel
+  Act 1 agent's uncommitted edits were left in the working tree.
+
 ## 18 October 2026 — Act 3 art brief: whole-background approach
 
 - `art/background_prompts_act3.md` rewritten: each Act 3 area (courtyard,

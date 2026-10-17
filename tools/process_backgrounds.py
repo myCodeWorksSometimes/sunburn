@@ -22,12 +22,8 @@ PROP_MAX = 900
 # is replaced by the previous painting's right edge, so the joint is exact.
 OVERLAP = 0.35
 CONTINUES = {}
-# Act 2 uses green-edged layers instead (art/background_prompts_act2.md).
-CONTINUES.update({
-    f"bg_a3_{b}_{state}": f"bg_a3_{a}_{state}"
-    for a, b in (("courtyard", "mechanisms"), ("mechanisms", "landing"))
-    for state in ("dark", "restored")
-})
+# Act 2 uses green-edged layers and Act 3 whole-area paintings instead
+# (art/background_prompts_act2.md, background_prompts_act3.md).
 
 
 def stitch(img, prev):
