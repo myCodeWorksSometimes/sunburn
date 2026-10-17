@@ -1,5 +1,12 @@
 # Asset production handoff — Embers of Before
 
+> **17 October 2026 — campaign MVP art:** the backgrounds for Acts 2 and 3 and
+> the sprites for Mara, Tomas, Nia and the Bell Warden are specified in
+> `art/ASSETS-README.md` (with `background_prompts_act2.md`,
+> `background_prompts_act3.md`, `character_sprites.md`). Those use complete
+> ultrawide 21:9 paintings with matching edges, one per world region. The prop
+> and tile briefs below still apply.
+
 Gameplay revision: the cup/drawing now belong to the Act 2 playground treehouse;
 the rescue is at the Act 3 clock tower. Earlier square/shelter location references
 below describe the prior build. Asset dimensions/filenames remain valid. Gameplay

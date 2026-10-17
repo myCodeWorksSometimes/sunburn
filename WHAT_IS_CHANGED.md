@@ -3,6 +3,22 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 17 October 2026 — MVP art briefs (documentation only)
+
+- Audit: Acts 2 and 3 reuse Act 1 paintings (playground = garden, treehouse =
+  campfire, canal = bridge, tower = square/lane); Mara/Tomas/Nia are tinted
+  placeholders; no Five-Hand art. `assets/backgrounds.zip` only backs up Act 1.
+- Rewrote `art/background_prompts_act2.md` (the old one described five screens,
+  a shattered sun and an older story). New files: `art/ASSETS-README.md`
+  (overview, priorities, rules), `art/background_prompts_act3.md`,
+  `art/character_sprites.md` (Mara, Tomas, Nia, Bell Warden; optional Five-Hand
+  and Braced Shadow).
+- Backgrounds are now specified as complete 21:9 side-view paintings, one per
+  region (dark + restored), with the walk line at 82% height, gameplay positions
+  given as percentages, and edges that continue into the neighbouring region.
+- No code changed. Integration (scaling to region width, edge blending) happens
+  when the art arrives.
+
 ## 17 October 2026 — campaign route reorder: three knocks and the Old Road
 
 ### Gameplay implemented (CAMPAIGN.md Scenes 8–11)
