@@ -3,6 +3,17 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 2 art brief: green-layer approach
+
+- `art/background_prompts_act2.md` rewritten at the user's request: every Act 2
+  image is on flat #00FF00 so it keys out and overlaps cleanly. Three layers:
+  backgrounds (scenery standing on a 62% ground line, green above, below and at
+  both outer edges; 70% speed), foreground props placed exactly by the game
+  (swing set, swing seat, crater, treehouse, rubble/gate, mill with ledges,
+  canal; sizes in Rowan heights matching the gameplay surfaces), optional front
+  silhouettes. Replaces the continuation workflow for Act 2.
+- Game wiring for props and green-edged backgrounds follows when the art lands.
+
 ## 18 October 2026 — Exact joins for Act 2/3 paintings
 
 - `tools/make_continuation.py <painting>` makes a 1920×1080 seed canvas with the

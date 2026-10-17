@@ -10,7 +10,7 @@ that, in priority order, with copy-paste prompts.
 
 | File | What it covers | Images |
 |---|---|---|
-| [background_prompts_act2.md](background_prompts_act2.md) | Act 2 — The Playground: swings, treehouse, canal | 6 (3 dark + 3 restored) |
+| [background_prompts_act2.md](background_prompts_act2.md) | Act 2 — The Playground, **new green-layer approach**: backgrounds, foreground props, front silhouettes, all on #00FF00 (supersedes the rules below for Act 2) | 6 backgrounds + 14 props (+2 optional) |
 | [background_prompts_act3.md](background_prompts_act3.md) | Act 3 — The Clock Tower: courtyard, bell mechanisms, upper landing | 6 (3 dark + 3 restored) |
 | [character_sprites.md](character_sprites.md) | Mara, Tomas, Nia; Bell Warden boss; optional Five-Hand | 8 required strips + optional |
 
