@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 import { Adventure } from './Adventure.js';
 import { placeProp } from '../presentation/Scenery.js';
 import { saveSession } from '../world/WorldState.js';
+import { HOME, homePainting } from '../presentation/Act1Presentation.js';
 
-const SPAWNS = { cellar: { x: 900, y: 650 }, front: { x: 175, y: 430 }, shortcut: { x: 205, y: 650 } };
+const SPAWNS = { cellar: { x: 900, y: 650 }, front: { x: HOME.front.x, y: 430 }, shortcut: { x: HOME.cellar.x - 65, y: 650 } };
 
 export class Hearth extends Adventure {
   constructor() { super('Hearth'); }
@@ -14,22 +15,17 @@ export class Hearth extends Adventure {
     this.setup(1280, this.getSpawn(spawnId));
     this.run.setCheckpoint('Hearth', spawnId);
     this.regionText.setText('The family hearth');
-    this.add.image(0, 0, 'bg_p1_home_dark').setOrigin(0).setDepth(-5).setAlpha(0.7);
-    const past = this.add.image(0, 0, 'bg_p1_home_restored').setOrigin(0).setDepth(-4).setAlpha(0);
+    this.add.image(0, 0, homePainting(this, 'dark')).setOrigin(0).setDepth(-5);
+    const past = this.add.image(0, 0, homePainting(this, 'restored')).setOrigin(0).setDepth(-4).setAlpha(0);
     this.regionVisuals.set('home', [past]);
     this.regionBounds.set('home', { x: 0, width: 1280 });
     // The legacy interior includes an obsolete shattered-sun illustration beyond
     // the right wall. Keep the supplied interior while hiding that non-canonical sky.
-    this.add.rectangle(1118, 0, 162, 720, 0x11101b).setOrigin(0).setDepth(-3);
     this.addSurface(55, 1105, 650, { colour: 0x39343e });
     this.addSurface(55, 1105, 430, { colour: 0x3e3542 });
-    this.addWall(50, 690, 450); this.addWall(1110, 690, 450);
-    this.ladders = [{ x: 440, top: 430, bottom: 650 }];
-    placeProp(this, 'ladder', 440, 650, 46, 220);
-    this.addLabel(440, 547, 'W / S', '#ffe1a5', 13);
-    placeProp(this, 'door', 175, 430, 72, 115);
-    placeProp(this, 'door', 205, 650, 72, 115).setTint(0xb2a3b0);
-    this.add.image(860, 365, 'item_photo').setDisplaySize(47, 39).setDepth(16);
+    this.addWall(50, 690, 450).image.setVisible(false); this.addWall(1110, 690, 450).image.setVisible(false);
+    this.ladders = [HOME.ladder];
+    this.addLabel(HOME.ladder.x, 547, 'W / S', '#ffe1a5', 13);
     const lantern = placeProp(this, 'item-lantern', 650, 650, 38, 48, 21).setVisible(!this.run.hasLantern);
     this.tweens.add({ targets: lantern, y: 644, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     this.lighting.add({ x: 650, y: 600, radius: 180, intensity: 0.8, on: true });
@@ -50,15 +46,15 @@ export class Hearth extends Adventure {
         if (!this.run.completedStory['home-first-memory']) this.captions.say('The hearth upstairs still holds a memory. Light it first.');
         else this.goTo('World', 'front');
       } });
-    placeProp(this, 'item-ember', 205, 579, 16, 20, 17).setTint(this.run.shortcutOpen ? 0xffffff : 0x5a5667);
-    this.addInteract({ id: 'cellar-latch', x: 205, floor: 650,
+    placeProp(this, 'item-ember', HOME.cellar.x + 35, 605, 10, 13, 17).setTint(this.run.shortcutOpen ? 0xffffff : 0x8b7954);
+    this.addInteract({ id: 'cellar-latch', x: HOME.cellar.x, floor: 650,
       label: () => this.run.shortcutOpen ? 'E: passage to the market' : this.run.hasHearthEmber ? 'E: warm the latch with the ember' : 'E: inspect the cold latch',
       use: () => {
         if (this.run.rescuedEli) { this.captions.say('We’re home. Let’s sit by the fire.'); return; }
         if (!this.run.hasHearthEmber && !this.run.shortcutOpen) { this.captions.say('A hearth mark. The latch needs an ember from home.'); return; }
         this.run.shortcutOpen = true; this.audio.cue('take'); this.goTo('World', 'shortcut');
       } });
-    this.addInteract({ id: 'family-photo', x: 860, floor: 430, label: 'E: look at the family photograph',
+    this.addInteract({ id: 'family-photo', x: 620, floor: 430, range: 35, label: 'E: look at the family photograph',
       when: () => !this.run.completedStory['photo'],
       use: () => this.story('photo', { speaker: 'Rowan', text: 'I promised him the view from the tower. Always later.' }) });
     if (!this.run.completedStory['wake']) this.time.delayedCall(450, () => this.story('wake', { speaker: 'Rowan', text: 'Eli?' }, { text: 'A/D: move · E: interact · W/S: climb', color: '#ebd5b0', hold: 1200 }));

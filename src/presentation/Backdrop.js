@@ -1,9 +1,9 @@
 // Parallax backdrop for the continuous World: a fixed sky, a slow looping
-// skyline, then one painting per region on a single 0.7-speed layer. Paintings
-// sit edge to edge in that layer's own space, so there are never gaps, and each
-// one fades in over its left neighbour so the seams blend instead of cutting.
-// The walkable ground, props and gameplay art stay at full speed in front.
+// skyline, then registered Act 1 paintings at world speed. Other
+// paintings retain their existing parallax. Playable architecture and props
+// share one coordinate system; only the distant layers drift behind them.
 import { GROUND } from '../world/layout.js';
+import { registeredPainting, isRegisteredRegion } from './Act1Presentation.js';
 
 export const PAINTING_SPEED = 0.7;
 export const SKYLINE_SPEED = 0.25;
@@ -74,6 +74,14 @@ export function buildBackdrop(scene, regions) {
   const skylinePast = scene.add.tileSprite(0, 40, VIEW, 720, looped(scene, 'bg_skyline_restored')).setOrigin(0).setScrollFactor(0).setDepth(-9).setAlpha(0);
   const paintings = new Map();
   regions.forEach((r, i) => {
+    if (isRegisteredRegion(r)) {
+      const dark = scene.add.image(r.x, 0, registeredPainting(scene, r, 'dark')).setOrigin(0).setDepth(-5).setName(`scenery-${r.id}`);
+      const past = scene.add.image(r.x, 0, registeredPainting(scene, r, 'restored')).setOrigin(0).setDepth(-4).setAlpha(0);
+      const scale = r.width / scene.textures.get(`bg_${r.art}_dark`).getSourceImage().width;
+      paintings.set(r.id, { x: r.x, y: GROUND - r.paintGround * scale, scale,
+        art: r.art, width: r.width, dark, past, speed: 1, registered: true });
+      return;
+    }
     if (isWhole(scene, r)) { paintings.set(r.id, wholePainting(scene, r)); return; }
     const { art, groundY: legacyGround } = regionArt(scene, r);
     const dark = `bg_${art}_dark`, past = `bg_${art}_restored`;

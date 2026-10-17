@@ -3,6 +3,23 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 1 cohesion and separate Five-Hand court
+
+- Registered nearby Act1 paintings, kept distant parallax, exposed painted
+  terrain/cliff edges and removed the foreground ground strip/duplicate floors.
+- Aligned both home floors; use painted doors/ladder and the correct right-hand
+  iron cellar gate. Market passage is a hatch; Old Road uses a supplied stone arch.
+- Moved Mara's stall and step route west; framed a separate Card Court with130px
+  card spacing (formerly50px), wider selection range and steady fight camera.
+- Fixed wrong-card sweep: only its visible moving front damages, not the trail.
+- Matched the garden pit and saved a permanent return boardwalk for backtracking.
+- Build and19/19 tests pass in isolated publication and shared tree. Short Chrome
+  checks passed roof/shutter, both boss rounds, wrong-card dodge, ladder/gate,
+  garden return+Continue, bridge return and scaled inventory. Full human QA remains.
+- Refreshed stable demo http://127.0.0.1:4176/ . Only owned Act1 changes/docs are
+  published; teammate's separately committed Act3 work was preserved during rebase.
+  No generated art in this iteration.
+
 ## 18 October 2026 — Act 3 built with the delivered paintings
 
 - Six delivered Act 3 images (`newimages/`) are in the game as whole-area

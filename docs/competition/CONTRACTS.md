@@ -264,3 +264,26 @@ called directly rather than subscribed through a separate event dispatcher.
   New art: walk line at 62% of the image height.
 - `public/bg/manifest.json` (written by `tools/process_backgrounds.py`) lists every background; Boot loads them all.
 - Region `continues: true`: when this region and the previous both use their own art, the painting is placed at `prev.x + prev.width * 0.65` with `prev.scale` (OVERLAP 0.35, matching `tools/make_continuation.py` and the processor).
+
+## Act 1 presentation / Card Court contract — 18 October 2026
+
+- Act1Presentation.js registers supplied home/yard/Act1 art; no bitmaps replaced.
+  Nearby paintings scroll at1, distant layers retain parallax. Other acts keep
+  their owners' placement policies. Solid terrain edges never fade to a hole.
+- HOME anchors: upper floor430, cellar650, front175, cellar gate980, ladder410.
+  Shortcut spawn915/650; existing cellar interaction/spawn IDs retained.
+  Ember objective points to the iron gate. Painted doors/ladder supply visuals.
+- surfaceArt returns empty visuals for indoor floors and registered Act1 ground,
+  retaining bodies. Temporary stairs/bridges still draw readable surfaces.
+- World.yardSurface spans780–1100: restored-only until x>1135, then permanently
+  enabled by WorldState.yardReturnOpen. Existing boolean save validation preserves
+  it. Old saves loaded east of the pit secure it on the first World tick.
+- MARA_STALL:3630–3870,roof385,shutter3790,release3815,exit4830. Steps:
+  3290–3400/y500,3405–3515/y440,3520–3640/y380. Square fire/checkpoint3250.
+  Echo route follows the steps. Market passage3410 is a pavement hatch.
+- FIVE_HAND:body4785,arenaStart4080,slots4140/4270/4400/4530/4660,cardY405;
+  selection range38. Existing IDs, two rounds and4.2s exposure windows retained.
+  Court subsection3970–4850. Optional Adventure.cameraFocusX=4440 frames the
+  arena while Mara is freed, Rowan is in the court and Five-Hand is undefeated.
+- Wrong pick:900ms tell,650ms sweep. Bright front damages within34px of its x
+  and when feet are within34px of ground. The dim trailing area is harmless.

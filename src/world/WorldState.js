@@ -12,6 +12,7 @@ export class WorldState {
     this.hasHearthEmber = false;
     this.homeMemorySpent = false;
     this.shortcutOpen = false;
+    this.yardReturnOpen = false;
     this.bridgeReturnOpen = false;
     this.rescuedEli = false;
     this.completed = false;
@@ -145,7 +146,7 @@ export class WorldState {
     if (!this.maraFreed && !this.villageGateOpen) return this.completedStory['mara-knock']
       ? goal('Act 1: restore the market; climb the steps to the stall roof release', 'World', MARA_STALL.release, MARA_STALL.roof)
       : goal('Act 1: someone is knocking inside a market stall', 'World', MARA_STALL.shutter);
-    if (this.maraFreed && !this.villageGateOpen) return goal('Act 1: defeat Five-Hand at the market exit', 'World', MARA_STALL.exitGate - 140);
+    if (this.maraFreed && !this.villageGateOpen) return goal('Act 1: defeat Five-Hand in the Card Court', 'World', MARA_STALL.exitGate - 140);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: follow Mara to the Bridge Refuge', 'World', REFUGE.mara);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
     if (!this.bridgeReturnOpen && !this.clearedEncounters['braced-shadow']) return goal('Act 1: bait the Braced Shadow into the cracked barrier', 'World', BRIDGE_WORKS.crate[0]);

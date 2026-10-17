@@ -437,3 +437,42 @@ bridge fire → flame 100; relight → deck enabled; walked to 6723 (feet 560),
 - Not covered: a full keyboard run from Act 2 into Act 3, death and respawn
   inside Act 3, human difficulty. The Warden ignores Rowan while he is on the
   bell ledge (it only aggros on the same level) — unchanged behaviour.
+
+## 18 October 2026 — Act 1 cohesion / short checks
+
+- Isolated publication build index-4Rc27y5x.js and combined H: build
+  index-BiOgdhbJ.js passed; both19/19 Node tests. Existing bundle-size warning.
+  npm ci --no-audit --no-fund passed in isolated checkout.
+- Browser plugin unavailable; bundled Playwright + installed Chrome,1280x720
+  and960x540. Final demo: correct title/canvas, Title → N → Intro skip → Hearth,
+  no page/console errors, failed requests or framework overlay.
+- Home: dark/restored floors inspected; zero door-sprite overlays. W on painted
+  ladder x410 reached feet430. Gate E at980 did not travel before the ember.
+  Valid quest fixture then enabled gate travel to market hatch3410.
+- Market: E costs25 flame (100→75). Actual movement/jump inputs reached
+  x3376/feet500,3499/440,3618/380, then x3783/385. Hold E freed Mara.
+- Five-Hand: actual movement between widened slots and body, E picks, F hits.
+  Both rounds won; hits1→2, flame75→55→35,health3, exit and cleared flag set.
+  Exposure windows were reachable; camera kept all cards and body visible.
+- Found/fixed unfair trailing sweep damage when landing after a jump. New front
+  hazard retest: wrong pick4, jump after anticipation, health3, invulnerability0,
+  next observe state. No immunity fixture masked the dodge.
+- Final garden: E restore → walk1161 → cancel memory → walk739,feet560.
+  Return flag/deck/local save all true. Reload → Continue at490, flag/deck true.
+- Bridge prerequisite fixture (Mara/Nia/Tomas,brake): E5970 → walk6714,feet560,
+  returnOpen; cancel memory → walk6323,feet560, deck solid. Banks inspected.
+- Inventory opened/closed at960x540; canvas fit, five item cards present.
+- Harness limitations: one early navigation preceded server readiness and was
+  retried. An initial bridge fixture omitted Tomas, causing a wait timeout;
+  corrected fixture passed. Neither failed attempt was reported as a pass.
+- Screenshots outside repo: C:/Users/owner/AppData/Local/Temp/act1-house-polished.png
+  and act1-card-court-polished.png. Fixture/short-check evidence only.
+- Not tested: fresh whole-Act1/uninterrupted adventure, human navigation/difficulty,
+  audio listening, or Act2/3 acceptance. Extended testing remains with the user.
+- Teammate Act3 arrived on GitHub during handoff. Rebased this Act1 commit,
+  retaining both doc histories, Act1 registration and Act3 whole-painting placement.
+
+- Final integration: rebased onto teammate commit a539169, resolved overlapping
+  World/Backdrop changes and retained both changelog/test histories. Rebuilt
+  merged publication: index-BiOgdhbJ.js, identical to the frozen demo;19/19 tests
+  pass after the merge. No additional gameplay changes during resolution.

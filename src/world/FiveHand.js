@@ -91,7 +91,7 @@ export function buildFiveHand(s) {
   };
 
   // Standing under a card and pressing E picks it.
-  FH.slots.forEach((x, slot) => s.addInteract({ id: `five-hand-card-${slot}`, x, floor: GROUND, range: 22, priority: 9,
+  FH.slots.forEach((x, slot) => s.addInteract({ id: `five-hand-card-${slot}`, x, floor: GROUND, range: 38, priority: 9,
     when: () => fight.state === 'select', label: 'E: pick this card',
     use: () => {
       fight.picked = fight.cardAt[slot];
@@ -139,7 +139,7 @@ export function buildFiveHand(s) {
 
     if (fight.state === 'waiting') {
       if (run.maraFreed && p.x > FH.arenaStart - 20) {
-        s.story('five-hand-wake', { text: 'The cards on Mara’s counter turn over by themselves.', color: '#ebd5b0' },
+        s.story('five-hand-wake', { text: 'Beyond the stall, five cards rise over the abandoned game court.', color: '#ebd5b0' },
           { speaker: 'Mara', text: 'It took my card game! Watch the lantern card — its heart hides under that one.' },
           { text: 'Track the lantern card. Stand under it and press E, then sweep with F.', color: '#ebd5b0' });
         go('observe');
@@ -172,8 +172,10 @@ export function buildFiveHand(s) {
       if (fight.elapsed > WINDUP_MS) {
         const t = Math.min(1, (fight.elapsed - WINDUP_MS) / SWEEP_MS);
         const front = FH.body - t * (FH.body - FH.arenaStart);
-        sweep.clear().fillStyle(0x0b0812, 0.95).fillRect(front, GROUND - 34, FH.body - front, 30).fillStyle(0x8a4cff, 0.8).fillRect(front - 6, GROUND - 38, 10, 38);
-        if (!fight.hitDealt && p.x > front - 10 && p.feet > GROUND - 34) { fight.hitDealt = true; s.combat.damage(FH.body); }
+        sweep.clear().fillStyle(0x0b0812, 0.25).fillRect(front, GROUND - 34, FH.body - front, 30).fillStyle(0x8a4cff, 0.9).fillRect(front - 15, GROUND - 38, 30, 38);
+        // Only the visible moving front hits. The fading trail is not a second
+        // invisible hazard after Rowan has already jumped over the hand.
+        if (!fight.hitDealt && Math.abs(p.x - front) < 34 && p.x < FH.body + 65 && p.feet > GROUND - 34) { fight.hitDealt = true; s.combat.damage(FH.body); }
         if (t >= 1) { sweep.clear(); warn.setVisible(false); resetCards(); go('observe'); }
       }
     }

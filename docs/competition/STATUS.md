@@ -1,5 +1,32 @@
 # Live implementation status
 
+## Latest iteration — 18 October 2026: Act 1 cohesion
+
+- Home/garden and Act 1 updated using supplied art; no image generation.
+- Nearby paintings move at world speed; distant sky/skyline retain parallax.
+  Painted ground/cliff bottoms remain visible; hidden colliders replace the
+  foreground stone strip and duplicate indoor floors.
+- Home floors registered at y430/y650; painted front door, ladder x410 and iron
+  cellar gate x980 replace duplicate SVGs. Market shortcut is a pavement hatch.
+- Mara's release is now x3815, reached by steps x3290/3405/3520. Five-Hand occupies
+  the framed Card Court beyond the stall: cards130px apart, steady fight camera.
+  Wrong-card sweep damages only at its visible moving front, not its faded trail.
+- Garden pit matches painting (780–1100); crossing secures the saved return
+  boardwalk (yardReturnOpen), preserving the later hearth journey.
+- Build +19/19 tests pass for isolated publication and combined shared tree.
+  Short Chrome checks passed steps/shutter, both boss rounds, wrong-card dodge,
+  ladder/gate, bridge return, garden backtracking/save/Continue and scaled inventory.
+- Frozen shared-tree demo: http://127.0.0.1:4176/ ; index-BiOgdhbJ.js;
+  C:/Users/owner/AppData/Local/Temp/embers-playtest-RfLjeo; PID21596.
+  Act3 was published by the teammate during handoff and is preserved by rebase.
+  Before integration, the isolated Act1 build was index-4Rc27y5x.js.
+- Act1 claim released. Other developer retains active Act3 claim. Next human
+  check: fresh home → market → Card Court → bridge, then return home after
+  restoration fades. Full-route/navigation/difficulty/audio checks remain human QA.
+
+## Earlier core/campaign handoff (historical; latest status above)
+
+
 Updated: 17 October 2026, complete original-chapter gameplay iteration.
 
 ## Current truth

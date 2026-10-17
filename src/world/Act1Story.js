@@ -1,7 +1,7 @@
 import { Npc } from '../entities/Npc.js';
-import { placeProp } from '../presentation/Scenery.js';
 import { GROUND, MARA_STALL as STALL, REFUGE } from './layout.js';
 import { saveSession } from './WorldState.js';
+import { stonePassage } from '../presentation/Act1Presentation.js';
 
 // Campaign Act 1 (CAMPAIGN.md Scenes 4 and 6): Mara trapped in her market stall,
 // then her family at the Bridge Refuge. Five-Hand and the bridge works come later.
@@ -10,7 +10,7 @@ const FREED_LINES = [
   { speaker: 'Mara', text: 'Rowan? Oh, thank the fire.' },
   { speaker: 'Rowan', text: 'Mara. Have you seen Eli?' },
   { speaker: 'Mara', text: 'He came back for the little ones. Took them toward the bridge.' },
-  { speaker: 'Mara', text: 'Nia was with them. But that thing at my counter is blocking the way out.' },
+  { speaker: 'Mara', text: 'Nia was with them. But that thing took over the card court, beyond my stall.' },
   { speaker: 'Rowan', text: 'Stay behind the shutter. I’ll deal with it.' },
 ];
 
@@ -47,7 +47,13 @@ export function buildAct1Story(s, gate) {
   body.fillStyle(0x4a3a30).fillRect(STALL.x1 + 14, GROUND - 58, width - 28, 10);
   s.addSurface(STALL.x1, STALL.x2, STALL.roof, { material: 'timber' });
   const opening = s.add.rectangle(STALL.shutter, GROUND - 56, 92, 112, 0x15121a).setDepth(9).setVisible(run.maraFreed);
-  const shutter = placeProp(s, 'door', STALL.shutter, GROUND, 96, 118).setTint(0x8c7b6a).setVisible(!run.maraFreed);
+  const shutter = s.add.graphics().setDepth(10).setVisible(!run.maraFreed);
+  shutter.fillStyle(0x352b27).fillRect(STALL.shutter - 46, GROUND - 115, 92, 115);
+  for (let y = GROUND - 111; y < GROUND - 6; y += 13) {
+    shutter.fillStyle(y % 2 ? 0x67513d : 0x594432).fillRect(STALL.shutter - 43, y, 86, 10);
+    shutter.lineStyle(1, 0x8d7352).lineBetween(STALL.shutter - 41, y, STALL.shutter + 41, y);
+  }
+  shutter.fillStyle(0x9c8866).fillRect(STALL.shutter - 13, GROUND - 32, 26, 4);
   s.addLabel(STALL.shutter, STALL.roof + 80, 'MARA’S STALL', '#d3bc91', 12);
   const lever = s.add.graphics().setDepth(22);
   const drawLever = (pulled) => {
@@ -94,7 +100,7 @@ export function buildAct1Story(s, gate) {
   gate(s, STALL.exitGate, () => run.villageGateOpen, run.maraFreed ? 'Five-Hand’s tendrils hold the market exit.' : 'Corruption chokes the market exit. Someone is knocking in the stalls behind you.');
 
   // ---- Bridge Refuge: the family, their spent hearth and the Old Road's west gate.
-  placeProp(s, 'door', REFUGE.oldRoad, GROUND, 80, 128).setTint(0x6d6878);
+  stonePassage(s, REFUGE.oldRoad, GROUND);
   s.addLabel(REFUGE.oldRoad, GROUND - 150, 'OLD ROAD', '#a59f9a', 13);
   s.addInteract({ id: 'old-road-west', x: REFUGE.oldRoad, floor: GROUND, range: 40,
     label: () => run.oldRoadOpen ? 'E: take the Old Road to the tower' : 'E: try the Old Road gate',

@@ -27,7 +27,7 @@ function gate(s, x, isOpen, label) {
 export function buildChapters(s) {
   s.transferRemaining = null; s.chapterGates = []; s.swingTime = 0;
   const run = s.run;
-  s.addInteract({ id: 'home-door', x: 180, floor: GROUND, label: 'E: enter home', use: () => s.goTo('Hearth', 'front') });
+  s.addInteract({ id: 'home-door', x: 225, floor: GROUND, label: 'E: enter home', use: () => s.goTo('Hearth', 'front') });
   s.addInteract({ id: 'square-passage', x: 3410, floor: GROUND, label: () => run.shortcutOpen ? 'E: passage home' : 'E: inspect the sealed passage',
     use: () => run.shortcutOpen ? s.goTo('Hearth', 'shortcut') : s.captions.say('This old passage is sealed. It opens from our cellar.') });
 
@@ -227,7 +227,7 @@ export function memoryChapter(s, fire) {
       s.story('square-memory', { speaker: 'Recorded Eli', text: 'You moved your hand. The card stayed there.' },
         { text: 'An ordinary afternoon at Mara’s stall. Climb the remembered steps to the stall roof.', color: '#ebd5b0' });
     }
-    s.echo([point(MARA_STALL.shutter - 30), point(MARA_STALL.shutter - 30), point(3890), point(3970, 500), point(4070, 440), point(4240, 380), point(MARA_STALL.release - 40, MARA_STALL.roof)], { delay: 1600 });
+    s.echo([point(3250), point(3335, 500), point(3450, 440), point(3580, 380), point(MARA_STALL.release - 40, MARA_STALL.roof)], { delay: 1600 });
   } else if (id === 'bridge') {
     if (!run.bridgeBrakeSet) s.story('bridge-gears-memory', { text: 'The bridge machinery wakes. Lever A turns both gears, lever B the small one. Line up both marks, then set the brake.', color: '#ebd5b0' });
     else { s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5900), point(6900)]); }

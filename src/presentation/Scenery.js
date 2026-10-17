@@ -3,6 +3,9 @@ export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = 
   const width = x2 - x1, indoor = scene.scene.key === 'Hearth';
   const block = scene.add.container(x1, y).setDepth(10);
   const edge = scene.add.container(x1, y).setDepth(11);
+  // Registered paintings already supply the complete indoor floor and Act 1
+  // terrain/cliff silhouette. Physics stays; don't paste a rectangle over it.
+  if (indoor || (y === 560 && ['yard', 'lane', 'square', 'bridge', 'camp'].includes(regionId) && material === 'stone')) return { block, edge };
   if (material === 'crate') {
     block.add(scene.add.image(width / 2, 0, 'crate').setOrigin(.5, 0).setDisplaySize(width, 76));
   } else if (indoor || material === 'timber' || material === 'bridge') {

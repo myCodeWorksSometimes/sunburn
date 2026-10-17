@@ -276,7 +276,7 @@ export class Adventure extends Phaser.Scene {
   getGoal() {
     if (this.scene.key === 'Hearth' && this.run.rescuedEli) return { text: 'Epilogue: sit by the hearth together', scene: 'Hearth', x: 530, y: 430 };
     if (this.scene.key === 'Hearth' && this.run.eliFound && !this.run.hasHearthEmber) return { text: 'Remember the hearth, then hold E to take its last ember', scene: 'Hearth', x: 530, y: 430 };
-    if (this.scene.key === 'Hearth' && this.run.hasHearthEmber) return { text: 'Take the cellar passage to the market, then the Old Road to the tower', scene: 'Hearth', x: 205, y: 650 };
+    if (this.scene.key === 'Hearth' && this.run.hasHearthEmber) return { text: 'Take the iron cellar door on the right, then the Old Road to the tower', scene: 'Hearth', x: 980, y: 650 };
     return this.run.goal;
   }
 
@@ -308,7 +308,7 @@ export class Adventure extends Phaser.Scene {
     const desiredLook = this.player.body.velocity.x === 0 ? 0 : Math.sign(this.player.body.velocity.x) * 110;
     this.look = Phaser.Math.Linear(this.look, desiredLook, 1 - Math.exp(-delta / 180));
     const camera = this.cameras.main;
-    const target = Phaser.Math.Clamp(this.player.x + this.look - 640, 0, this.width - 1280);
+    const target = Phaser.Math.Clamp((this.cameraFocusX ?? this.player.x + this.look) - 640, 0, this.width - 1280);
     camera.scrollX = Phaser.Math.Linear(camera.scrollX, target, 1 - Math.exp(-delta / 110));
     this.lantern.on = this.run.hasLantern;
     this.lantern.radius = 140 + this.run.flame * 0.6;
