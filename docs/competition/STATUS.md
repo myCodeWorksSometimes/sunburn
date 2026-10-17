@@ -1,5 +1,42 @@
 # Live implementation status
 
+## Latest handoff — 18 Oct, Act 1 horror/combat and pixel UI
+
+- Implemented: physical dropped lantern/X sword/F slashes, faster animated
+  ferals, dedicated painted foundry with boss intro/seals/charge/summons/tendrils,
+  painted rotating gears/pivoting controls, memory-bound stall/Mara skeleton/ash,
+  explicit Tomas/Nia escort and saved living outcome, grounded civilian activity,
+  distant giant, unstable visual memory edge, recorded horror/boss soundscape.
+- UI uses a clean painted pixel 9-slice frame and bundled Pixelify Sans/OFL.
+  Fixed HUD safe insets, caption/prompt spacing, inventory and narrow map labels.
+  Actual hero/shadow/village/stall references were uploaded before generation.
+  Gemini produced the motion/environment/mechanism/UI assets; after its image
+  limit, the user-authorised ChatGPT tab produced the final ruined kiosk.
+- Tests: 33/33 Node tests and production build pass. Short Chrome checks passed
+  sword counters/retrieval/death/temporary-support fall, boss intro/charge counter/
+  summon wave/marked tendril dodge, AAB moving controls/brake, timed crossing and
+  expired return, escort start/follow/endpoint save, skeleton expiry/campfire
+  access, and 1280/960 HUD/satchel/map/audio pause. Details in TEST-LOG.md.
+- Current frozen demo: http://127.0.0.1:4176/ ; bundle index-DiDMO2Gy.js;
+  Node process12088. Snapshot: C:/Users/owner/AppData/Local/Temp/embers-playtest-vzv0Bl.
+  Source edits/builds cannot mutate it. Temporary :4177 development/QA servers
+  have been stopped; only :4176 remains served.
+- Ownership: Codex Act1 combat/presentation integration claim released at handoff.
+  Other developer retains their Act3 claim. No Act3 coordinates, paintings or
+  TowerStory source were changed. Unrelated CAMPAIGN-STORY-AND-MECHANICS-DRAFT.md
+  and shared H: .stfolder/backgrounds.zip are preserved.
+- Known teammate follow-up: TowerStory.js contains the old “Mara brought Tomas
+  back with an ember” sentence. It conflicts with the new dead-Mara canon; exact
+  proposed correction is in ACT1-HORROR.md for its owner. This is not certified
+  fixed. The Act1/journal story uses the latest decision.
+- Human acceptance still required: fresh uninterrupted Act1 run, complete boss
+  fight and full escort/retry timing, navigation/visual judgement and headphone/
+  speaker mix. Complete campaign/other machine QA remains human-owned. Use the
+  four checks in ACT1-HORROR.md. No award or production-readiness guarantee.
+- Run: npm ci (first setup), npm run dev -- --host 127.0.0.1. Release: npm test,
+  npm run build, npm run demo. Prompts, inspected packing and exact source files:
+  art/production/HORROR-ASSETS.md; cumulative change history: WHAT_IS_CHANGED.md.
+
 ## Latest audit — 18 Oct, active audio and survivor labels
 
 -26/26 tests and build pass. AudioCues now owns active one-shot clips, so pause,

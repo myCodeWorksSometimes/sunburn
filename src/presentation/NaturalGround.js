@@ -26,6 +26,9 @@ export function naturalGround(scene,x1,x2,y,regionId) {
 
 export function supplyLedge(scene,x1,x2,y) {
   const block=scene.add.container(x1,y).setDepth(10),edge=scene.add.container(x1,y).setDepth(11);
+  if(scene.textures.exists('supply-ledge')){
+    block.add(scene.add.image(0,0,'supply-ledge').setOrigin(0).setDisplaySize(x2-x1,76));return {block,edge};
+  }
   // Sample the stall's actual painted wooden beam, not a vector X-box.
   const key='painted-supply-wood';
   if(!scene.textures.exists(key)) {

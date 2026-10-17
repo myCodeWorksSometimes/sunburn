@@ -35,6 +35,7 @@ export class BossIntroduction {
     c.scrollX=this.before.scrollX+(sp.x-640-this.before.scrollX)*amount;
     c.scrollY=this.before.scrollY+(sp.y-360-this.before.scrollY)*amount;
     sp.sprite.pose?.(0);sp.sprite.setFlipX(false);
+    sp.sprite.animateState?.('summon',Math.min(500,t));
     if(t>=3900)this.finish();
   }
   finish(commit=true) {

@@ -122,11 +122,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     const ladder = ladders.find((l) => Math.abs(this.x - l.x) < 26 && this.feet >= l.top - 6 && this.feet <= l.bottom + 6);
-    if (ladder && i.up && this.feet > ladder.top + 4) {
+    if (ladder && !this.swordDrawn && i.up && this.feet > ladder.top + 4) {
       this.startClimb(ladder);
       return;
     }
-    if (ladder && i.down && Math.abs(this.feet - ladder.top) < 8) {
+    if (ladder && !this.swordDrawn && i.down && Math.abs(this.feet - ladder.top) < 8) {
       this.startClimb(ladder);
       this.y += 10;
       return;
@@ -148,7 +148,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       const vy = this.body.velocity.y;
       if (air > 80 || vy < -100) {
         this.anims.stop();
-        this.setTexture('hero_jump', vy < -200 ? 1 : vy < 150 ? 2 : 3);
+        if(this.swordDrawn)this.setTexture('sword-motion',vy<0?10:11);
+        else this.setTexture('hero_jump', vy < -200 ? 1 : vy < 150 ? 2 : 3);
       }
     } else {
       this.airborneSince = null;
@@ -158,11 +159,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       }
       if (this.scene.time.now - this.landedAt < 90) {
         this.anims.stop();
-        this.setTexture('hero_jump', 4);
+        if(this.swordDrawn)this.setTexture('sword-motion',8);
+        else this.setTexture('hero_jump', 4);
       } else if (vx) {
-        this.play('hero-walk', true);
+        this.play(this.swordDrawn&&this.scene.anims.exists('sword-walk')?'sword-walk':'hero-walk', true);
       } else {
-        this.play('hero-idle', true);
+        this.play(this.swordDrawn&&this.scene.anims.exists('sword-idle')?'sword-idle':'hero-idle', true);
       }
     }
   }

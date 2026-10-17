@@ -21,7 +21,9 @@ test('active creature clips pause/resume and mute immediately with the loops',()
   const {audio,sounds}=setup();audio.unlock();audio.cue('monster-roar');const voice=sounds.at(-1);
   assert.equal(voice.isPlaying,true);
   audio.pause();assert.equal(voice.isPaused,true);assert.equal(audio.music.isPaused,true);
+  assert.equal(audio.bossbed.isPaused,true);
   audio.toggleMute();assert.equal(voice.mute,true);assert.equal(audio.music.mute,true);
+  assert.equal(audio.bossbed.mute,true);
   audio.resume();assert.equal(voice.isPlaying,true);assert.equal(voice.mute,true);
   audio.toggleMute();assert.equal(voice.mute,false);
 });

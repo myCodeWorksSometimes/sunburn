@@ -24,6 +24,17 @@ export function prepareProductionAssets(scene) {
 }
 
 export function paintedBoss(scene, kind, x, floor, height) {
+  if(kind==='braced'&&scene.textures.exists('boss-motion')){
+    const sprite=scene.add.sprite(x,floor,'boss-motion',0).setOrigin(.5,1).setDepth(22);
+    sprite.pose=()=>sprite;
+    sprite.animateState=(state,elapsed)=>{
+      const row={idle:0,windup:1,charge:2,summon:3,lash:3,stunned:4,recover:0,death:5}[state]??0;
+      const speed=state==='charge'?75:state==='idle'?150:state==='death'?180:180;
+      const f=state==='death'?Math.min(5,Math.floor(elapsed/speed)):Math.floor(elapsed/speed)%6;
+      sprite.setFrame(row*6+f).setDisplaySize(256,256);return sprite;
+    };
+    return sprite;
+  }
   const sprite=scene.add.sprite(x,floor,`${kind}-1`).setOrigin(.5,1).setDepth(22);
   sprite.pose=(index)=>{
     const key=`${kind}-${index}`;

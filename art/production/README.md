@@ -1,5 +1,11 @@
 # Act 1 production assets
 
+Latest horror revision: see **HORROR-ASSETS.md** for real reference uploads,
+36-frame boss,32-frame sword, skeleton/ash sequences, foundry, painted mechanism
+parts, clean9-slice UI frame and the ChatGPT-generated ruined stall. Exact prompt
+archives: GEMINI-HORROR-PROMPTS.json and CHATGPT-STALL-PROMPT.txt. The older Braced
+poses described below are replaced in the active game by boss-motion.png.
+
 Style: slightly pixelated, restrained painted pixel clusters, limited shading,
 readable silhouettes. No hyperrealism. The original hero and world paintings
 remain the style reference.

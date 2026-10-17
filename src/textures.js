@@ -40,6 +40,10 @@ export function createTextures(scene) {
   anim('hero-interact', 'hero_interact', 8, 0, [0, 1, 2, 2, 1, 0]);
   anim('hero-light', 'hero_light', 7, 0, [0, 1, 2, 3, 3, 4]);
   anim('hero-death', 'hero_death', 9, 0);
+  anim('sword-idle','sword-motion',6,-1,[0,1,2,3,4,5,6,7]);
+  anim('sword-walk','sword-motion',12,-1,[8,9,10,11,12,13,14,15]);
+  anim('sword-attack','sword-motion',16,0,[16,17,18,19,20,21,22,23]);
+  anim('sword-draw','sword-motion',16,0,[24,25,26,27,28,29,30,31]);
   anim('shadow-idle', 'shadow_idle', 5);
   anim('shadow-move', 'shadow_move', 8);
   anim('shadow-hurt', 'shadow_hurt', 10, 0);

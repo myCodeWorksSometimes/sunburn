@@ -1,175 +1,85 @@
 import { Npc } from '../entities/Npc.js';
-import { GROUND, MARA_STALL as STALL, REFUGE } from './layout.js';
+import { GROUND, MARA_STALL as STALL, REFUGE, BRIDGE_GAP } from './layout.js';
 import { saveSession } from './WorldState.js';
 import { stonePassage } from '../presentation/Act1Presentation.js';
 
-// Campaign Act 1 (CAMPAIGN.md Scenes 4 and 6): Mara trapped in her market stall,
-// then her family at the Bridge Refuge. Five-Hand and the bridge works come later.
-
-const FREED_LINES = [
-  { speaker: 'Mara', text: 'Rowan? Oh, thank the fire.' },
-  { speaker: 'Rowan', text: 'Mara. Have you seen Eli?' },
-  { speaker: 'Mara', text: 'He came back for the little ones. Took them toward the bridge.' },
-  { speaker: 'Mara', text: 'Nia was with them. But that thing took over the card court, beyond my stall.' },
-  { speaker: 'Rowan', text: 'Stay behind the shutter. I’ll deal with it.' },
-];
-
-const REUNION_LINES = [
-  { speaker: 'Mara', text: 'Nia!' },
-  { speaker: 'Nia', text: 'Mama! You came!' },
-  { speaker: 'Rowan', text: 'Nia — did you see Eli?' },
-  { speaker: 'Nia', text: 'We went to the tower. Then the shadows came.' },
-  { speaker: 'Nia', text: 'Eli said to use the old road when the bell rang.' },
-  { speaker: 'Rowan', text: 'Did he come with you?' },
-  { speaker: 'Nia', text: 'We heard it. He didn’t come.' },
-];
-
-const HEARTH_LINES = [
-  { speaker: 'Tomas', text: 'The old road’s gate only opens from the tower side. The bridge is your way across.' },
-  { speaker: 'Tomas', text: 'Be careful at its fire. It could show me the crossing… but I couldn’t get out.' },
-  { speaker: 'Mara', text: 'I brought an ember from our hearth. Then he could take my hand.' },
-  { speaker: 'Tomas', text: 'The house hasn’t remembered since.' },
-  { speaker: 'Rowan', text: 'An ember from home… can bring someone back.' },
-  { speaker: 'Tomas', text: 'Something braced in iron guards the bridge works. Its front turns any blow. Make it charge the cracked barrier.' },
-  { speaker: 'Tomas', text: 'Inside, line up both gear marks in remembered time, then set the brake. The brake holds in any time.' },
-];
-
-export function buildAct1Story(s, gate) {
-  const run = s.run;
-  s.npcs = [];
-  s.knockClock = 0;
-
-  // ---- Market: Mara's stall. Its roof is reached from the remembered steps.
+// Mara died at the market. Her memory reveals a route, never becomes a living
+// copy at the refuge. Tomas and Nia require an explicit, player-led escort.
+export function buildAct1Story(s,gate) {
+  const run=s.run;s.npcs=[];s.knockClock=0;
   const width=STALL.x2-STALL.x1,cx=(STALL.x1+STALL.x2)/2;
-  const opening=s.add.image(cx,GROUND,'stall-open').setOrigin(.5,1).setDisplaySize(width+20,185).setDepth(10).setVisible(run.maraFreed);
-  const shutter=s.add.image(cx,GROUND,'stall-closed').setOrigin(.5,1).setDisplaySize(width+20,185).setDepth(10).setVisible(!run.maraFreed);
+  const ruin=s.add.image(cx,GROUND,'stall-ruined').setOrigin(.5,1).setDisplaySize(width+20,185).setDepth(10);
+  const healthy=s.add.image(cx,GROUND,run.maraFreed?'stall-open':'stall-closed').setOrigin(.5,1).setDisplaySize(width+20,185).setDepth(11).setAlpha(0);
+  s.regionVisuals.get('square').push(healthy);
   const roof=s.addSurface(STALL.x1,STALL.x2,STALL.roof,{material:'timber'});roof.block.setAlpha(0);roof.edge.setAlpha(0);
-  s.add.ellipse(cx,GROUND+5,width+40,15,0x08090d,.45).setDepth(9);
-  s.addLabel(cx,STALL.roof-25,'MARA’S TOY STALL','#d3bc91',12);
-  const lever = s.add.graphics().setDepth(22);
-  const drawLever = (pulled) => {
-    lever.clear().fillStyle(0x6e5a44).fillRect(STALL.release - 3, STALL.roof - 34, 6, 34);
-    lever.lineStyle(4, 0xc9a86a).lineBetween(STALL.release, STALL.roof - 30, STALL.release + (pulled ? 16 : -16), STALL.roof - 48);
-  };
-  drawLever(run.maraFreed);
-  const releaseLabel = s.addLabel(STALL.release, STALL.roof - 70, 'SHUTTER RELEASE', '#d3bc91', 12).setVisible(!run.maraFreed);
-  // Mara stays in her stall until Five-Hand is gone, then leaves for the refuge.
-  const stallMara = new Npc(s, 'mara', STALL.shutter, GROUND, { visible: run.maraFreed && !run.villageGateOpen });
-  // She walks off toward the refuge; tickAct1Story swaps her to the refuge copy
-  // once she leaves (or as soon as Rowan goes on ahead).
-  const onFiveHandDefeated = () => s.time.delayedCall(6000, () => stallMara.walkTo(STALL.exitGate + 90, { hide: true }));
-  s.events.on('five-hand:defeated', onFiveHandDefeated);
-  s.events.once('shutdown', () => s.events.off('five-hand:defeated', onFiveHandDefeated));
+  s.add.ellipse(cx,GROUND+4,width+40,12,0x08090d,.45).setDepth(9);
+  const lever=s.add.graphics().setDepth(22);
+  const drawLever=()=>{lever.clear().fillStyle(0x554944).fillRect(STALL.release-4,STALL.roof-24,8,24).lineStyle(4,0xc0a16e).lineBetween(STALL.release,STALL.roof-22,STALL.release+(run.maraFreed?15:-15),STALL.roof-42);};drawLever();
+  const stallMara=new Npc(s,'mara',STALL.shutter,GROUND,{visible:false});stallMara.echo=true;
   s.npcs.push(stallMara);
-
-  s.addInteract({ id: 'mara-shutter', x: STALL.shutter, floor: GROUND, range: 70, when: () => !run.maraFreed,
-    label: 'E: knock on the shutter',
-    use: () => {
-      s.audio.cue('knock');
-      if (!s.story('mara-knock', { text: '… knock, knock …', color: '#ffe1a1' },
-        { speaker: 'Mara', text: 'Someone’s there? The shutter’s jammed — the release is up on the roof!' },
-        { speaker: 'Rowan', text: 'Hold on. I’ll find a way up.' },
-        { text: 'Restore the market fire. Its remembered steps reach the stall roof.', color: '#ebd5b0' })) {
-        s.captions.say({ speaker: 'Mara', text: 'The release is on the roof! Please hurry.' });
-      }
-    } });
-
-  s.addInteract({ id: 'mara-release', x: STALL.release, floor: STALL.roof, hold: 600, priority: 5, when: () => !run.maraFreed,
-    label: 'Hold E: pull the shutter release',
-    use: () => {
-      if (!run.freeMara()) return;
-      drawLever(true); releaseLabel.setVisible(false);
-      shutter.setVisible(false); opening.setVisible(true);
-      stallMara.setVisible(true);
-      s.audio.cue('take');
-      s.notice('The shutter opens.');
-      s.story('mara-freed', ...FREED_LINES);
-      saveSession(s);
-    } });
-
-  // Five-Hand's tendrils hold this exit until it is defeated (FiveHand.js).
-  gate(s, STALL.exitGate, () => run.villageGateOpen, run.maraFreed ? 'Five-Hand’s tendrils hold the market exit.' : 'Corruption chokes the market exit. Someone is knocking in the stalls behind you.');
-
-  // ---- Bridge Refuge: the family, their spent hearth and the Old Road's west gate.
-  stonePassage(s, REFUGE.oldRoad, GROUND);
-  s.addLabel(REFUGE.oldRoad, GROUND - 150, 'OLD ROAD', '#a59f9a', 13);
-  s.addInteract({ id: 'old-road-west', x: REFUGE.oldRoad, floor: GROUND, range: 40,
-    label: () => run.oldRoadOpen ? 'E: take the Old Road to the tower' : 'E: try the Old Road gate',
-    use: () => run.oldRoadOpen ? s.goTo('World', 'oldRoadEast')
-      : s.captions.say({ speaker: 'Rowan', text: run.heardTomas ? 'Barred from the tower side, like Tomas said.' : 'Barred. From the other side.' }) });
-
-  // An ordinary household fire: rest works here, restoration does not.
-  const hearth = s.addFire({ id: 'refuge-hearth', regionId: 'bridge', x: REFUGE.hearth, floor: GROUND, duration: 1000, spawnId: 'refuge', spent: () => true });
-  hearth.lit = true; hearth.light.on = true; hearth.sprite.play('fire-burning'); hearth.embers.start();
-  s.addLabel(REFUGE.hearth, GROUND - 150, 'REFUGE HEARTH', '#d3bc91', 12);
-  s.addInteract({ id: 'refuge-hearth-look', x: REFUGE.hearth, floor: GROUND, range: 30, priority: -1, label: 'E: look at the hearth',
-    use: () => s.captions.say({ speaker: 'Rowan', text: run.heardTomas ? 'Still warm. It just doesn’t remember any more.' : 'Warm… but no memory stirs in it.' }) });
-
-  const nia = new Npc(s, 'nia', REFUGE.nia, GROUND);
-  const tomas = new Npc(s, 'tomas', REFUGE.tomas, GROUND);
-  const mara = new Npc(s, 'mara', REFUGE.mara, GROUND, { visible: run.maraFreed && run.villageGateOpen });
-  if (run.heardNia) mara.sprite.x = REFUGE.mara;
-  s.npcs.push(nia, tomas, mara);
-  s.refuge = { mara, stallMara };
-
-  s.addInteract({ id: 'talk-nia', x: REFUGE.nia, floor: GROUND, range: 34, priority: 4, label: 'E: talk to Nia',
-    use: () => s.captions.say(run.heardNia
-      ? { speaker: 'Nia', text: 'Eli showed me Mama’s card trick. You find him, okay?' }
-      : { speaker: 'Nia', text: 'Is Mama coming? She was at the market.' }) });
-  s.addInteract({ id: 'talk-tomas', x: REFUGE.tomas, floor: GROUND, range: 34, priority: 6,
-    label: () => run.heardNia && !run.heardTomas ? 'E: talk to Tomas' : 'E: talk to Tomas',
-    use: () => {
-      if (run.hearTomas()) {
-        // Queue after any reunion lines still playing instead of cutting them off.
-        run.completeStory('refuge-hearth'); s.captions.say(...HEARTH_LINES);
-        s.events.emit('story:completed', { storyId: 'refuge-hearth' }); saveSession(s); return;
-      }
-      s.captions.say(run.heardTomas
-        ? { speaker: 'Tomas', text: run.bridgeBrakeSet ? 'The brake’s set. The bridge fire will hold the deck — be quick.' : 'Bait it into the cracked barrier, then hit its back. Lever A turns both gears, lever B the small one.' }
-        : { speaker: 'Tomas', text: 'Mara? Is Mara with you? She went back for supplies.' });
-    } });
-  s.addInteract({ id: 'talk-mara-stall', x: STALL.shutter, floor: GROUND, range: 50, priority: 3, when: () => stallMara.visible && !stallMara.walking,
-    label: 'E: talk to Mara', use: () => s.captions.say({ speaker: 'Mara', text: run.villageGateOpen ? 'Thank you. I’m going to Nia now.' : 'Watch the lantern card. Its heart hides under it.' }) });
-  s.refuge.talkMara = s.addInteract({ id: 'talk-mara', x: mara.x, floor: GROUND, range: 34, priority: 4, when: () => run.maraFreed && mara.visible,
-    label: 'E: talk to Mara',
-    use: () => s.captions.say({ speaker: 'Mara', text: 'He came back for my girl. Go and bring him home.' }) });
+  s.addInteract({id:'mara-shutter',x:STALL.shutter,floor:GROUND,range:65,when:()=>!run.maraFreed,label:'E: knock on the ruined shutter',use:()=>{
+    s.audio.cue('knock');s.story('mara-knock',{speaker:'Rowan',text:'Someone is knocking. From before the impact.'},{speaker:'Echo Mara',text:'The release is on the roof. Please—my daughter is at the bridge.'},{text:'Remember the market fire. Climb its repaired scaffold to the roof.'});
+  }});
+  s.addInteract({id:'mara-release',x:STALL.release,floor:STALL.roof,hold:600,priority:5,when:()=>!run.maraFreed,label:'Hold E: release the shutter',use:()=>{
+    if(!run.freeMara())return;drawLever();healthy.setTexture('stall-open').setDisplaySize(width+20,185);s.audio.cue('machinery');
+    s.story('mara-freed',{speaker:'Echo Mara',text:'Rowan? Eli took Nia and Tomas toward the bridge. He came back for them.'},{speaker:'Rowan',text:'Come with me.'},{speaker:'Echo Mara',text:'I never left this stall. But they may still be waiting. Watch the lantern card in the court.'},{speaker:'Rowan',text:'I will find them.'});saveSession(s);
+  }});
+  s.addInteract({id:'talk-mara-stall',x:STALL.shutter,floor:GROUND,range:50,priority:3,when:()=>stallMara.visible,label:'E: listen to Mara’s memory',use:()=>s.captions.say({speaker:'Echo Mara',text:'Watch the lantern card. Please bring my little girl across the bridge.'})});
+  gate(s,STALL.exitGate,()=>run.villageGateOpen,'Five-Hand holds the Card Court exit.');
+  stonePassage(s,REFUGE.oldRoad,GROUND);s.addLabel(REFUGE.oldRoad,GROUND-150,'OLD ROAD','#a59f9a',13);
+  s.addInteract({id:'old-road-west',x:REFUGE.oldRoad,floor:GROUND,range:40,label:()=>run.oldRoadOpen?'E: take the Old Road to the tower':'E: try the Old Road gate',use:()=>run.oldRoadOpen?s.goTo('World','oldRoadEast'):s.captions.say({speaker:'Rowan',text:'Barred from the tower side.'})});
+  s.addFire({id:'refuge-hearth',regionId:'bridge',x:REFUGE.hearth,floor:GROUND,radius:460,duration:20000,spawnId:'refuge'});
+  s.addLabel(REFUGE.hearth,GROUND-155,'REFUGE HEARTH','#bba989',12);
+  const safeX=BRIDGE_GAP.x2+100;
+  const niaHome=BRIDGE_GAP.x2+50,tomasHome=BRIDGE_GAP.x2+330;
+  const nia=new Npc(s,'nia',run.refugeesRescued?niaHome:REFUGE.nia,GROUND,{visible:run.refugeesRescued});
+  const tomas=new Npc(s,'tomas',run.refugeesRescued?tomasHome:REFUGE.tomas,GROUND,{visible:run.refugeesRescued});
+  nia.echo=tomas.echo=!run.refugeesRescued;s.npcs.push(nia,tomas);
+  s.refuge={stallMara,nia,tomas,healthy,ruin,escort:false,safeX,away:0};
+  s.addInteract({id:'talk-nia',x:nia.x,floor:GROUND,range:45,priority:4,when:()=>nia.visible,label:'E: talk to Nia',use:()=>s.captions.say({speaker:'Nia',text:run.refugeesRescued?'My hands are warm. Mama said you would come.':'Eli sent us down the old road when the bell rang. He did not come.'})});
+  s.addInteract({id:'talk-tomas',x:tomas.x,floor:GROUND,range:45,priority:6,when:()=>tomas.visible,label:'E: talk to Tomas',use:()=>{
+    if(run.hearTomas()){
+      s.story('refuge-hearth',{speaker:'Tomas',text:'We cannot leave this fire alone. Secure the bridge, then come back with your lantern.'},{speaker:'Rowan',text:'Mara is still at the market. A memory.'},{speaker:'Tomas',text:'I know. Save Nia. There is something in the abandoned foundry, far beyond the arches.'},{speaker:'Tomas',text:'Bait its charge into the cracked barrier. Strike the exposed back. The works beyond it control the bridge.'},{text:'In remembered time: A turns both gears, B the small gear. Align the marks and engage the brake.'});saveSession(s);
+    }else s.captions.say({speaker:'Tomas',text:run.refugeesRescued?'You brought us through. We will keep the far-bank fire.':'Clear the foundry, secure the bridge, then come back for us.'});
+  }});
+  s.addInteract({id:'refuge-escort',x:REFUGE.hearth,floor:GROUND,range:80,hold:900,priority:9,when:()=>run.bridgeReturnOpen&&!run.refugeesRescued&&!s.refuge.escort&&s.memory.isRestoredAt('bridge',REFUGE.hearth,GROUND-40),label:'Hold E: share the lantern and lead the family across',use:()=>{
+    if(s.combat.weapon.drawn){s.notice('Carry the lantern to guide them.');return;}
+    s.refuge.escort=true;nia.setVisible(true);tomas.setVisible(true);s.audio.cue('rescue');
+    s.captions.say({speaker:'Rowan',text:'Stay with my light. Both of you. We cross together.'});
+  }});
+  const resetEscort=()=>{if(!run.refugeesRescued){s.refuge.escort=false;for(const [npc,x]of [[nia,REFUGE.nia],[tomas,REFUGE.tomas]]){npc.walking=null;npc.sprite.x=x;npc.setVisible(false);}}};
+  s.events.on('player:respawned',resetEscort);s.events.once('shutdown',()=>s.events.off('player:respawned',resetEscort));
 }
 
-export function tickAct1Story(s, delta) {
-  const run = s.run, x = s.player.x;
-  for (const npc of s.npcs) npc.tick(delta, s.player);
-  s.refuge.talkMara.x = s.refuge.mara.x;
-  const { stallMara, mara } = s.refuge;
-  if (run.villageGateOpen && !mara.visible && (!stallMara.visible || x > STALL.exitGate + 20)) {
-    stallMara.setVisible(false); mara.setVisible(true);
+export function tickAct1Story(s,delta) {
+  const run=s.run,x=s.player.x,r=s.refuge;
+  for(const npc of s.npcs)npc.tick(delta,s.player);
+  r.stallMara.updateEcho(run.maraFreed&&s.memory.isRestoredAt('square',r.stallMara.x,GROUND-45),delta);
+  for(const npc of [r.nia,r.tomas]){
+    if(run.refugeesRescued){npc.echo=false;npc.setVisible(true);}
+    else if(r.escort){
+      npc.setVisible(true);npc.echo=false;
+      const behind=npc===r.nia?80:145;
+      if(Math.abs(x-npc.x)>behind+20&&!s.combat.weapon.drawn)npc.walkTo(Math.max(npc.x,x-behind),{speed:185});
+      else npc.walking=null;
+    }else {npc.echo=true;npc.updateEcho(s.memory.isRestoredAt('bridge',npc.x,GROUND-40),delta);}
   }
-
-  // Coming home with Eli: Nia sees him (CAMPAIGN Scene 14).
-  if (run.rescuedEli && Math.abs(x - REFUGE.nia) < 260 && s.story('nia-eli',
-    { speaker: 'Nia', text: 'Eli! You came back!' }, { speaker: 'Eli', text: 'Rowan came for me.' },
-    { speaker: 'Nia', text: 'You rang the bell. We heard it, and we ran.' },
-    { speaker: 'Mara', text: 'Go home, you two. Your hearth is waiting.' })) saveSession(s);
-
-  // Knocking draws Rowan to the stall before he has spoken to Mara.
-  if (!run.maraFreed && !run.completedStory['mara-knock'] && Math.abs(x - STALL.shutter) < 450) {
-    s.knockClock -= delta;
-    if (s.knockClock <= 0) { s.knockClock = 2600; s.audio.cue('knock'); s.notice('Knocking… from inside a market stall.'); }
-  }
-
-  // Arriving at the refuge plays the reunion once.
-  if (run.maraFreed && !run.heardNia && x > REFUGE.oldRoad - 40 && x < REFUGE.barrier + 200) {
-    if (run.hearNia()) {
-      s.story('refuge-reunion', ...REUNION_LINES);
-      s.refuge.mara.walkTo(REFUGE.mara);
-      saveSession(s);
+  if(r.escort){
+    r.away=s.combat.weapon.drawn||Math.abs(x-r.nia.x)>440||Math.abs(x-r.tomas.x)>440?r.away+delta:0;
+    if(r.away>6000){r.escort=false;r.away=0;for(const [npc,pos]of [[r.nia,REFUGE.nia],[r.tomas,REFUGE.tomas]]){npc.walking=null;npc.updateEcho(false,delta);npc.sprite.x=pos;}s.notice('Their tether broke. Return to the refuge fire and try again.');}
+    else if(r.nia.x>BRIDGE_GAP.x2+30&&r.tomas.x>BRIDGE_GAP.x2+30){
+      run.refugeesRescued=true;r.escort=false;r.nia.homeX=BRIDGE_GAP.x2+50;r.tomas.homeX=BRIDGE_GAP.x2+330;r.nia.walkTo(r.nia.homeX);r.tomas.walkTo(r.tomas.homeX);
+      s.enemies.find(e=>e.id==='camp-crawler')?.disperse();
+      s.story('refugees-rescued',{speaker:'Nia',text:'The fire is behind us. I am still here.'},{speaker:'Tomas',text:'We were caught in the crossing. The secured bridge let you lead us out.'},{speaker:'Tomas',text:'The tower holds Eli much deeper. He may need an ember from a place that knows him.'},{speaker:'Rowan',text:'Keep her bird safe. I have one more person to find.'});saveSession(s);
     }
   }
-
-  // Tomas has something to say before Rowan tries the bridge.
-  if (run.maraFreed && !run.heardTomas && !run.bridgeReturnOpen && x > REFUGE.barrier) {
-    const push = x - REFUGE.barrier;
-    s.player.body.x -= push;
-    s.player.setVelocityX(Math.min(0, s.player.body.velocity.x));
-    if (!s.noticeRemaining) s.notice('Tomas: “Rowan — a word before the bridge.”');
+  for(const it of s.interactions){if(it.id==='talk-nia')it.x=r.nia.x;if(it.id==='talk-tomas')it.x=r.tomas.x;}
+  if(run.rescuedEli&&Math.min(Math.abs(x-REFUGE.nia),Math.abs(x-r.safeX))<300&&s.story('nia-eli',
+    {speaker:'Rowan',text:run.refugeesRescued?'They made it across. Eli, you gave them a chance.':'The refuge still waits inside its fire.'},
+    {speaker:'Eli',text:'You came for me.'}))saveSession(s);
+  if(!run.maraFreed&&!run.completedStory['mara-knock']&&Math.abs(x-STALL.shutter)<450){s.knockClock-=delta;if(s.knockClock<=0){s.knockClock=2600;s.audio.cue('knock');s.notice('Knocking... from the ruined toy stall.');}}
+  if(run.maraFreed&&!run.heardNia&&s.memory.isRestoredAt('bridge',REFUGE.hearth,GROUND-40)&&x>REFUGE.oldRoad&&x<REFUGE.barrier){
+    if(run.hearNia()){s.story('refuge-reunion',{speaker:'Nia',text:'Mama said wait by the fire. Eli went back to the tower.'},{speaker:'Rowan',text:'I heard her. At the market.'},{speaker:'Nia',text:'You can hear her too?'});saveSession(s);}
   }
+  if(run.maraFreed&&!run.heardTomas&&!run.bridgeReturnOpen&&x>REFUGE.barrier){s.player.body.x-=x-REFUGE.barrier;s.player.setVelocityX(Math.min(0,s.player.body.velocity.x));if(!s.noticeRemaining)s.notice('Remember the refuge hearth. Tomas knows the crossing.');}
 }

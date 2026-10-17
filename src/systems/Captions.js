@@ -1,7 +1,7 @@
 import { panel } from '../presentation/ui.js';
 // Bottom-of-screen story captions with a typewriter effect.
 
-export const FONT = 'Trebuchet MS, sans-serif';
+export const FONT = '"Pixelify Sans", sans-serif';
 
 export class Captions {
   constructor(scene, depth = 100) {
@@ -9,8 +9,8 @@ export class Captions {
     const { width, height } = scene.scale;
     // The cellar's walk line is y650: bottom captions would hide its pickups,
     // hands and feet. Give the interior a clear upper caption band instead.
-    const captionY = scene.scene.key === 'Hearth' ? 212 : height - 70;
-    this.box = panel(scene,width/2,captionY,width-240,72,{depth,alpha:.95}).setAlpha(0);
+    const captionY = scene.scene.key === 'Hearth' ? 260 : height - 70;
+    this.box = panel(scene,width/2,captionY,width-240,86,{depth,alpha:.95}).setAlpha(0);
     this.text = scene.add
       .text(190, captionY, '', { fontFamily: FONT, fontSize: '21px', color: '#f3e6d0', align: 'left', resolution:2, fixedWidth:900, lineSpacing:6, wordWrap: { width: 900 } })
       .setOrigin(0,0.5)

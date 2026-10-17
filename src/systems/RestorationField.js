@@ -25,10 +25,15 @@ export class RestorationField {
     this.targets.add(object);
   }
   update(fire,alpha) {
-    this.radius=fire?fieldRadius(fire)*alpha:0;
+    const t=this.scene.memory.elapsed;
+    const unstable=this.scene.memory.phase==='warning';
+    // Cosmetic breathing never changes fieldContains / collision availability.
+    const flicker=1+Math.sin(t*.017)*.008+Math.sin(t*.037)*.006*(unstable?2:1);
+    this.radius=fire?fieldRadius(fire)*alpha*flicker:0;
     if(fire)this.mask.setPosition(fire.x,fire.floor-45);
     this.mask.setDisplaySize(Math.max(.01,this.radius*2),Math.max(.01,this.radius*2));
-    const opacity=Math.min(1,alpha*3);
+    const glitch=alpha>.95&&t>3000&&t%5700<120;
+    const opacity=Math.min(1,alpha*3)*(glitch ? .72 : 1);
     for(const list of this.scene.regionVisuals.values()) for(const o of list) {
       this.attach(o);o.setAlpha(opacity);
     }

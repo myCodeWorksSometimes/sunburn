@@ -25,8 +25,8 @@ export class Pause extends Phaser.Scene {
       menuText(this,220,140,'Satchel',36).setOrigin(0,.5).setFontFamily(UI.title).setColor(UI.gold);
 
       const items = [
-        { key: 'kit-lantern', title: 'Lantern', owned: run.hasLantern, status: run.hasLantern ? 'Carried' : 'Missing',
-          detail: 'Grandfather’s lantern wakes old fires.\nE · Remember (25 flame)     F · Sweep (20 flame)' },
+        { key: 'kit-lantern', title: 'Lantern & sword', owned: run.hasLantern, status: run.hasLantern ? (source.combat.weapon.drawn?'Lantern on ground':'Lantern carried') : 'Missing',
+          detail: 'X · Draw sword / retrieve nearby lantern. F · Attack.\nSword: no flame cost. Lantern must stay on the ground.' },
         { key: 'kit-cup', title: 'Ember cup', owned: run.hasEmberCup, status: run.hasEmberCup ? 'Carried' : 'Missing',
           detail: 'Carries a memory ember safely.\nFound in the playground treehouse.' },
         { key: 'kit-flame', title: 'Hearth ember', owned: run.hasHearthEmber, status: run.hasHearthEmber ? 'Protected' : run.rescuedEli ? 'Given to Eli' : 'Missing',
@@ -99,12 +99,16 @@ export class Pause extends Phaser.Scene {
       for(const r of REGIONS) {
         const x=scaleX(r.x),w=r.width/WORLD_WIDTH*840,seen=run.maxXReached>=r.x;
         this.add.rectangle(x+w/2,332,w-3,54,seen?0x302c28:0x151923).setStrokeStyle(target===r.id?2:1,target===r.id?0xf3cc87:0x655640);
-        const names={yard:'Garden',lane:'Lane',square:'Market',bridge:'Refuge',camp:'Campfire',swings:'Swings',treehouse:'Treehouse',canal:'Canal','tower-court':'Tower\ncourt','tower-base':'Bell\nworks','tower-crown':'Tower\ncrown'};
-        menuText(this,x+w/2,332,names[r.id],16,seen?'#e0cba4':'#85808a').setLineSpacing(3);
+        const names={yard:'Garden',lane:'Lane',square:'Market',bridge:'Refuge\nFoundry',camp:'Fire',swings:'Swings',treehouse:'Treehouse',canal:'Canal','tower-court':'Tower\ncourt','tower-base':'Bell\nworks','tower-crown':'Tower\ncrown'};
+        const label=menuText(this,x+w/2,332,names[r.id],16,seen?'#e0cba4':'#85808a').setLineSpacing(3);
+        if(label.width>w-8)label.setFontSize(Math.max(10,Math.floor(16*(w-8)/label.width)));
       }
       for(const [a,b,label] of [[0,8800,'PROLOGUE / ACT 1'],[8800,13600,'ACT 2'],[13600,WORLD_WIDTH,'ACT 3']]) menuText(this,scaleX((a+b)/2),238,label,15,UI.gold);
       const px=current==='home'?185:scaleX(source.player.x),py=current==='home'?440:382;
       this.add.image(px,py,'kit-lantern').setDisplaySize(20,26);menuText(this,px,py+26,'You',14,'#9bd3db');
+        if(source.combat.weapon.drop&&current!=='home'){
+          const lx=scaleX(source.combat.weapon.drop.x);this.add.image(lx,416,'kit-lantern').setDisplaySize(18,23);menuText(this,lx,440,'Lantern',13,UI.gold);
+        }
       road.lineBetween(225,332,185,440);menuText(this,185,483,'Home',16,UI.gold);
       this.add.image(185,440,'kit-door').setDisplaySize(31,38);
       if(target==='home')this.add.circle(185,440,26).setStrokeStyle(2,0xf3cc87).setFillStyle(0,0);
@@ -118,12 +122,13 @@ export class Pause extends Phaser.Scene {
     } else {
       const entries = [
         ['home-first-memory', 'The lantern wakes old fires. Their memories restore daylight and safe paths.'],
-        ['mara-freed', 'Mara was trapped in her stall. Eli came back for the little ones and took them toward the bridge.'],
+          ['mara-freed', 'Mara died at the stall. Her memory says Eli led Tomas and Nia to the bridge.'],
         ['five-hand-defeated', 'Five-Hand hid its heart under the lantern card. I found it. The market road is open.'],
         ['braced-defeated', 'The braced shadow broke itself on the barrier. The bridge works are open.'],
         ['bridge-brake', 'Gears aligned and the brake set. The bridge fire can hold the deck now.'],
-        ['refuge-reunion', 'Nia: Eli sent the children down the old road when the bell rang. He didn’t come.'],
-        ['refuge-hearth', 'Mara spent her hearth’s ember to bring Tomas back from a frozen moment. Their house no longer remembers.'],
+          ['refuge-reunion', 'Tomas and Nia are tethered to their fire. Secure the bridge, then guide them with the lantern.'],
+          ['refugees-rescued', 'I led them across myself. They remain alive when the memory fades.'],
+        ['refuge-hearth', 'Mara is a dead record. Tomas and Nia are still tethered to the crossing; my lantern can guide them across the secured bridge.'],
         ['act-2', 'Eli went to the playground. The swing crossing returns in remembered time.'],
         ['drawing-found', 'Eli led the children to the clock tower. His drawing and his ember cup were in the treehouse.'],
         ['eli-found', 'Eli answered three knocks. He is alive, trapped at the tower window. An ember from home can bring him back.'],
@@ -133,7 +138,7 @@ export class Pause extends Phaser.Scene {
         ['act-3', 'Three bells will break the guardian’s wards. Then I can reach Eli.'],
         ['rescue', 'The daylight faded. Eli stayed.'],
         ['view-platform', 'We stood at the tower arches. You can see our house from up there.'],
-        ['nia-eli', 'Nia saw Eli at the refuge. The children he saved are safe.'],
+        ['nia-eli', run.refugeesRescued?'Tomas and Nia made it across. Eli is with me. We are going home.':'The refuge remains a memory. Eli is with me. We are going home.'],
         ['home-together', 'I came this time. No more later.'],
       ].filter(([id]) => run.completedStory[id]);
       if (!entries.length) entries.push(['start', 'Find Grandfather’s lantern in the cellar. E interacts; W/S climbs.']);
@@ -159,7 +164,7 @@ export class Pause extends Phaser.Scene {
     box.add(this.add.rectangle(640,360,1280,720,0x080b12,.85).setInteractive());
     box.add(panel(this,640,350,760,460,{depth:0,fixed:false}));
     box.add(menuText(this,640,170,'Controls',32,UI.gold).setFontFamily(UI.title));
-    const rows=[['A / D','Move'],['Space','Jump'],['W / S','Climb'],['E','Interact / remember'],['F','Lantern sweep'],['Q','Use oil'],['Hold R','Rest at a fire'],['I / M / J','Satchel / map / journal']];
+    const rows=[['A / D','Move'],['Space','Jump'],['W / S','Climb'],['E','Interact / remember'],['F / X','Attack / draw sword'],['Q','Use oil'],['Hold R','Rest at a fire'],['I / M / J','Satchel / map / journal']];
     rows.forEach(([key,label],i)=>{const x=i<4?340:680,y=240+(i%4)*58;box.add(menuText(this,x,y,key,18,UI.gold).setOrigin(0,.5));box.add(menuText(this,x+100,y,label,18).setOrigin(0,.5));});
     box.add(menuText(this,640,526,'Close',20,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>box.destroy(true)));
     this.controlPanel=box;

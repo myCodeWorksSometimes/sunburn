@@ -23,9 +23,17 @@ export class Boot extends Phaser.Scene {
     this.add.text(width / 2, height / 2 - 30, 'kindling…', { fontFamily: FONT, fontSize: '22px', color: '#d8c8b0' }).setOrigin(0.5);
     this.load.on('progress', (p) => (bar.width = 400 * p));
     for (const name of ['score','fire','step-stone','step-wood','knock','door','impact','take','sweep','monster-roar','monster-hit','monster-death']) this.load.audio(`audio-${name}`, `audio/${name}.ogg`);
+    for(const name of ['stalk','snarl','lunge','summon','blade','machinery','memory-surge','memory-break','bossbed','step-wet'])this.load.audio(`audio-${name}`,`audio/${name}.ogg`);
     this.load.image('production-ui','art/production/ui-atlas.png');
     this.load.image('production-stall','art/production/mara-stall.png');
     this.load.image('production-bosses','art/production/boss-atlas.png');
+    this.load.spritesheet('boss-motion','art/production/boss-motion.png',{frameWidth:256,frameHeight:256});
+    this.load.spritesheet('sword-motion','art/production/sword-motion.png',{frameWidth:155,frameHeight:110});
+    this.load.spritesheet('echo-motion','art/production/echo-motion.png',{frameWidth:96,frameHeight:112});
+    this.load.image('foundry','art/production/foundry.png');
+    this.load.image('ui-frame','art/production/ui-frame.png');
+    this.load.image('stall-ruined','art/production/stall-ruined.png');
+    for(const name of ['gear-large','gear-small','lever-base','lever-handle','brake-base','brake-handle','machine-plate','supply-ledge'])this.load.image(name,`art/production/${name}.png`);
     for(const who of ['mara','tomas','nia']) this.load.spritesheet(`npc-${who}`,`art/production/npc-${who}.png`,{frameWidth:96,frameHeight:112});
     for (const key of BACKGROUNDS) this.load.image(key, `bg/${key}.png`);
     // Region paintings added later (Act 2/3) are listed by tools/process_backgrounds.py.

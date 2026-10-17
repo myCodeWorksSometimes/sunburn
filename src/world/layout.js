@@ -4,8 +4,8 @@ export const REGIONS = [
   { id: 'yard', act: 'Prologue', name: 'The garden', x: 0, width: 1550, art: 'p2_yard', paintGround: 508 },
   { id: 'lane', act: 'Act 1', name: 'Village lane', x: 1550, width: 1650, art: 'a1_lane', paintGround: 555 },
   { id: 'square', act: 'Act 1', name: 'Market square', x: 3200, width: 1650, art: 'a1_square', paintGround: 545 },
-  { id: 'bridge', act: 'Act 1', name: 'Bridge Refuge', x: 4850, width: 2250, art: 'a1_bridge', paintGround: 410 },
-  { id: 'camp', act: 'Act 1', name: 'Village campfire', x: 7100, width: 1700, art: 'a1_campfire', paintGround: 545 },
+  { id: 'bridge', act: 'Act 1', name: 'Bridge Refuge', x: 4850, width: 3250, art: 'a1_bridge', paintGround: 410 },
+  { id: 'camp', act: 'Act 1', name: 'Village campfire', x: 8100, width: 700, art: 'a1_campfire', paintGround: 545 },
   { id: 'swings', act: 'Act 2', name: 'The playground', x: 8800, width: 1600, art: 'a2_swings', fallback: 'p2_yard', artGround: 0.68, paintGround: 508 },
   { id: 'treehouse', act: 'Act 2', name: 'The treehouse', x: 10400, width: 1600, art: 'a2_treehouse', fallback: 'a1_campfire', artGround: 0.73, paintGround: 545 },
   { id: 'canal', act: 'Act 2', name: 'Canal road', x: 12000, width: 1600, art: 'a2_canal', fallback: 'a1_bridge', artGround: 0.72, paintGround: 410 },
@@ -23,8 +23,8 @@ export const SPAWNS = {
   shortcut: { x: 3410, y: GROUND },
   refuge: { x: 5350, y: GROUND },
   oldRoadWest: { x: 4935, y: GROUND },
-  bridge: { x: 6350, y: GROUND },
-  farBank: { x: 6950, y: GROUND },
+  bridge: { x: 7440, y: GROUND },
+  farBank: { x: 8050, y: GROUND },
   camp: { x: 8120, y: GROUND },
   playground: { x: 9110, y: GROUND },
   swingBank: { x: 10130, y: GROUND },
@@ -64,9 +64,9 @@ export const A3 = {
 };
 // Bridge works (CAMPAIGN Scene 7), in the space before the bridge fire: the
 // Braced Shadow's arena, a crate to dodge onto, the cracked barrier and the gear bay.
-export const BRIDGE_WORKS = { arenaMin: 5660, arenaMax: 6090, elite: 5740, crate: [5940, 6030], barrier: 6110,
-  leverA: 6170, leverB: 6230, brake: 6300, bigGear: { x: 6200, y: 405, r: 44 }, smallGear: { x: 6276, y: 372, r: 26 } };
-export const BRIDGE_GAP = { x1: 6460, x2: 6880 };
+export const BRIDGE_WORKS = { arenaMin: 6100, arenaMax: 7030, elite: 6460, crate: [6860, 7000], barrier: 7060,
+  leverA: 7150, leverB: 7240, brake: 7350, bigGear: { x: 7190, y: 397, r: 53 }, smallGear: { x: 7280, y: 397, r: 37 } };
+export const BRIDGE_GAP = { x1: 7550, x2: 7970 };
 export const YARD_GAP = { x1: 780, x2: 1100 };
 export const CAMP_GAP = { x1: 8400, x2: 8720 };
 export const SWING_GAP = { x1: 9760, x2: 10060 };
@@ -81,7 +81,7 @@ export const FIRES = [
   { id: 'yard-fire', regionId: 'yard', x: 490, floor: GROUND, duration: 14000, spawnId: 'yard' },
   { id: 'lane-fire', regionId: 'lane', x: 1710, floor: GROUND, duration: 14000, spawnId: 'lane' },
   { id: 'square-fire', regionId: 'square', x: 3250, floor: GROUND, duration: 18000, spawnId: 'square' },
-  { id: 'bridge-fire', regionId: 'bridge', x: 6350, floor: GROUND, radius: 800, duration: 14000, spawnId: 'bridge' },
+  { id: 'bridge-fire', regionId: 'bridge', x: 7440, floor: GROUND, radius: 800, duration: 16000, spawnId: 'bridge' },
   { id: 'camp-fire', regionId: 'camp', x: 8120, floor: GROUND, radius: 720, duration: 20000, spawnId: 'camp' },
   { id: 'swing-fire', regionId: 'swings', x: 9110, floor: GROUND, radius: 1060, duration: 16000, spawnId: 'playground' },
   { id: 'treehouse-fire', regionId: 'treehouse', x: 10520, floor: GROUND, radius: 900, duration: 20000, spawnId: 'treehouse' },

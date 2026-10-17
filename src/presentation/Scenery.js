@@ -28,9 +28,13 @@ export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = 
     const height = y >= 550 ? 180 : 45;
     const source = scene.textures.get('stone-ground').getSourceImage();
     block.add(scene.add.tileSprite(0, 0, width, height, 'stone-ground').setOrigin(0).setTileScale(180 / source.height).setTint(0xbbb7bd));
-    if (y < 550) {
-      // Remembered stair treads sit on complete stone columns, not floating boxes.
-      block.add(scene.add.tileSprite(10, 42, Math.max(1, width - 20), 560 - y - 42, 'stone-ground').setOrigin(0).setTileScale(.2).setTint(0x777780));
+    if (y < 550 && regionId==='square') {
+      // Repaired market scaffold: thin stone treads on braced timber supports.
+      // Keep the painting visible underneath instead of filling huge columns.
+      const supports=scene.add.graphics();block.add(supports);
+      supports.lineStyle(7,0x3c302b).lineBetween(14,22,14,560-y).lineBetween(width-14,22,width-14,560-y);
+      supports.lineStyle(5,0x67513a).lineBetween(14,30,width-14,560-y-8);
+      supports.lineStyle(2,0xa18759).lineBetween(12,22,12,560-y);
     }
     if (regionId) {
       const growth = scene.add.tileSprite(0, -25, width, 30, 'living-edge').setOrigin(0).setAlpha(0);

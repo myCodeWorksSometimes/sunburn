@@ -1,13 +1,18 @@
 import { Adventure } from './Adventure.js';
-import { REGIONS, SPAWNS, FIRES, GROUND, WORLD_WIDTH, regionAt, BRIDGE_GAP, YARD_GAP, GAPS, FIVE_HAND } from '../world/layout.js';
+import { REGIONS, SPAWNS, FIRES, GROUND, WORLD_WIDTH, regionAt, BRIDGE_GAP, YARD_GAP, GAPS, FIVE_HAND, BRIDGE_WORKS } from '../world/layout.js';
 import { buildChapters, tickChapters, memoryChapter } from '../world/Chapters.js';
 import { addOutdoorAtmosphere, placeProp } from '../presentation/Scenery.js';
 import { buildBackdrop, tickBackdrop, onPainting, isWhole } from '../presentation/Backdrop.js';
 import { cellarHatch, buildMarketCourt } from '../presentation/Act1Presentation.js';
+import { DistantPresence } from '../presentation/DistantPresence.js';
 
 export class World extends Adventure {
   constructor() { super('World'); }
   getSpawn(id) { return SPAWNS[id] || SPAWNS.front; }
+  getGoal() {
+    if(this.refuge?.escort)return {text:'Lead Tomas and Nia across the secured bridge. Stay close and carry the lantern.',scene:'World',x:BRIDGE_GAP.x2+200,y:GROUND};
+    return super.getGoal();
+  }
 
   create() {
     const spawnId = this.entry.spawnId || 'front';
@@ -16,6 +21,7 @@ export class World extends Adventure {
     addOutdoorAtmosphere(this, WORLD_WIDTH, { sky: false });
     for (const r of REGIONS) this.regionBounds.set(r.id, { x: r.x, width: r.width });
     this.backdrop = buildBackdrop(this, REGIONS);
+    this.distantPresence=new DistantPresence(this);
     for (const r of REGIONS) {
       const waterPast = this.add.graphics().setDepth(-8).setAlpha(0);
       if (r.id === 'bridge') waterPast.fillGradientStyle(0x38575e, 0x38575e, 0x111c2b, 0x111c2b).fillRect(BRIDGE_GAP.x1, GROUND, BRIDGE_GAP.x2 - BRIDGE_GAP.x1, 160);
@@ -60,12 +66,14 @@ export class World extends Adventure {
   }
 
   tick(delta) {
+    this.distantPresence.update(delta);
     tickBackdrop(this, this.backdrop, this.restoredView);
     if (this.memory.isRestored('square')) this.clockHand.rotation += delta / 800;
     const region = regionAt(this.player.x);
     const inCourt = this.player.x >= FIVE_HAND.arenaStart - 110 && this.player.x < 4850;
-    this.cameraFocusX = inCourt && this.run.maraFreed && !this.run.villageGateOpen ? 4440 : null;
-    this.regionText.setText(inCourt ? 'Act 1 · The Card Court' : `${region.act} · ${region.name}`);
+    const inFoundry=this.player.x>BRIDGE_WORKS.arenaMin-40&&this.player.x<BRIDGE_WORKS.barrier+80&&!this.run.clearedEncounters['braced-shadow'];
+    this.cameraFocusX = inCourt && this.run.maraFreed && !this.run.villageGateOpen ? 4440 : inFoundry?(BRIDGE_WORKS.arenaMin+BRIDGE_WORKS.barrier)/2:null;
+    this.regionText.setText(inCourt ? 'Act 1 · The Card Court' : this.player.x>BRIDGE_WORKS.arenaMin&&this.player.x<BRIDGE_WORKS.barrier ? 'Act 1 · Abandoned Foundry' : `${region.act} · ${region.name}`);
     if (this.regionId !== region.id) {
       const previous = this.regionId; this.regionId = region.id;
       this.events.emit('region:entered', { regionId: region.id, fromRegionId: previous });

@@ -27,6 +27,9 @@ export class MemorySystem {
     this.elapsed = 0;
     this.remaining = fire.duration;
     this.scene.events.emit('fire:ignited', { fireId: fire.id, regionId: fire.regionId, x: fire.x, y: fire.floor });
+    this.scene.memoryShock=380;
+    this.scene.audio?.cue('memory-surge');
+    this.scene.cameras?.main.shake(240,.0025);
     return true;
   }
 

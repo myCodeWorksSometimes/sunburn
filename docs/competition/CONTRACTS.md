@@ -1,5 +1,48 @@
 # Integration contracts
 
+## Act 1 horror revision — 18 October 2026 (supersedes old coordinates below)
+
+- Act2/3 coordinates unchanged, world width17470. Bridge region4850–8100,
+  camp8100–8800; refuge hearth5350. Foundry arena6100–7060, boss6460,
+  ledge6860–7000 at485, barrier7060, controls7150/7240/7350, fire7440,
+  river7550–7970, farBank spawn8050. Paintings use native arch scale, not stretching.
+- `CombatSystem.weapon: WeaponState`: drawn/drop{x,floor}/carrying. X draws only
+  when grounded, no action/hurt/climb/transfer. F sword:160ms windup,115px reach,
+  520ms recovery, zero flame. Existing sweep fuel20 and directed-hit rules remain.
+  Dynamic dropped lantern collides with enabled surfaces, light follows THAT item,
+  position updates each frame, X retrieves within80px. Rest/remember/climb/exits
+  require carrying; death/abyss resets mode and returns the lantern. Retrieval
+  remains possible after Eli's rescue; drawing anew then is disabled.
+- Act1 ferals: pursuit245px/s; locked lunge440px/s after420ms tell;450ms attack,
+  650ms recovery; hit staggers. Act2 Pouncer / Act3 Warden profiles retained.
+- Braced: three health, one hit per stunned opening, back-only.1000ms tell,
+  charge540px/s; final health720ms/675px/s. Barrier impact2300ms opening.
+  Summon1250ms, at most TWO living offspring; reset/defeat clears them and seals.
+  Remaining on an elevated ledge1400ms enables a locked-position tendril tell:
+  650ms warning,200ms damage window,1050ms total; move sideways to evade.
+  Existing encounter IDs / clear flags retained. Mist gates and fight camera
+  keep combat in its dedicated foundry; sprite animation rows are real frames.
+- Gear A/B logical quarter turns unchanged (A,A,B from reset); rendered meshing
+  gears turn oppositely and handles pivot. A turn is locked during its480ms
+  motion. Local `isRestoredAt` is required, including brake; the refuge fire
+  cannot power remote machinery. Boss defeat unlocks controls.
+- `run.refugeesRescued` is a saved boolean, defaultfalse on old saves. Refuge fire
+  is now a20s, radius460 memory. Hold E900ms after `bridgeReturnOpen` to start an
+  escort. Family follows185px/s; six seconds of lost carried light/>440px distance
+  returns their tether to refuge for retry. Both crossing x8000 anchors rescue.
+  Their camp homes8020/8300 stay clear of campfire8120. Rescue clears its Crawler.
+  Escort-in-progress is transient; death/scene recreation returns unrescued echoes.
+  `maraFreed` remains a backward-compatible shutter/memory flag, not living Mara.
+- `RestorationField` visual radius breathes; brief120ms opacity dips every5.7s.
+  `fieldContains`/surface collision remain deterministic. Ignition380ms enemy
+  shock,1.2s expansion, existing useful duration/cooldown contract retained.
+- AudioCues now owns music/fire/bossbed plus tracked one-shots. All obey
+  pause/mute/cleanup; active effects obey immediate volume changes. New local
+  CC0 edits/provenance: public/audio/LICENSES.md. Pixelify font/OFL bundled offline.
+- UI frame uses16px side/12px top-bottom9-slice borders. Content safe insets
+  enforced at1280 logical size, scaled to960. Map labels fit their region widths.
+  World captions650/86px; interior captions260/86px, separate from resource HUD.
+
 Status: expanded original Acts 1–3 are implemented and checked through short
 production interactions. No uninterrupted new full run is claimed. Browser-local
 autosave is implemented; the original module proposals and earlier interfaces

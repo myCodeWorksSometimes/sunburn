@@ -1,6 +1,6 @@
 import { Crawler } from '../entities/Crawler.js';
 import { placeProp } from '../presentation/Scenery.js';
-import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, A3, regionAt } from './layout.js';
+import { CAMP_GAP, BRIDGE_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, A3, regionAt } from './layout.js';
 import { saveSession } from './WorldState.js';
 import { buildAct1Story, tickAct1Story } from './Act1Story.js';
 import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
@@ -36,7 +36,7 @@ export function buildChapters(s) {
   buildFiveHand(s);
   buildBridgeWorks(s);
   enemy(s, { id: 'lane-crawler', x: 2480, floor: GROUND, minX: 1820, maxX: 2860, regionId: 'lane' });
-  enemy(s, { id: 'camp-crawler', x: 7970, floor: GROUND, minX: 7690, maxX: 8240, regionId: 'camp' });
+  if(!run.refugeesRescued)enemy(s, { id: 'camp-crawler', x: 8280, floor: GROUND, minX: 8010, maxX: 8340, regionId: 'camp' });
   s.campSurface = s.addSurface(CAMP_GAP.x1, CAMP_GAP.x2, GROUND, { regionId: 'camp', restoredOnly: true, material: 'bridge', permanent: () => run.campReturnOpen });
 
   // ACT 2: a moving restored swing, treehouse evidence, home return, canal wheel.
@@ -215,13 +215,14 @@ export function tickChapters(s, delta) {
 
 export function memoryChapter(s, fire) {
   if (fire.id === 'rescue-memory') return;
+  if(fire.id==='refuge-hearth'){s.notice('Their tether holds only inside the fire. Secure the bridge, then guide them out.');return;}
   const run = s.run;
   const id = fire.regionId;
   if (id === 'yard') {
     s.story('yard-memory', { speaker: 'Rowan', text: 'Daylight. Even the grass remembers.' });
     s.echo([point(300), point(1350)]);
   } else if (id === 'lane') {
-    s.notice('F: face a Crawler and sweep twice, or evade it from the crate.'); s.echo([point(1750), point(2950)]);
+    s.notice('X · Draw sword; lantern stays on the ground. F · Strike after a lunge.'); s.echo([point(1750), point(2950)]);
   } else if (id === 'square') {
     if (!run.maraFreed) {
       s.story('square-memory', { speaker: 'Recorded Eli', text: 'You moved your hand. The card stayed there.' },
@@ -230,7 +231,7 @@ export function memoryChapter(s, fire) {
     s.echo([point(3250), point(3335, 500), point(3450, 440), point(3580, 380), point(MARA_STALL.release - 40, MARA_STALL.roof)], { delay: 1600 });
   } else if (id === 'bridge') {
     if (!run.bridgeBrakeSet) s.story('bridge-gears-memory', { text: 'The bridge machinery wakes. Lever A turns both gears, lever B the small one. Line up both marks, then set the brake.', color: '#ebd5b0' });
-    else { s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(6350), point(6950)]); }
+    else { s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(fire.x), point(BRIDGE_GAP.x2+55)]); }
   } else if (id === 'camp') {
     s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(8120), point(8900)]);
   } else if (id === 'swings') {

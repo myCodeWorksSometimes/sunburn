@@ -45,14 +45,21 @@ export function registeredPainting(scene, r, state) {
   const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
   ctx.translate(bleed,0);
   if (r.id === 'bridge') {
-    // Bank art and the gameplay crossing must agree. The old whole-image scale
-    // put painted cliffs inside the real gap and a painted pit under solid land.
     const gapLeft = BRIDGE_GAP.x1 - r.x, gapRight = BRIDGE_GAP.x2 - r.x;
-    ctx.drawImage(src, 0, 0, 450, src.height, 0, 150, gapLeft, src.height);
-    ctx.drawImage(src, 900, 0, src.width - 900, src.height, gapRight, 130, r.width - gapRight, src.height);
+    // Never stretch a 450px arch across the entire approach. Continue the lane
+    // at native pixel scale; register the refuge arch and river banks separately.
+    const lane=scene.textures.get(`bg_a1_lane_${state}`).getSourceImage();
+    for(let x=0;x<gapLeft;x+=lane.width)ctx.drawImage(lane,x,GROUND-555);
+    const bank=document.createElement('canvas');bank.width=495;bank.height=792;
+    const bc=bank.getContext('2d');bc.imageSmoothingEnabled=false;bc.drawImage(src,0,0,450,720,0,0,495,792);
+    bc.globalCompositeOperation='destination-in';const fade=bc.createLinearGradient(0,0,495,0);
+    fade.addColorStop(0,'rgba(0,0,0,0)');fade.addColorStop(.13,'rgba(0,0,0,1)');fade.addColorStop(.86,'rgba(0,0,0,1)');fade.addColorStop(1,'rgba(0,0,0,0)');bc.fillStyle=fade;bc.fillRect(0,0,495,792);
+    ctx.drawImage(bank,300,GROUND-410*1.1);
+    ctx.clearRect(gapLeft,0,gapRight-gapLeft,720);
+    ctx.drawImage(src,900,0,src.width-900,src.height,gapRight,GROUND-410,src.width-900,src.height);
   } else {
-    const scale = r.width / src.width;
-    ctx.drawImage(src, 0, GROUND - r.paintGround * scale, r.width, src.height * scale);
+    const scale = r.id==='camp'?1:r.width / src.width;
+    ctx.drawImage(src, 0, GROUND - r.paintGround * scale, src.width*scale, src.height * scale);
     if (r.id === 'yard') {
       // Keep the real pit clear; only the restored bridge supplies its collider.
       ctx.clearRect(YARD_GAP.x1 - r.x, GROUND + 4, YARD_GAP.x2 - YARD_GAP.x1, 160);

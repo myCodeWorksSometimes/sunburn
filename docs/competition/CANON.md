@@ -1,5 +1,30 @@
 # Canon — latest user-approved world rules
 
+## Latest horror/story decision — 18 October 2026
+
+- Mara at the toy stall is dead. She is a replayed echo; she never walks to the
+  refuge as a living duplicate. When her restored pocket fades, her image becomes
+  a clothed skeleton, dissolves into ash, and the kiosk is a physical ruin.
+- Tomas and Nia are still tethered to the crossing. Unanchored, their fire recalls
+  them and its expiry shows bones/ash. Rowan can personally guide them across the
+  secured present-day bridge with his carried lantern. That explicit rescue
+  anchors them alive. Simply visiting the refuge does not rescue them.
+- Eli is held more deeply by the tower and still needs the unique home ember.
+  Family escort is an additional rescue, not permission to bypass his quest.
+- X draws Rowan's sword and sets down the lantern. F becomes a short sword slash
+  with no flame cost. The lantern supplies stationary light and must be recovered
+  nearby; it falls if temporary support disappears. Death/abyss recovery cannot
+  permanently lose this quest item. Lantern sweep remains available while carried.
+- Use actual uploaded hero/creature/village references before generating assets.
+  Pixelated art, actual animation frames, painted moving mechanisms and a clean
+  pixel UI/font replace static poses, floating discs and intrusive frame spikes.
+- Cosmetic memory-edge flicker and brief instability do not flicker colliders.
+  The meteor-corrupted present remains night outside the local fire pocket.
+
+See ACT1-HORROR.md and art/production/HORROR-ASSETS.md. Older automatic Mara
+reunion / already-saved Tomas dialogue below is superseded. One legacy sentence
+in teammate-owned TowerStory.js still requires its owner's update (STATUS).
+
 ## Latest production decision — 18 October 2026
 
 Restoration spreads outward from the source fire through a soft circular light

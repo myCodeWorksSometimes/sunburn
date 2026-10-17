@@ -15,7 +15,7 @@ and simple readable lighting, then polish art and atmosphere after the core is p
 
 The current route completes the original chapter structure: **Prologue → Act 1:
 The Ruined Village → Act 2: The Playground → Act 3: The Clock Tower → home epilogue**.
-An 18000px continuous outdoor world connects restored crossings, a moving swing,
+A 17470px continuous outdoor world connects restored crossings, a moving swing,
 treehouse evidence, a return-home quest, canal mechanism, three bell relays and a
 Bell Warden encounter. Rescue Eli and return to the family hearth to finish.
 The original fixed scenes remain development references. Read the
@@ -34,7 +34,10 @@ npm run dev
 Then open http://localhost:5173.
 
 **Controls:** A/D or arrows move; Space jumps; W/S climb; E interacts/remembers;
-F performs a lantern sweep; Q uses oil; I opens the paused satchel; M opens the map;
+F attacks: lantern sweep while carrying it, sword slash when drawn. X sets the
+lantern down and draws the sword; press X within reach to retrieve it. Sword
+attacks cost no flame, but the light stays where you put it. Retrieve the lantern
+before climbing, remembering, resting or leaving. Q uses oil; I opens the paused satchel; M opens the map;
 J opens the journal; hold R at a fire to rest; Escape pauses; Enter advances captions
 or skips a short scene. Title Enter continues a saved run when present; N starts fresh.
 
@@ -43,6 +46,13 @@ Remembering costs 25 flame, a sweep costs 20, and ordinary walking/light never
 drains fuel. Active memories cannot be restarted; ended memories cool for four
 seconds. Resting for two seconds recovers supplies without duplicating quest items.
 The [mechanics plan](docs/competition/MECHANICS-PLAN.md) describes the area-by-area design.
+
+Act 1 horror revision: Mara is a dead memory at the toy stall. Remember the
+refuge fire to meet Tomas and Nia, clear the abandoned foundry, align its gears,
+set the brake and cross. Then return to the refuge, hold E to share the lantern,
+and personally lead the family across the secured bridge. Stay close and carry
+the lantern; a broken tether can be retried at the refuge. Their rescued state
+persists after the memory expires. See [revision and human checks](docs/competition/ACT1-HORROR.md).
 
 ## Production and isolated playtest
 

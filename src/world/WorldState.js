@@ -25,6 +25,7 @@ export class WorldState {
     this.maraFreed = false;
     this.heardNia = false;
     this.heardTomas = false;
+    this.refugeesRescued = false;
     // Campaign Scene 7: the bridge works' brake, set after aligning the gears.
     this.bridgeBrakeSet = false;
     // Campaign Scene 10: Eli answers three knocks; the Old Road opens from the tower.
@@ -147,11 +148,12 @@ export class WorldState {
       ? goal('Act 1: restore the market; climb the steps to the stall roof release', 'World', MARA_STALL.release, MARA_STALL.roof)
       : goal('Act 1: someone is knocking inside a market stall', 'World', MARA_STALL.shutter);
     if (this.maraFreed && !this.villageGateOpen) return goal('Act 1: defeat Five-Hand in the Card Court', 'World', MARA_STALL.exitGate - 140);
-    if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: follow Mara to the Bridge Refuge', 'World', REFUGE.mara);
+    if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: remember the Bridge Refuge hearth to find Mara’s family', 'World', REFUGE.hearth);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
     if (!this.bridgeReturnOpen && !this.clearedEncounters['braced-shadow']) return goal('Act 1: bait the Braced Shadow into the cracked barrier', 'World', BRIDGE_WORKS.crate[0]);
     if (!this.bridgeReturnOpen && !this.bridgeBrakeSet) return goal('Act 1: restore the bridge fire, line up both gear marks, then set the brake', 'World', BRIDGE_WORKS.brake);
     if (!this.bridgeReturnOpen) return goal('Act 1: restore the bridge fire and cross before it falls apart', 'World', FIRES.find(f => f.id === 'bridge-fire').x);
+    if (!this.refugeesRescued && !this.campReturnOpen) return goal('Act 1: return to the refuge fire; lead Tomas and Nia across with your lantern', 'World', REFUGE.hearth);
     if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', FIRES.find(f => f.id === 'camp-fire').x);
     if (!this.swingReturnOpen) return goal('Act 2: restore the swing crossing', 'World', 9110);
     if (!this.hasDrawing) return goal('Act 2: restore the treehouse; find Eli’s drawing above', 'World', 11000, 380);
@@ -185,7 +187,7 @@ export function decodeSave(text) {
     for (const key of ['completedStory', 'clearedEncounters']) {
       if (data[key] && typeof data[key] === 'object') for (const [id, value] of Object.entries(data[key])) if (/^[a-z0-9-]{1,80}$/.test(id) && value === true) run[key][id] = true;
     }
-    for (const id of [...FIRES.map(f => f.id), 'home-hearth']) if (data.litFires?.[id] === true) run.litFires[id] = true;
+    for (const id of [...FIRES.map(f => f.id), 'home-hearth','refuge-hearth']) if (data.litFires?.[id] === true) run.litFires[id] = true;
     for (const r of RELAYS) if (data.litFinaleLamps?.[r.id] === true) run.litFinaleLamps[r.id] = true;
     if (run.hasDrawing) run.hasEmberCup = true;
     // Saves from before the campaign: an open market or a crossed bridge means

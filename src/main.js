@@ -14,6 +14,7 @@ import { Credits } from './scenes/Credits.js';
 const debug = new URLSearchParams(location.search).has('debug');
 
 async function start() {
+  await document.fonts.load('18px "Pixelify Sans"');
   window.game = new Phaser.Game({
     type: Phaser.WEBGL,
     parent: 'game',

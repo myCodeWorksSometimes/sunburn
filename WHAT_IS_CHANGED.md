@@ -3,6 +3,45 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 1 horror combat, memories and pixel presentation
+
+- Added X sword draw/retrieval and F sword combat. Rowan sets the lantern down;
+  its light follows the physical dropped item. It falls when restored support
+  disappears. Flame-free short slashes trade carried light for reach/risk; death
+  and abyss recovery cannot lose the lantern. Retrieval also works after rescue.
+- Act 1 creatures pursue faster, telegraph locked lunges, stagger and dissolve
+  through actual animation frames. Braced Shadow has a separate painted foundry,
+  protected intro, mist seals, steady fight camera, faster final-health charges,
+  bounded offspring summons and a marked tendril strike against prolonged perching.
+- Replaced Braced's four static poses with 36 frames, added 32 sword frames and
+  three skeleton-to-ash sequences. Uploaded actual game reference sheets before
+  Gemini revisions. ChatGPT generated the final ruined kiosk after Gemini's limit.
+- Mara is a dead stall echo, no living duplicate at refuge. Healthy/ruined stall
+  follows the local memory pocket. Tomas/Nia require an explicit lantern escort
+  across the secured bridge; rescued state persists. They settle clear of the
+  campfire and clear its danger; unanchored echoes collapse when memory fades.
+- Gave the foundry more approach/arena space without shifting Acts 2/3. Registered
+  the arch at native scale, replaced square stair columns with scaffold supports,
+  painted the supply ledge and added a distant moving shadow silhouette.
+- Imported painted rotating gears, separate pivoting lever/brake parts and clean
+  pixel 9-slice UI. Bundled Pixelify Sans/OFL locally; corrected HUD padding,
+  caption/prompt separation, inventory spacing and narrow map labels.
+- Added fire-edge breathing/brief memory instability with stable colliders and
+  a short ignition shock. Replaced melodic score with recorded horror ambience,
+  boss tension layer, new creature/metal/memory cues and wet creature footsteps.
+  Audio pause/mute/volume/cleanup remains owned and tested. CC0 provenance retained.
+- Verification: 33 Node tests + production build. Short Chrome inputs/fixtures
+  checked sword counters, physical lantern recovery, boss intro/charge counter/
+  summons, gear handles/AAB/brake, timed bridge + expired return, escort start/
+  endpoint save, skeleton expiry, campfire access and 1280/960 UI/audio pause.
+  Complete fresh route, full escort/fight difficulty and listening remain human QA.
+- Known integration follow-up: teammate-owned TowerStory.js retains one old
+  Mara/Tomas ember sentence; exact correction is documented in ACT1-HORROR.md.
+  No edits were made to that owner's Act 3 geometry, paintings or story module.
+- Run `npm ci` then `npm run dev -- --host 127.0.0.1`, or build and `npm run demo`.
+  Canonical frozen demo remains http://127.0.0.1:4176/; the handoff records its
+  refreshed bundle. Prompt/source register: art/production/HORROR-ASSETS.md.
+
 ## 18 October 2026 — active sound controls and survivor label audit
 
 - Fixed already-playing creature/foley clips continuing through pause/mute.

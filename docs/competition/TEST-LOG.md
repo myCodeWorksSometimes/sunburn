@@ -1,5 +1,63 @@
 # Test evidence
 
+## Latest — 18 October 2026, Act 1 horror revision
+
+Tester: Codex integrator, Windows / installed Chrome, production snapshots on
+127.0.0.1:4177. Browser plugin not available; regular bundled Playwright used.
+Only short fixtures/input sequences; extended runs remain human-owned.
+
+- `npm test`: 33/33 pass. New coverage includes resource-free sword attacks,
+  attack guards, fixed drop position/retrieval reach, reset, rescued-family save
+  and recovery of a dropped lantern after Eli's rescue. Audio tests include the
+  third boss loop in pause/mute ownership. `npm run build` passes; standard
+  Phaser bundle-size warning remains. Release bundle: index-DiDMO2Gy.js.
+- Actual X/F: sword texture/state loaded; two recovery-window counters reduced a
+  feral from2→1→0 with flame100 unchanged. Moving away left light/drop behind;
+  distant X refused, nearby X retrieved. Drawing during an incoming lunge is
+  vulnerable, not an automatic interrupt. A lantern placed on a y500 restored
+  tread fell to560 when it expired, and remained retrievable. Actual death reset
+  returned the lantern, removed its body/collider and cleared sword mode.
+- Boss: protected intro reached zoom1.7 with frozen player/gameplay clock. A real
+  Space jump landed on the y485 ledge as the charge hit the barrier; sword back
+  counter reduced health3→2, one hit used. A summon wave produced two living
+  offspring. Final-hit fixture cleared minions/encounter/seals. These checks do
+  not certify a complete three-opening human fight or sustained spawn balance.
+  The ledge tendril locked x6925; actual D movement to6998 avoided its686ms
+  damage window while the marked point still correctly registered a hit.
+- Painted mechanism: actual E sampled handle rotation during motion; large and
+  small gears rotated oppositely. A,A,B aligned both marks; held E set brake and
+  enabled deck. A separate crossing fixture started with the defeated boss/brake
+  flags, ignited the fire with E, walked across to x8157 at feet560, then walked
+  back to x7444 after expiry with the permanent deck still enabled.
+- Refuge: E lit the memory; both echoes appeared. Held E started escort, actual D
+  moved their followers. An independent far-bank endpoint fixture anchored both
+  and wrote refugeesRescued=true to storage. No complete timed escort is claimed.
+  Restored saved-family fixture placed homes8020/8300, no camp Crawler, nearest
+  interaction camp-fire; actual E successfully restored that fire.
+- Market: restored Mara visible; expiry hid her, healthy alpha0, ruined kiosk
+  loaded, echo-motion frame2 (clothed skeleton) visible with drifting particles.
+  Runtime circle/physics boundary tests pass. Cosmetic flicker comfort remains
+  human judgement.
+- UI: actual I/M opened satchel/map; all three audio loops paused. Screenshots at
+ 1280×720 and960×540 inspected. Explicit HUD resource/objective rectangles fit
+  safe bounds; narrow Fire map label fits. Pixelify font loaded locally. Two-line
+  captions have separate padding from prompts and the interior resource HUD.
+- Final short production sessions had no page errors or failed assets. Early dev
+  hot-reloads briefly preceded completion of the boss audio file; this did not
+  reproduce after the completed build. An initial HUD assertion was corrected
+  to serialize Rectangle right/bottom getters; corrected bounds passed.
+
+Evidence outside Git: %TEMP%/embers-final-market-past.png,
+embers-final-market-expiry.png, embers-final-satchel-1280.png,
+embers-final-satchel-960.png, embers-final-map-fitted.png. Short test scripts:
+embers-horror-final-qa.cjs, embers-horror-ui-qa.cjs, embers-horror-edge-qa.cjs,
+embers-horror-lash-qa.cjs. Longer human checklist: ACT1-HORROR.md.
+
+Remaining: uninterrupted new Act1 route, all boss cycles/difficulty, whole escort
+and retry timing, full campaign/second-machine playthrough, speaker/headphone mix
+and subjective horror/art acceptance. Teammate-owned Act3 lore line is flagged,
+not claimed repaired.
+
 ## Implementation evidence — 17 October 2026
 
 Tester: current Codex integrator, Windows 10, Node 24.14.0, npm 11.9.0,
