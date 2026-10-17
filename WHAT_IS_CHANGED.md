@@ -3,6 +3,14 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Delivered Act 2 source art committed
+
+- `newart/` (25 delivered Gemini images, ~57 MB) is now tracked so
+  `tools/import_act2.py` can re-stage Act 2 art from a fresh clone.
+- `assets/backgrounds.zip` (39 MB) is left untracked: every file in it is
+  already tracked under `assets/backgrounds/`.
+- No code changes; no build or test run needed for this iteration.
+
 ## 18 October 2026 — Act 2 built with the delivered art
 
 - `tools/import_act2.py` names the 25 delivered images in `newart/` and stages
