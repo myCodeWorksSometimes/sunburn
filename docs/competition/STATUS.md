@@ -1,5 +1,20 @@
 # Live implementation status
 
+## Latest audit — 18 Oct, active audio and survivor labels
+
+-26/26 tests and build pass. AudioCues now owns active one-shot clips, so pause,
+ mute, effects-volume changes and shutdown apply immediately, not just to loops.
+- Survivor labels use actual painted heights, with12px head clearance and
+  title-case text; latest Gemini sprites remain unchanged.
+- All five outdoor fire E interactions were checked in short fixtures. Each spent
+  exactly25 flame, its visual/daylight radius matched, and an outside point stayed
+  corrupted. New build index-CZ5iGwVk.js; canonical :4176 refresh follows publication.
+- No Act3 source edits. This focused audit claim covers only AudioCues, Npc and its
+  tests/docs and is released at handoff. Earlier audits remain below for history.
+- Remaining required input: the user's fresh Act1 route/difficulty, visual
+  cohesion and listening feedback described in ACT1-PRODUCTION.md. These are
+  explicitly human-owned; production acceptance remains unverified.
+
 ## Latest handoff — 18 Oct, Act 1 production pass
 
 This section supersedes earlier no-generation/audio-placeholder/whole-region-day

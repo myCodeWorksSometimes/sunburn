@@ -542,3 +542,35 @@ asset/typography approval remain human-owned. No recorded human QA was invented.
   build index-CFJLCN30.js pass. .stfolder and assets/backgrounds.zip remain untracked.
   Workspace sunburn fast-forwarded from3d4a82b; its untracked story draft remains.
   Temporary owned4177/5174 servers stopped; only canonical4176 remains listening.
+
+
+## 18 Oct — final Act1 active-sound and label audit
+
+Current baseline b066e52 was clean except the user's untracked story draft.
+Worked in workspace sunburn on codex/act1-final-audit; preserved Act3 ownership.
+
+Browser plugin not available; bundled Playwright + local Chrome used. Flow:
+World → recorded creature cue → pause/mute/volume → resume → completion; then
+survivor rendering and five fire interactions. Viewport1280x720, local frozen
+preview :4177. Page title/URL and canvas render matched game; no framework overlay.
+
+- Before fix on canonical CFJLCN30: after cue/pause/mute, settingMutedtrue but
+  voiceStillPlayingtrue, voicePausedfalse, voiceMutedfalse. This was a real gap:
+  only music/fire loops were controlled.
+- After fix: active clip isPausedtrue / isPlayingfalse; config mute=true and
+  volume=.13 aftereffects=.2. While resumed and muted, actual WebAudio mute gain0,
+  volume gain.129999995, isPlayingtrue. Unmute preserves volume and playback.
+  Complete released the clip from effects Map. No page errors/console warnings.
+-26 Node tests pass, including3 meaningful active-sound lifecycle regressions.
+  Production build passes (standard Phaser size warning), index-CZ5iGwVk.js.
+- Survivor labels: Nia y478, Tomas446, Mara450, exactly12px above each painted head;
+  image inspected at C:/Users/owner/AppData/Local/Temp/act1-audit-labels.png.
+- Actual E input at yard/lane/square/bridge/camp fire after positioning each short
+  fixture: fuel100→75 each; field/light radii720/720/720/800/720; centres exactly
+  fire.x /515; point radius+10 outside returnedfalse; each actual past painting
+  had the radial mask. Camp screenshot after real D travel to8550 shows healthy
+  left scene fading into corrupted right, not a whole-screen swap:
+  C:/Users/owner/AppData/Local/Temp/act1-audit-camp-circle.png.
+
+Human-owned extended checks are still pending; no full route, difficulty judgment,
+headphone mix or production approval was fabricated. See acceptance audit below.

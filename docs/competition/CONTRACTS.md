@@ -324,3 +324,15 @@ called directly rather than subscribed through a separate event dispatcher.
   are on-demand in Pause (C), not a permanent HUD strip. Gameplay bindings unchanged.
 - Shutdown cancellation clears logical memory without touching already-released
   bodies or mask textures. Ordinary death/expiry/replacement still refresh visuals.
+
+
+## Active audio clip ownership — final Act1 audit
+
+AudioCues.effects is a Map<Sound, baseGain>. playEffect(key,gain) registers cleanup
+on complete/destroy; pause/resume and applySettings affect every owned clip.
+setVolume('effects',value) updates in-flight clips without restarting them;
+toggleMute applies immediately. Shutdown destroys both loops and all temporary
+clips. Paused WebAudio nodes may not evaluate gain getters until reconnected;
+currentConfig retains settings, which are applied when playback resumes.
+Npc.visibleHeight is the registered painted height (98/102/70), independent of
+its112px frame; name labels sit12px above the actual head line.

@@ -3,6 +3,19 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — active sound controls and survivor label audit
+
+- Fixed already-playing creature/foley clips continuing through pause/mute.
+  AudioCues now owns temporary clips as well as loops; pause/resume, mute,
+  effects-volume changes and scene cleanup apply to active recordings.
+- Aligned survivor names to each character's visible height instead of the shared
+  padded sprite frame; Nia no longer has a label floating far above her head.
+  Names use the same title-case, higher-resolution typography as the other UI.
+- Verification:26/26 tests, production build, short Chrome audio/gain lifecycle
+  checks, survivor-label screenshot and actual E at all five outdoor fires.
+  Each fire cost25 and matched restoration/light radius; points outside stayed
+  corrupted. Human playthrough/difficulty/mix approval is still required.
+
 ## 18 October 2026 — Act 1 presentation, local restoration and typography
 
 - Replaced whole-region restoration with a 1.2s expanding, feathered circle.

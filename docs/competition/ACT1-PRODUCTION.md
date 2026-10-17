@@ -69,3 +69,27 @@ work. Publish cumulative WHAT_IS_CHANGED plus STATUS/CONTRACTS/TEST-LOG evidence
 No uninterrupted whole adventure, human difficulty/art approval, final audio mix,
 second-machine acceptance or award guarantee is claimed. Act2/3 were preserved;
 only compatibility radii, mask integration and shared systems changed there.
+
+
+## Completion audit — 18 Oct, after active-audio fix
+
+Completion is **not yet proven**. Short checks establish these concrete facts;
+subjective/extended acceptance remains assigned to the user.
+
+| Requirement | Current evidence | Remaining evidence |
+| --- | --- | --- |
+|1 Local expanding fire restoration | Actual E at all5 outdoor fires; home/bridge/camp screenshots; matching circular mask/light radii | Human appearance assessment while travelling |
+|2 Matching collision and safe resets | Spatial/expiry/replacement/shutdown tests; physical bridge return and paused timer checks | Full-route expiry/death edge cases |
+|3 Boss cinematic protection | Frontal render,1.7zoom,2.5s hold; skip/pause and restored clocks/physics/tweens verified | Human cinematic feel and fresh revisit run |
+|4 Boss readability and spacing | Painted silhouettes, distinct arena, short charge/dodge/back hit and card pick/sweep | Entire fights and human difficulty feedback |
+|5 Ground and meaningful ledges | Painted contact plane/ledge source, feet560/ledge485 runtime checks | Human survey of every scene/edge |
+|6 Home ladder and doors | Registered source/collision, actual W climb, inspected dark/past renders, latch guards | Human fresh navigation acceptance |
+|7 Stall integration | Paired generated art and roof route; separated court; latest survivors | Human composition/asset approval |
+|8 Scene joins | Authored overlap/feather, continuous ground, local camp boundary screenshot | Human back-and-forth visual survey |
+|9 UI/theme/typography | Latest sprite/UI source;1280 and960 renders; no HUD overlap or clipped item labels | Human readability preference |
+|10 Map/journal/inventory | Real keyboard/mouse tabs, card selection, journal pages, objective/home/shortcut map | Human navigation feedback |
+|11 Real audio and controls | Bundled CC0 provenance, decoded score, actual gain/pause/mute/volume/cleanup checks | Human listening/mix approval |
+|12 Verification and handoff |26 tests, production build, short input checks, cumulative logs and Git publication | User-owned extended playthrough |
+
+Do not substitute this table or test count for the missing human checks. The next
+necessary external input is the user's Act1 playthrough and listening feedback.

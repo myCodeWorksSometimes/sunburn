@@ -7,8 +7,10 @@ export function audioSettings() {
 export class AudioCues {
   constructor(scene) {
     this.scene = scene; this.settings = audioSettings(); this.paused = false; this.stepClock = 0; this.lastCue = new Map();
+    this.effects = new Map();
     this.music = scene.sound.add('audio-score', { loop: true, volume: 0 });
     this.fire = scene.sound.add('audio-fire', { loop: true, volume: 0 });
+    this.applySettings();
     scene.events.once('shutdown', () => this.destroy());
   }
   get muted() { return this.settings.muted; }
@@ -31,7 +33,15 @@ export class AudioCues {
     const now = this.scene.time.now;
     if (now - (this.lastCue.get(id) ?? -Infinity) < 160) return;
     this.lastCue.set(id, now);
-    this.scene.sound.play(`audio-${key}`, { volume: volume * this.settings.effects });
+    this.playEffect(key,volume);
+  }
+  playEffect(key, volume) {
+    if(this.muted || this.paused)return;
+    const sound=this.scene.sound.add(`audio-${key}`,{volume:volume*this.settings.effects});
+    this.effects.set(sound,volume);
+    sound.once('complete',()=>sound.destroy());
+    sound.once('destroy',()=>this.effects.delete(sound));
+    sound.play();
   }
   update(delta) {
     if (this.paused) return;
@@ -44,13 +54,23 @@ export class AudioCues {
     const p = scene.player;
     if (!settings.muted && !p.frozen && p.body.blocked.down && Math.abs(p.body.velocity.x) > 30 && this.stepClock > 310) {
       this.stepClock = 0;
-      scene.sound.play(scene.scene.key === 'Hearth' ? 'audio-step-wood' : 'audio-step-stone', { volume: settings.effects * .25 });
+      this.playEffect(scene.scene.key === 'Hearth' ? 'step-wood' : 'step-stone', .25);
     }
   }
-  pause() { this.paused = true; this.music.pause(); this.fire.pause(); }
-  resume() { this.paused = false; this.music.resume(); this.fire.resume(); this.unlock(); }
+  applySettings() {
+    this.music.setMute(this.muted);this.fire.setMute(this.muted);
+    for(const [sound,gain] of this.effects)sound.setMute(this.muted).setVolume(gain*this.settings.effects);
+  }
+  pause() { this.paused = true; this.music.pause(); this.fire.pause(); for(const sound of this.effects.keys())sound.pause(); }
+  resume() { this.paused = false; this.music.resume(); this.fire.resume(); for(const sound of this.effects.keys())sound.resume(); this.unlock(); }
   save() { try { localStorage.setItem(SETTINGS, JSON.stringify(this.settings)); } catch { /* Private storage may be unavailable. */ } }
-  toggleMute() { this.settings.muted = !this.muted; this.save(); }
-  setVolume(channel, value) { if (channel === 'music' || channel === 'effects') { this.settings[channel] = Math.max(0, Math.min(1, value)); this.save(); } }
-  destroy() { this.music.destroy(); this.fire.destroy(); }
+  toggleMute() { this.settings.muted = !this.muted; this.applySettings(); this.save(); }
+  setVolume(channel, value) {
+    if (channel === 'music' || channel === 'effects') {
+      this.settings[channel] = Math.max(0, Math.min(1, value));
+      if(channel==='music')this.music.setVolume(this.settings.music);
+      this.applySettings();this.save();
+    }
+  }
+  destroy() { this.music.destroy(); this.fire.destroy(); for(const sound of this.effects.keys())sound.destroy(); this.effects.clear(); }
 }
