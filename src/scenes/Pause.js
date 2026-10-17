@@ -97,7 +97,9 @@ export class Pause extends Phaser.Scene {
     } else {
       const entries = [
         ['home-first-memory', 'The lantern wakes old fires. Their memories restore daylight and safe paths.'],
-        ['village-latch', 'The market bell latch opens the road through the ruined village.'],
+        ['mara-freed', 'Mara was trapped in her stall. Eli came back for the little ones and took them toward the bridge.'],
+        ['refuge-reunion', 'Nia: Eli sent the children down the old road when the bell rang. He didn’t come.'],
+        ['refuge-hearth', 'Mara spent her hearth’s ember to bring Tomas back from a frozen moment. Their house no longer remembers.'],
         ['act-2', 'Eli went to the playground. The swing crossing returns in remembered time.'],
         ['drawing-found', 'Eli led the children to the clock tower. His drawing and an ember cup survived.'],
         ['hearth-spent', 'I took our hearth’s last memory. Its ember can bring Eli into the present.'],

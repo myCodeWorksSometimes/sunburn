@@ -3,6 +3,68 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 17 October 2026 — campaign Act 1: Mara's stall and the Bridge Refuge
+
+### Gameplay implemented (CAMPAIGN.md Scenes 4 and 6)
+
+- **Mara's stall (market):** knocking draws Rowan to a shuttered stall. Mara
+  explains the release is on the roof. Restoring the market fire brings back the
+  remembered steps, which now lead onto the stall roof (unreachable otherwise).
+  Holding E on the release opens the shutter permanently; Mara tells Rowan that
+  Eli took the little ones toward the bridge, then leaves for the refuge. The
+  market memory shows a recorded Eli at her card counter. Replaces the old
+  "bell latch". Until Five-Hand exists, freeing Mara clears the market exit.
+- **Bridge Refuge (near bank of the bridge):** Nia, Tomas and Mara by a spent
+  household hearth (rest works, restoration doesn't), and the Old Road's barred
+  west gate. Arriving plays the reunion and Nia's account once. Rowan must talk
+  to Tomas (the hearth rule) before reaching the bridge fire. Repeat talk lines
+  for each of them. The bridge fire moved right (x 5370) to make room.
+- **New NPC type** with placeholder looks (tinted hero for Mara/Tomas, tinted Eli
+  for Nia) and name labels. No new art generated.
+- Objectives, journal entries and the region name ("Bridge Refuge") updated.
+  Older saves migrate (open market ⇒ Mara freed; crossed bridge ⇒ refuge heard).
+
+### Verification and limits
+
+- `npm test` 15 passing (2 new). `npm run build` passed (`index-06UoOXUN.js`).
+- Browser checks with real key events: knock → restore → climb → release →
+  Mara freed → reunion → barrier → Tomas → rest → bridge crossing; save, reload
+  and Continue at the refuge; restart clears the new flags. No console errors.
+  Details in TEST-LOG.
+- Not done: Five-Hand, Braced Shadow, gears, route reorder, three knocks. No
+  uninterrupted new-game playthrough. NPCs are placeholders until sprites exist.
+
+## 17 October 2026 — campaign story adopted (documentation only)
+
+### What changed
+
+- The user adopted the campaign draft as the target story and gameplay. Added it
+  as `docs/competition/CAMPAIGN.md`, marked **Adopted**.
+- Added two sections to CAMPAIGN.md:
+  - **Integration with the current build:** maps every campaign place onto the
+    existing 18,000px world regions (Market = `square`, Bridge Refuge = `bridge`
+    west bank, Old Road = tower courtyard ↔ refuge, inspection window above
+    `tower-court`, etc.), places Mara, Tomas and Nia, lists the new story flags,
+    and describes the route-order change (Eli is found before the ember trip).
+  - **MVP status:** scene-by-scene audit of what the build already does and what
+    the MVP still needs.
+- CANON.md: new top section with the adopted cast (Eli is now nine), Eli's
+  evacuation story, shadows as corruption creatures (not villagers), the hearth
+  rule learned from Tomas and Mara, the two bosses, the elite and the ending.
+- NARRATIVE-SCRIPT.md and ACTS-IMPLEMENTATION.md: notes that CAMPAIGN.md
+  supersedes their story beats. AGENTS.md: points agents at CAMPAIGN.md.
+- STATUS.md: next action updated to the MVP gaps.
+
+### Verification and limits
+
+- Documentation only. No game code, assets or tests changed; nothing to build or
+  run for this entry.
+- The current build still plays the previous story order (ember before finding
+  Eli). Mara, Tomas, Nia, Five-Hand, the refuge scene, the three-knocks scene and
+  the Braced Shadow are not implemented yet, and the three new characters have no
+  art.
+- Committed and pushed together with the Act 1 iteration below.
+
 ## 17 October 2026 — complete original Acts 1–3 and Git collaboration handoff
 
 ### Gameplay implemented

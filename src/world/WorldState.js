@@ -1,5 +1,5 @@
 import { BALANCE } from './balance.js';
-import { FIRES, RELAYS, SPAWNS } from './layout.js';
+import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE } from './layout.js';
 
 export const SAVE_KEY = 'embers-before-three-acts-v1';
 
@@ -20,6 +20,10 @@ export class WorldState {
     this.litFinaleLamps = {};
     this.litFires = {};
     this.villageGateOpen = false;
+    // Campaign Act 1: Mara's stall and the Bridge Refuge family.
+    this.maraFreed = false;
+    this.heardNia = false;
+    this.heardTomas = false;
     this.campReturnOpen = false;
     this.swingReturnOpen = false;
     this.hasDrawing = false;
@@ -60,6 +64,23 @@ export class WorldState {
     return this.health;
   }
 
+  // Releasing the stall shutter frees Mara. Until Five-Hand is built, this also
+  // clears the market exit (villageGateOpen).
+  freeMara() {
+    if (this.maraFreed) return false;
+    this.maraFreed = true; this.villageGateOpen = true; return true;
+  }
+
+  hearNia() {
+    if (!this.maraFreed || this.heardNia) return false;
+    this.heardNia = true; return true;
+  }
+
+  hearTomas() {
+    if (!this.heardNia || this.heardTomas) return false;
+    this.heardTomas = true; return true;
+  }
+
   takeHearthEmber() {
     if (!this.hasEmberCup || this.homeMemorySpent) return false;
     this.hasHearthEmber = true;
@@ -92,8 +113,13 @@ export class WorldState {
     if (!this.completedStory['home-first-memory']) return goal('Climb upstairs and remember the hearth', 'Hearth', 530, 430);
     if (this.completed) return goal('Together, at last', 'Hearth', 530, 430);
     if (this.rescuedEli) return goal('Take the old road home together', 'World', 16500);
-    if (!this.villageGateOpen) return goal('Act 1: restore the square; open the bell latch above the steps', 'World', 4240, 380);
-    if (!this.bridgeReturnOpen) return goal('Act 1: restore and cross the broken bridge', 'World', 5190);
+    // Older saves opened the market without Mara; they skip straight to the bridge.
+    if (!this.maraFreed && !this.villageGateOpen) return this.completedStory['mara-knock']
+      ? goal('Act 1: restore the market; climb the steps to the stall roof release', 'World', MARA_STALL.release, MARA_STALL.roof)
+      : goal('Act 1: someone is knocking inside a market stall', 'World', MARA_STALL.shutter);
+    if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: follow Mara to the Bridge Refuge', 'World', REFUGE.mara);
+    if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
+    if (!this.bridgeReturnOpen) return goal('Act 1: restore and cross the broken bridge', 'World', 5370);
     if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', 6870);
     if (!this.swingReturnOpen) return goal('Act 2: restore the swing crossing', 'World', 8510);
     if (!this.hasDrawing) return goal('Act 2: restore the treehouse; find Eli’s drawing above', 'World', 10400, 380);
@@ -127,6 +153,10 @@ export function decodeSave(text) {
     for (const id of [...FIRES.map(f => f.id), 'home-hearth']) if (data.litFires?.[id] === true) run.litFires[id] = true;
     for (const r of RELAYS) if (data.litFinaleLamps?.[r.id] === true) run.litFinaleLamps[r.id] = true;
     if (run.hasDrawing) run.hasEmberCup = true;
+    // Saves from before the campaign: an open market or a crossed bridge means
+    // the matching story has effectively happened.
+    if (run.villageGateOpen) run.maraFreed = true;
+    if (run.bridgeReturnOpen) run.heardNia = run.heardTomas = true;
     if (run.rescuedEli) { run.hasHearthEmber = false; run.homeMemorySpent = true; }
     run.checkpoint = { scene, spawnId }; return run;
   } catch { return null; }

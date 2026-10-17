@@ -47,7 +47,7 @@ export class World extends Adventure {
     for (const fire of FIRES) this.addFire(fire);
     placeProp(this, 'door', 180, GROUND, 78, 125);
     placeProp(this, 'door', 3410, GROUND, 70, 112).setTint(0x9a91a2);
-    placeProp(this, 'marker', 5385, GROUND, 52, 65);
+    placeProp(this, 'marker', 5445, GROUND, 52, 65);
     // Water below the gap keeps its silhouette readable in either time state.
     this.water = this.add.graphics().setDepth(1);
     for (let i = 0; i < 19; i++) this.water.lineStyle(1, i % 3 ? 0x5d687b : 0xa18471, .35).lineBetween(5500 + (i * 29) % 160, 607 + i * 6, 5920 + (i * 37) % 100, 607 + i * 6);

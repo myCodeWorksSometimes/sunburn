@@ -1,6 +1,38 @@
 # Canon — latest user-approved world rules
 
-## Latest scope revision — original chapters, complete Acts 2 and 3
+## Latest story revision — adopted campaign (17 October 2026)
+
+The user adopted **CAMPAIGN.md** as the target story and gameplay design. Where it
+disagrees with older text in this file, NARRATIVE-SCRIPT.md or ACTS-IMPLEMENTATION.md,
+CAMPAIGN.md wins. The meteor/local-restoration canon below is unchanged.
+
+What this adds or changes:
+
+- **Cast:** Rowan, Eli (now **nine**), and one family Eli helped: **Mara** (market
+  toy-and-game stall), her partner **Tomas** (bridge keeper) and their daughter
+  **Nia** (six, Eli's friend). No other named characters are required.
+- **What happened to Eli:** he was at the playground at impact, led younger children
+  to the market gathering point and on to the clock-tower shelter, then rang the
+  tower bell to draw shadows away while the children escaped by the **Old Road**.
+  He is trapped **alive** in a fractured moment on the tower's upper landing.
+- **Shadows are creatures of corruption, separate from the villagers.** Defeating
+  one never kills a person. (Replaces any earlier idea that shadows were townsfolk.)
+- **Recordings vs. the living:** recorded people (echoes) cannot respond to new
+  actions; living survivors can. Eli answering **three** knocks with three proves
+  he is alive.
+- **The hearth rule** is learned from Tomas and Mara (she spent their household
+  hearth's ember to bring Tomas back), not from an inscription. The ember cup is a
+  practical heatproof carrier Eli used, with no magic of its own.
+- **Places:** Home → Market → Bridge Refuge → Broken Bridge → Playground → Canal →
+  Clock Tower, plus the Old Road linking the tower courtyard to the Bridge Refuge.
+  CAMPAIGN.md maps each place onto the existing 18,000px world regions.
+- **Bosses:** Five-Hand (market card-tracking boss) and the Bell Warden (tower).
+  One elite: the Braced Shadow at the bridge works.
+- **Ending:** after the rescue the brothers share the promised view from the tower
+  ("You can see our house."), return home and sit by the ordinary hearth. Eli taps
+  twice; the player answers. The world stays dark.
+
+## Earlier scope revision — original chapters, complete Acts 2 and 3
 
 The user now requests the original chapter identity: Prologue (Home / Yard),
 Act 1 — The Ruined Village, Act 2 — The Playground, then a complete Act 3.

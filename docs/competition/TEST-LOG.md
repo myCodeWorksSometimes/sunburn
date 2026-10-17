@@ -289,3 +289,31 @@ the server then reported ready. Two over-tight final verification calls timed
 out; the bounded 30s cold smoke check completed successfully. Preview5173 was
 stopped; only4176 remains listening among project demo/test ports. No additional
 gameplay changes occurred after the final production build.
+
+## 17 October 2026 — campaign Act 1 (Mara's stall, Bridge Refuge)
+
+Build: `npm run build` passed, bundle `index-06UoOXUN.js` (standard large-bundle
+warning only). `npm test`: **15 passing** (13 existing + 2 new: Act 1 ordering /
+idempotence, save round trip and old-save migration).
+
+Browser checks on the Vite dev server (`?test` keeps the loop running), 1280×720,
+real key events dispatched to the page:
+
+- Market: knocking notice near the stall; E at the shutter plays `mara-knock` and
+  the objective changes to the roof release. Restored the square fire (E), jumped
+  the three remembered steps (feet 478 → 423 → 363) onto the stall roof, held E at
+  the release: Mara appears, `mara-freed` lines play, market exit tendrils clear,
+  objective becomes "follow Mara to the Bridge Refuge".
+- Refuge: entering plays the reunion once (`heardNia`). Walking right was held at
+  the barrier with Tomas's notice. Talking to Tomas set `heardTomas` and freed the
+  route. Rest (hold R 2s) at the spent refuge hearth restored flame 40→100 and
+  health 2→3 and set checkpoint `refuge`; its prompt shows "This memory is spent."
+  Lit the moved bridge fire (x 5370) and crossed; objective moved to the campfire.
+- Save/Continue: set Mara/Nia progress, waited for autosave, reloaded the page,
+  Title → Enter (Continue) resumed at `refuge` with flags and Mara beside Nia.
+  Pause → Begin again cleared all three flags.
+- Console: no errors during these runs.
+
+Not checked: a full uninterrupted new-game route, the journal screen visually,
+reverse traversal from the far bank, audio by ear, other machines. Placeholder
+NPC art only.

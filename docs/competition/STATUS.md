@@ -20,6 +20,20 @@ Updated: 17 October 2026, complete original-chapter gameplay iteration.
 
 Canonical link: http://127.0.0.1:4176/ . Refreshed and verified with bundle index-BMOqQZEt.js; fresh Title/Intro skip/Hearth/map smoke check passed with no page errors. Frozen snapshot: C:/Users/owner/AppData/Local/Temp/embers-playtest-kxhzmY, Node process11964. Development preview :5173 was stopped after checks. Only :4176 remains listening among the project's demo/test ports. Source edits do not mutate this snapshot. Old temporary copies remain unserved after an earlier automatic deletion rejection.
 
+## Story target and MVP gaps (17 October 2026)
+
+The user adopted `CAMPAIGN.md` as the target story. The build above implements
+the earlier story order. MVP work, in order (details in CAMPAIGN.md → "MVP status"):
+
+1. ~~Act 1 story spine~~ **Done 17 Oct** (Mara's stall, Bridge Refuge family, spent
+   hearth, Old Road west gate; placeholder art). See TEST-LOG for checks.
+2. Route reorder: canal and courtyard no longer need the ember; three-knocks
+   scene and Old Road release at the tower courtyard; `eliFound` unlocks the ember.
+3. Five-Hand (simplified: one tracking round) at the market exit.
+4. Small text fixes: cup inscription removed, drawing text, viewing-platform line,
+   Nia's acknowledgement, opening taps.
+5. If time allows: Braced Shadow and gears at the bridge, canal lift, Nia's bird.
+
 ## Ownership / next action
 
 Implementation and local checks are complete; the integrator releases core editing claims at this handoff. No other local active claims were observed. Next human action: use the frozen demo and the eight-step checklist in ACTS-IMPLEMENTATION.md, then report route/difficulty failures. Git publication is recorded by the repository commit history and the final handoff message; cumulative WHAT_IS_CHANGED.md describes this iteration and prior local work.

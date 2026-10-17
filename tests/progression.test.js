@@ -166,3 +166,35 @@ test('completion and rescue survive saving while consumed ember stays consumed',
   assert.equal(loaded.rescuedEli, true); assert.equal(loaded.completed, true);
   assert.equal(loaded.hasHearthEmber, false); assert.equal(loaded.takeHearthEmber(), false);
 });
+
+test('campaign Act 1: Mara, Nia and Tomas progress in order, once each', () => {
+  const state = new WorldState();
+  state.hasLantern = true; state.completedStory['home-first-memory'] = true;
+  assert.match(state.objective, /knocking/);
+  state.completeStory('mara-knock');
+  assert.match(state.objective, /roof release/);
+  assert.equal(state.hearNia(), false, 'the refuge story needs Mara freed first');
+  assert.equal(state.freeMara(), true);
+  assert.equal(state.freeMara(), false);
+  assert.equal(state.villageGateOpen, true, 'freeing Mara clears the market exit until Five-Hand exists');
+  assert.match(state.objective, /Bridge Refuge/);
+  assert.equal(state.hearTomas(), false, 'Tomas speaks after the reunion');
+  assert.equal(state.hearNia(), true); assert.equal(state.hearNia(), false);
+  assert.match(state.objective, /Tomas/);
+  assert.equal(state.hearTomas(), true); assert.equal(state.hearTomas(), false);
+  assert.match(state.objective, /broken bridge/);
+});
+
+test('campaign Act 1 flags survive saving; older saves migrate safely', () => {
+  const state = new WorldState();
+  state.freeMara(); state.hearNia(); state.setCheckpoint('World', 'refuge');
+  const loaded = decodeSave(JSON.stringify(state));
+  assert.equal(loaded.maraFreed, true); assert.equal(loaded.heardNia, true); assert.equal(loaded.heardTomas, false);
+  assert.equal(loaded.checkpoint.spawnId, 'refuge');
+  const old = new WorldState();
+  old.villageGateOpen = true; old.bridgeReturnOpen = true; old.setCheckpoint('World', 'camp');
+  const json = JSON.parse(JSON.stringify(old));
+  delete json.maraFreed; delete json.heardNia; delete json.heardTomas;
+  const migrated = decodeSave(JSON.stringify(json));
+  assert.equal(migrated.maraFreed, true); assert.equal(migrated.heardNia, true); assert.equal(migrated.heardTomas, true);
+});

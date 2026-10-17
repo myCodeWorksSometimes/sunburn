@@ -36,6 +36,10 @@ Restart starts a clean run. Invalid/blocked storage must not crash gameplay.
 
 ## Story
 
+> **Superseded (17 October 2026):** the target story is now `CAMPAIGN.md`. The text
+> below describes what the current build implements. CAMPAIGN.md → "Route order
+> changes" lists what must change to match it.
+
 Eli ran toward the playground before the impact. Rowan follows recorded fragments
 through the ruined village. At the playground, a memory reveals that Eli led other
 children toward the clock tower's shelter. His drawing shows the tower visit Rowan

@@ -2,6 +2,8 @@ import { Crawler } from '../entities/Crawler.js';
 import { placeProp } from '../presentation/Scenery.js';
 import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, regionAt } from './layout.js';
 import { saveSession } from './WorldState.js';
+import { buildAct1Story, tickAct1Story } from './Act1Story.js';
+import { MARA_STALL } from './layout.js';
 
 const point = (x, y = GROUND) => ({ x, y });
 function steps(s, regionId, start, permanent) {
@@ -23,15 +25,10 @@ export function buildChapters(s) {
   const run = s.run;
   s.addInteract({ id: 'home-door', x: 180, floor: GROUND, label: 'E: enter home', use: () => s.goTo('Hearth', 'front') });
   s.addInteract({ id: 'square-passage', x: 3410, floor: GROUND, label: () => run.shortcutOpen ? 'E: passage home' : 'E: inspect the sealed passage',
-    use: () => run.shortcutOpen ? s.goTo('Hearth', 'shortcut') : s.captions.say('This old passage opens from the playground. The bell latch above the steps opens the village road.') });
+    use: () => run.shortcutOpen ? s.goTo('Hearth', 'shortcut') : s.captions.say('This old passage is sealed. It opens from the playground side.') });
 
-  // ACT 1: the original four village locations, with a real square gate puzzle.
-  placeProp(s, 'item-lantern', 4240, 380, 34, 44, 23);
-  s.addLabel(4240, 303, 'BELL LATCH', '#d3bc91', 13);
-  s.addInteract({ id: 'village-latch', x: 4240, floor: 380,
-    when: () => !run.villageGateOpen && s.memory.isRestored('square'), label: 'E: pull the bell latch — open the village road',
-    use: () => { run.villageGateOpen = true; s.audio.cue('take'); s.story('village-latch', { speaker: 'Rowan', text: 'The road to the playground. Still a way through.' }); } });
-  gate(s, 4990, () => run.villageGateOpen, 'Restore the market steps and pull the bell latch above.');
+  // ACT 1: the village, Mara's stall in the market and the Bridge Refuge.
+  buildAct1Story(s, gate);
   enemy(s, { id: 'lane-crawler', x: 2480, floor: GROUND, minX: 1820, maxX: 2860, regionId: 'lane' });
   enemy(s, { id: 'camp-crawler', x: 7370, floor: GROUND, minX: 7090, maxX: 7640, regionId: 'camp' });
   s.campSurface = s.addSurface(CAMP_GAP.x1, CAMP_GAP.x2, GROUND, { regionId: 'camp', restoredOnly: true, material: 'bridge', permanent: () => run.campReturnOpen });
@@ -111,6 +108,7 @@ export function buildChapters(s) {
 
 export function tickChapters(s, delta) {
   const run = s.run, x = s.player.x;
+  tickAct1Story(s, delta);
   run.maxXReached = Math.max(run.maxXReached, x);
   if (regionAt(x).act === 'Act 1') s.story('act-1', { text: 'ACT 1 — THE RUINED VILLAGE', hold: 1000 }, { speaker: 'Rowan', text: 'The playground is beyond the village. Keep going.' });
   for (const g of s.chapterGates) { g.zone.body.enable = !g.isOpen(); g.image.setVisible(!g.isOpen()); }
@@ -167,6 +165,7 @@ export function tickChapters(s, delta) {
 
 export function memoryChapter(s, fire) {
   if (fire.id === 'rescue-memory') return;
+  const run = s.run;
   const id = fire.regionId;
   if (id === 'yard') {
     s.story('yard-memory', { speaker: 'Rowan', text: 'Daylight. Even the grass remembers.' });
@@ -174,10 +173,13 @@ export function memoryChapter(s, fire) {
   } else if (id === 'lane') {
     s.notice('F: face a Crawler and sweep twice, or evade it from the crate.'); s.echo([point(1750), point(2950)]);
   } else if (id === 'square') {
-    s.story('square-memory', { speaker: 'Echo Eli', text: 'The playground! This way!' }, { text: 'Jump up the restored steps and pull the bell latch.' });
-    s.echo([point(3560), point(3890), point(3970, 500), point(4070, 440), point(4240, 380)]);
+    if (!run.maraFreed) {
+      s.story('square-memory', { speaker: 'Recorded Eli', text: 'You moved your hand. The card stayed there.' },
+        { text: 'An ordinary afternoon at Mara’s stall. Climb the remembered steps to the stall roof.', color: '#ebd5b0' });
+    }
+    s.echo([point(MARA_STALL.shutter - 30), point(MARA_STALL.shutter - 30), point(3890), point(3970, 500), point(4070, 440), point(4240, 380), point(MARA_STALL.release - 40, MARA_STALL.roof)], { delay: 1600 });
   } else if (id === 'bridge') {
-    s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5240), point(6300)]);
+    s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5300), point(6300)]);
   } else if (id === 'camp') {
     s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(6930), point(8300)]);
   } else if (id === 'swings') {

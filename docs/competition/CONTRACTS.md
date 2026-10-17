@@ -5,7 +5,34 @@ production interactions. No uninterrupted new full run is claimed. Browser-local
 autosave is implemented; the original module proposals and earlier interfaces
 below are supplemented/superseded by this current chapter contract.
 
-## Current Acts 1–3 contract (latest)
+## Campaign Act 1 contract (17 October 2026, latest)
+
+- Story source: CAMPAIGN.md Scenes 4 and 6. Code in `src/world/Act1Story.js`
+  (`buildAct1Story(scene, gate)`, `tickAct1Story(scene, delta)`), called from
+  Chapters.js. NPCs in `src/entities/Npc.js` (`new Npc(scene, 'mara'|'tomas'|'nia',
+  x, y, {visible})`, `walkTo(x, {hide, speed})`, `tick(delta, player)`). Placeholder
+  looks: tinted hero_idle for Mara/Tomas, tinted `brother` for Nia, with name labels.
+- Layout: `MARA_STALL {x1, x2, roof, shutter, release, exitGate}` and
+  `REFUGE {oldRoad, nia, hearth, tomas, mara, barrier}` in layout.js. New spawn
+  `refuge` (x 5075). Bridge fire and `bridge` spawn moved to x 5370 to make room.
+  The stall roof (y 385) is a permanent timber surface reachable only from the
+  square's restored steps (jump height ≈120px; roof is 175px above ground).
+- State (WorldState, schema version 3 unchanged): `maraFreed`, `heardNia`,
+  `heardTomas`. `freeMara()` also sets `villageGateOpen` (market exit) until
+  Five-Hand exists; `hearNia()` requires `maraFreed`; `hearTomas()` requires
+  `heardNia`. Each returns false when repeated. decodeSave migration: an open
+  market implies `maraFreed`; a crossed bridge implies both refuge flags.
+- Story IDs: `mara-knock`, `mara-freed`, `refuge-reunion`, `refuge-hearth`
+  (journal entries in Pause.js). `village-latch` is retired; old saves keep it
+  harmlessly.
+- Interactions: `mara-shutter` (knock), `mara-release` (hold 600ms on the roof),
+  `old-road-west`, `refuge-hearth-look`, `talk-nia`, `talk-tomas`, `talk-mara`.
+  The refuge hearth is a fire with `spent: () => true`: rest and checkpoint work,
+  restoration does not. The market exit gate sits at x 4780 (was 4990).
+- Ordering rule: until `heardTomas` (and while the bridge is uncrossed) Rowan is
+  held at `REFUGE.barrier`, outside the bridge fire's interaction range.
+
+## Acts 1–3 contract (previous iteration)
 
 - Canon: CANON's latest chapter revision and ACTS-IMPLEMENTATION supersede the
   earlier five-beat shelter ending. Route is Title → Intro → Hearth ↔ World →

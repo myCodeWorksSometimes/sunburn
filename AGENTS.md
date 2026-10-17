@@ -31,6 +31,10 @@ For a documentation-only request, update documentation without starting gameplay
   are gameplay requirements now. Final art, shaders and cinematic lighting come later.
 - Deadline: 2026-10-18 09:30 Asia/Karachi. Four humans; only three comfortable with AI.
 
+The user adopted `docs/competition/CAMPAIGN.md` (17 October 2026) as the target
+story and gameplay design: Rowan, Eli, and Mara/Tomas/Nia's family; Five-Hand and
+the Bell Warden; the Old Road. Its "MVP status" section lists what is still missing.
+
 `docs/competition/CANON.md` is the current design authority. Earlier prototype
 captions, art prompts, and filenames may still describe a shattered sun. They are
 legacy material, not permission to contradict the latest user-approved premise.

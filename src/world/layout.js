@@ -4,7 +4,7 @@ export const REGIONS = [
   { id: 'yard', act: 'Prologue', name: 'The garden', x: 0, width: 1550, art: 'p2_yard', paintGround: 508 },
   { id: 'lane', act: 'Act 1', name: 'Village lane', x: 1550, width: 1650, art: 'a1_lane', paintGround: 555 },
   { id: 'square', act: 'Act 1', name: 'Market square', x: 3200, width: 1650, art: 'a1_square', paintGround: 545 },
-  { id: 'bridge', act: 'Act 1', name: 'The broken bridge', x: 4850, width: 1650, art: 'a1_bridge', paintGround: 410 },
+  { id: 'bridge', act: 'Act 1', name: 'Bridge Refuge', x: 4850, width: 1650, art: 'a1_bridge', paintGround: 410 },
   { id: 'camp', act: 'Act 1', name: 'Village campfire', x: 6500, width: 1700, art: 'a1_campfire', paintGround: 545 },
   { id: 'swings', act: 'Act 2', name: 'The playground', x: 8200, width: 1600, art: 'p2_yard', paintGround: 508 },
   { id: 'treehouse', act: 'Act 2', name: 'The treehouse', x: 9800, width: 1600, art: 'a1_campfire', paintGround: 545 },
@@ -19,7 +19,8 @@ export const SPAWNS = {
   lane: { x: 1710, y: GROUND },
   square: { x: 3520, y: GROUND },
   shortcut: { x: 3410, y: GROUND },
-  bridge: { x: 5190, y: GROUND },
+  refuge: { x: 5075, y: GROUND },
+  bridge: { x: 5370, y: GROUND },
   farBank: { x: 6170, y: GROUND },
   camp: { x: 6870, y: GROUND },
   playground: { x: 8510, y: GROUND },
@@ -32,6 +33,11 @@ export const SPAWNS = {
   mechanisms: { x: 14820, y: GROUND },
   crown: { x: 16500, y: GROUND },
 };
+// Campaign Act 1 positions. The stall's roof is reached from the square's
+// restored steps (top tread 4130–4330 at y380).
+export const MARA_STALL = { x1: 4345, x2: 4570, roof: 385, shutter: 4460, release: 4525, exitGate: 4780 };
+// barrier keeps Rowan out of the bridge fire's reach until Tomas has spoken.
+export const REFUGE = { oldRoad: 4885, nia: 4985, hearth: 5075, tomas: 5165, mara: 5245, barrier: 5285 };
 export const BRIDGE_GAP = { x1: 5480, x2: 6040 };
 export const YARD_GAP = { x1: 720, x2: 830 };
 export const CAMP_GAP = { x1: 7800, x2: 8120 };
@@ -47,7 +53,7 @@ export const FIRES = [
   { id: 'yard-fire', regionId: 'yard', x: 490, floor: GROUND, duration: 14000, spawnId: 'yard' },
   { id: 'lane-fire', regionId: 'lane', x: 1710, floor: GROUND, duration: 14000, spawnId: 'lane' },
   { id: 'square-fire', regionId: 'square', x: 3520, floor: GROUND, duration: 18000, spawnId: 'square' },
-  { id: 'bridge-fire', regionId: 'bridge', x: 5190, floor: GROUND, duration: 9000, spawnId: 'bridge' },
+  { id: 'bridge-fire', regionId: 'bridge', x: 5370, floor: GROUND, duration: 9000, spawnId: 'bridge' },
   { id: 'camp-fire', regionId: 'camp', x: 6870, floor: GROUND, duration: 20000, spawnId: 'camp' },
   { id: 'swing-fire', regionId: 'swings', x: 8510, floor: GROUND, duration: 16000, spawnId: 'playground' },
   { id: 'treehouse-fire', regionId: 'treehouse', x: 9920, floor: GROUND, duration: 20000, spawnId: 'treehouse' },

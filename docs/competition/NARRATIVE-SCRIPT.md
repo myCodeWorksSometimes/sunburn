@@ -1,5 +1,14 @@
 # Narrative script — Light the past. Bring him home.
 
+> **Superseded for story beats (17 October 2026):** the user adopted
+> `CAMPAIGN.md` as the target story. Its Scenes 1–14, cast (Mara, Tomas, Nia) and
+> route order replace the beats below where they differ, notably: the ember cup has
+> no inscription (Tomas and Mara explain the hearth rule), Eli is found through a
+> three-knock exchange at the tower before the ember trip, and the final lamps are
+> the tower's bell mechanisms. Motifs below (two knocks, red ball, "later", restored
+> daylight, stopped clock) still apply. See CAMPAIGN.md → "Integration with the
+> current build".
+
 Latest user scope replaces the earlier shelter finale below with original chapter
 identity and complete Acts 2/3. Current sequence/dialogue triggers are implemented
 in src/world/Chapters.js and Hearth.js; ACTS-IMPLEMENTATION.md records the revised
