@@ -27,8 +27,7 @@ the earlier story order. MVP work, in order (details in CAMPAIGN.md → "MVP sta
 
 1. ~~Act 1 story spine~~ **Done 17 Oct** (Mara's stall, Bridge Refuge family, spent
    hearth, Old Road west gate; placeholder art). See TEST-LOG for checks.
-2. Route reorder: canal and courtyard no longer need the ember; three-knocks
-   scene and Old Road release at the tower courtyard; `eliFound` unlocks the ember.
+2. ~~Route reorder~~ **Done 17 Oct** (three knocks, Old Road, ember after Eli).
 3. Five-Hand (simplified: one tracking round) at the market exit.
 4. Small text fixes: cup inscription removed, drawing text, viewing-platform line,
    Nia's acknowledgement, opening taps.

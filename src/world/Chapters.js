@@ -3,6 +3,7 @@ import { placeProp } from '../presentation/Scenery.js';
 import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, regionAt } from './layout.js';
 import { saveSession } from './WorldState.js';
 import { buildAct1Story, tickAct1Story } from './Act1Story.js';
+import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
 import { MARA_STALL } from './layout.js';
 
 const point = (x, y = GROUND) => ({ x, y });
@@ -25,7 +26,7 @@ export function buildChapters(s) {
   const run = s.run;
   s.addInteract({ id: 'home-door', x: 180, floor: GROUND, label: 'E: enter home', use: () => s.goTo('Hearth', 'front') });
   s.addInteract({ id: 'square-passage', x: 3410, floor: GROUND, label: () => run.shortcutOpen ? 'E: passage home' : 'E: inspect the sealed passage',
-    use: () => run.shortcutOpen ? s.goTo('Hearth', 'shortcut') : s.captions.say('This old passage is sealed. It opens from the playground side.') });
+    use: () => run.shortcutOpen ? s.goTo('Hearth', 'shortcut') : s.captions.say('This old passage is sealed. It opens from our cellar.') });
 
   // ACT 1: the village, Mara's stall in the market and the Bridge Refuge.
   buildAct1Story(s, gate);
@@ -47,25 +48,24 @@ export function buildChapters(s) {
       if (!run.findDrawing()) return;
       drawing.setVisible(false); cup.setVisible(false); s.audio.cue('take');
       s.story('drawing-found', { speaker: 'Echo Eli', text: 'The tower has a shelter. Follow me!' },
-        { speaker: 'Rowan', text: 'He helped them. Then he went to the tower.' },
-        { text: '“A hearth remembers its own. Its last ember can call them home.”' },
-        { speaker: 'Rowan', text: 'Our hearth. The old passage below leads home.' });
+        { speaker: 'Rowan', text: 'He led them to the tower.' },
+        { speaker: 'Rowan', text: 'His drawing… the two of us at the tower railing. The view I kept putting off.' },
+        { speaker: 'Rowan', text: 'And his ember cup. He carried coals in this on every expedition.' },
+        { text: 'The treehouse hatch opens onto the service path to the canal.', color: '#ebd5b0' });
     } });
-  placeProp(s, 'door', 11100, GROUND, 78, 125);
-  s.addLabel(11100, 407, 'PASSAGE HOME', '#d3bc91', 13);
-  s.addInteract({ id: 'playground-passage', x: 11100, floor: GROUND, when: () => run.hasDrawing,
-    label: 'E: open the old passage home', use: () => { run.shortcutOpen = true; s.goTo('Hearth', 'shortcut'); } });
   enemy(s, { id: 'playground-pouncer', x: 10860, floor: GROUND, minX: 10670, maxX: 11000, regionId: 'treehouse', kind: 'pouncer' });
-  gate(s, 11450, () => run.hasHearthEmber || run.rescuedEli, 'Take the passage home and bring the last hearth ember.');
+  // The playground's way out is buried; the treehouse service hatch leads on.
+  gate(s, 11450, () => run.hasDrawing, 'Rubble buries the playground exit. Eli always used the treehouse — search up there.');
   s.addSurface(11680, 11790, 500, { regionId: 'canal', restoredOnly: true });
   s.addSurface(11800, 11890, 440, { regionId: 'canal', restoredOnly: true });
   s.canalSurface = s.addSurface(CANAL_GAP.x1, CANAL_GAP.x2, GROUND, { regionId: 'canal', restoredOnly: true, material: 'bridge', permanent: () => run.canalGateOpen || run.canalReturnOpen });
   s.add.circle(11820, 415, 19, 0x252832).setStrokeStyle(4, 0xb69868).setDepth(23);
   s.addInteract({ id: 'canal-wheel', x: 11820, floor: 440, hold: 800, label: 'Hold E: turn the sluice wheel — secure the tower road',
-    when: () => run.hasHearthEmber && !run.canalGateOpen && s.memory.isRestored('canal'),
+    when: () => !run.canalGateOpen && s.memory.isRestored('canal'),
     use: () => { run.canalGateOpen = true; s.refreshSurface(s.canalSurface); s.audio.cue('take'); s.story('sluice-open', { speaker: 'Rowan', text: 'The crossing will hold now. The tower is close.' }); } });
 
-  // ACT 3: three different-height relays remove a guardian's wards.
+  // ACT 3: Eli at the tower window, the Old Road, then three relays and the Warden.
+  buildTowerStory(s);
   gate(s, 13040, () => run.canalGateOpen, 'Restore the canal and turn its sluice wheel before entering the tower.');
   s.addSurface(13510, 13620, 500, { regionId: 'tower-court', restoredOnly: true });
   s.addSurface(13640, 13850, 440, { regionId: 'tower-court', restoredOnly: true });
@@ -109,6 +109,7 @@ export function buildChapters(s) {
 export function tickChapters(s, delta) {
   const run = s.run, x = s.player.x;
   tickAct1Story(s, delta);
+  tickTowerStory(s, delta);
   run.maxXReached = Math.max(run.maxXReached, x);
   if (regionAt(x).act === 'Act 1') s.story('act-1', { text: 'ACT 1 — THE RUINED VILLAGE', hold: 1000 }, { speaker: 'Rowan', text: 'The playground is beyond the village. Keep going.' });
   for (const g of s.chapterGates) { g.zone.body.enable = !g.isOpen(); g.image.setVisible(!g.isOpen()); }
@@ -137,7 +138,7 @@ export function tickChapters(s, delta) {
   else s.bossText.setVisible(false);
   if (run.relayCount === 3 && run.clearedEncounters['bell-warden']) for (const stair of s.eliStairs) s.refreshSurface(stair);
   if (x > 17320 && !run.rescuedEli) {
-    if (s.story('eli-found', { text: '… tap, tap …', color: '#ffe1a1' }, { speaker: 'Rowan', text: 'Eli. I’m here.' })) s.audio.cue('knock');
+    if (s.story('eli-landing', { text: '… tap, tap …', color: '#ffe1a1' }, { speaker: 'Rowan', text: 'Eli. I brought it. I’m here.' })) s.audio.cue('knock');
   }
   if (s.transferRemaining != null) {
     s.transferRemaining -= delta;
@@ -188,5 +189,6 @@ export function memoryChapter(s, fire) {
     s.story('treehouse-memory', { speaker: 'Echo Eli', text: 'The tower has room for everyone!' }, { speaker: 'Rowan', text: 'His drawing. Up in the treehouse.' });
     s.echo([point(9980), point(10110, 500), point(10230, 440), point(10400, 380)]);
   } else if (id === 'canal') s.story('canal-memory', { text: 'Climb the two restored ledges. Turn the wheel to secure the tower road.' });
-  else if (id.startsWith('tower-')) s.notice('Climb to the bell and hold E while this region is restored. M: map · J: journal');
+  else if (id === 'tower-court' && towerMemory(s)) return;
+  else if (id.startsWith('tower-')) s.notice(run.hasHearthEmber ? 'Climb to the bell and hold E while this region is restored. M: map · J: journal' : 'The bells answer only to the hearth’s ember.');
 }

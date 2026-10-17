@@ -275,8 +275,8 @@ export class Adventure extends Phaser.Scene {
 
   getGoal() {
     if (this.scene.key === 'Hearth' && this.run.rescuedEli) return { text: 'Epilogue: sit by the hearth together', scene: 'Hearth', x: 530, y: 430 };
-    if (this.scene.key === 'Hearth' && this.run.hasEmberCup && !this.run.hasHearthEmber) return { text: 'Remember the hearth, then hold E to take its last ember', scene: 'Hearth', x: 530, y: 430 };
-    if (this.scene.key === 'Hearth' && this.run.hasHearthEmber) return { text: 'Use the cellar passage back to the playground', scene: 'Hearth', x: 205, y: 650 };
+    if (this.scene.key === 'Hearth' && this.run.eliFound && !this.run.hasHearthEmber) return { text: 'Remember the hearth, then hold E to take its last ember', scene: 'Hearth', x: 530, y: 430 };
+    if (this.scene.key === 'Hearth' && this.run.hasHearthEmber) return { text: 'Take the cellar passage to the market, then the Old Road to the tower', scene: 'Hearth', x: 205, y: 650 };
     return this.run.goal;
   }
 

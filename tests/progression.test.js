@@ -9,6 +9,8 @@ test('hearth exchange is atomic and cannot lose/reissue the quest ember', () => 
   const state = new WorldState();
   assert.equal(state.takeHearthEmber(), false);
   state.hasEmberCup = true;
+  assert.equal(state.takeHearthEmber(), false, 'Eli must be found before the ember is taken');
+  state.findEli();
   assert.equal(state.takeHearthEmber(), true);
   assert.equal(state.homeMemorySpent, true);
   assert.equal(state.takeHearthEmber(), false);
@@ -95,7 +97,7 @@ test('fuel spending cannot go below zero, overpay, or accept invalid costs', () 
 
 test('oil and rest enforce supply caps without duplicating or spending quest items', () => {
   const state = new WorldState();
-  state.hasEmberCup = true; state.takeHearthEmber();
+  state.hasEmberCup = true; state.findEli(); state.takeHearthEmber();
   assert.equal(state.useOil(), false, 'full meter must keep the vial');
   assert.equal(state.oil, 1);
   state.spendFlame(10); assert.equal(state.useOil(), true);
@@ -120,7 +122,7 @@ test('drawing/cup and relay rewards are unique and require the protected ember',
   assert.equal(state.ringRelay(RELAYS[0].id), false);
   assert.equal(state.findDrawing(), true); assert.equal(state.findDrawing(), false);
   assert.equal(state.hasDrawing, true); assert.equal(state.hasEmberCup, true);
-  state.takeHearthEmber();
+  state.findEli(); state.takeHearthEmber();
   assert.equal(state.ringRelay('fake-relay'), false);
   for (const relay of RELAYS) { assert.equal(state.ringRelay(relay.id), true); assert.equal(state.ringRelay(relay.id), false); }
   assert.equal(state.relayCount, 3); assert.equal(state.hasHearthEmber, true);
@@ -128,7 +130,7 @@ test('drawing/cup and relay rewards are unique and require the protected ember',
 
 test('save round trip preserves all chapter gates and restores a safe checkpoint', () => {
   const state = new WorldState();
-  state.findDrawing(); state.takeHearthEmber(); state.ringRelay(RELAYS[0].id);
+  state.findDrawing(); state.findEli(); state.takeHearthEmber(); state.ringRelay(RELAYS[0].id);
   state.villageGateOpen = state.campReturnOpen = state.swingReturnOpen = state.canalGateOpen = state.canalReturnOpen = true;
   state.setCheckpoint('World', 'mechanisms'); state.clearEncounter('playground-pouncer');
   const loaded = decodeSave(JSON.stringify(state));
@@ -151,14 +153,14 @@ test('out-of-order relay visits target the actual missing bell', () => {
   const state = new WorldState();
   state.hasLantern = true; state.completedStory['home-first-memory'] = true;
   state.villageGateOpen = state.bridgeReturnOpen = state.campReturnOpen = state.swingReturnOpen = state.canalGateOpen = true;
-  state.findDrawing(); state.takeHearthEmber(); state.ringRelay('tower-relay-3');
+  state.findDrawing(); state.findEli(); state.takeHearthEmber(); state.ringRelay('tower-relay-3');
   assert.equal(state.goal.x, RELAYS[0].x); assert.match(state.objective, /bell 1/);
   state.ringRelay('tower-relay-1'); assert.equal(state.goal.x, RELAYS[1].x);
   assert.match(state.objective, /bell 2/);
 });
 
 test('completion and rescue survive saving while consumed ember stays consumed', () => {
-  const state = new WorldState(); state.findDrawing(); state.takeHearthEmber();
+  const state = new WorldState(); state.findDrawing(); state.findEli(); state.takeHearthEmber();
   for (const r of RELAYS) state.ringRelay(r.id);
   state.clearEncounter('bell-warden'); state.rescue(); state.completed = true;
   state.setCheckpoint('Hearth', 'front');
@@ -197,4 +199,37 @@ test('campaign Act 1 flags survive saving; older saves migrate safely', () => {
   delete json.maraFreed; delete json.heardNia; delete json.heardTomas;
   const migrated = decodeSave(JSON.stringify(json));
   assert.equal(migrated.maraFreed, true); assert.equal(migrated.heardNia, true); assert.equal(migrated.heardTomas, true);
+});
+
+test('campaign route: canal, then Eli at the window, Old Road, then the ember', () => {
+  const state = new WorldState();
+  state.hasLantern = true; state.completedStory['home-first-memory'] = true;
+  state.freeMara(); state.hearNia(); state.hearTomas();
+  state.bridgeReturnOpen = state.campReturnOpen = state.swingReturnOpen = true;
+  state.findDrawing();
+  assert.match(state.objective, /canal/, 'the canal no longer waits for the ember');
+  state.canalGateOpen = true;
+  assert.match(state.objective, /tower window/);
+  assert.equal(state.openOldRoad(), false, 'the Old Road opens after Eli is found');
+  assert.equal(state.takeHearthEmber(), false, 'no ember before Eli is found');
+  assert.equal(state.findEli(), true); assert.equal(state.findEli(), false);
+  assert.match(state.objective, /Old Road gate/);
+  assert.equal(state.openOldRoad(), true); assert.equal(state.openOldRoad(), false);
+  assert.equal(state.goal.scene, 'Hearth');
+  assert.equal(state.takeHearthEmber(), true);
+  assert.match(state.objective, /Old Road — ring bell 1/);
+  state.ringRelay(RELAYS[0].id);
+  assert.match(state.objective, /bell 2 .*1\/3/);
+});
+
+test('old-route saves that already hold the ember count as having found Eli', () => {
+  const old = new WorldState();
+  old.hasEmberCup = old.hasHearthEmber = old.homeMemorySpent = true; old.setCheckpoint('World', 'canal');
+  const json = JSON.parse(JSON.stringify(old)); delete json.eliFound; delete json.oldRoadOpen;
+  const loaded = decodeSave(JSON.stringify(json));
+  assert.equal(loaded.eliFound, true); assert.equal(loaded.oldRoadOpen, true);
+  for (const id of ['oldRoadWest', 'oldRoadEast']) {
+    const s = new WorldState(); s.setCheckpoint('World', id);
+    assert.equal(decodeSave(JSON.stringify(s)).checkpoint.spawnId, id);
+  }
 });

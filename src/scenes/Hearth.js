@@ -37,7 +37,7 @@ export class Hearth extends Adventure {
     this.hearth = this.addFire({ id: 'home-hearth', regionId: 'home', x: 530, floor: 430, duration: 18000, spawnId: 'front', spent: () => this.run.homeMemorySpent });
     this.addInteract({ id: 'take-hearth', x: 530, floor: 430, priority: 10, hold: 1000,
       label: 'Hold E: take the last ember\nThis home’s memory will fade.',
-      when: () => this.run.hasEmberCup && !this.run.homeMemorySpent && this.memory.isRestored('home'),
+      when: () => this.run.hasEmberCup && this.run.eliFound && !this.run.homeMemorySpent && this.memory.isRestored('home'),
       use: () => {
         if (!this.run.takeHearthEmber()) return;
         this.memory.cancel('hearth-spent'); this.audio.cue('take');
@@ -51,11 +51,11 @@ export class Hearth extends Adventure {
       } });
     placeProp(this, 'item-ember', 205, 579, 16, 20, 17).setTint(this.run.shortcutOpen ? 0xffffff : 0x5a5667);
     this.addInteract({ id: 'cellar-latch', x: 205, floor: 650,
-      label: () => this.run.shortcutOpen ? 'E: passage to the playground' : 'E: inspect the cold latch',
+      label: () => this.run.shortcutOpen ? 'E: passage to the market' : this.run.hasHearthEmber ? 'E: warm the latch with the ember' : 'E: inspect the cold latch',
       use: () => {
         if (this.run.rescuedEli) { this.captions.say('We’re home. Let’s sit by the fire.'); return; }
         if (!this.run.hasHearthEmber && !this.run.shortcutOpen) { this.captions.say('A hearth mark. The latch needs an ember from home.'); return; }
-        this.run.shortcutOpen = true; this.audio.cue('take'); this.goTo('World', 'passage');
+        this.run.shortcutOpen = true; this.audio.cue('take'); this.goTo('World', 'shortcut');
       } });
     this.addInteract({ id: 'family-photo', x: 860, floor: 430, label: 'E: look at the family photograph',
       when: () => !this.run.completedStory['photo'],
@@ -86,7 +86,7 @@ export class Hearth extends Adventure {
   onMemoryReady(fire) {
     super.onMemoryReady(fire);
     this.audio.cue('knock');
-    if (this.run.hasEmberCup) {
+    if (this.run.eliFound) {
       this.story('home-return-memory', { speaker: 'Echo Eli', text: 'You’ll come this time?' }, { speaker: 'Echo Rowan', text: 'Later. I promise.' });
       this.echo([{ x: 240, y: 430 }, { x: 240, y: 430 }], { delay: 3500 });
     } else {

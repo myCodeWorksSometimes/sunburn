@@ -90,8 +90,10 @@ export function buildAct1Story(s, gate) {
   // ---- Bridge Refuge: the family, their spent hearth and the Old Road's west gate.
   placeProp(s, 'door', REFUGE.oldRoad, GROUND, 80, 128).setTint(0x6d6878);
   s.addLabel(REFUGE.oldRoad, GROUND - 150, 'OLD ROAD', '#a59f9a', 13);
-  s.addInteract({ id: 'old-road-west', x: REFUGE.oldRoad, floor: GROUND, range: 40, label: 'E: try the Old Road gate',
-    use: () => s.captions.say({ speaker: 'Rowan', text: run.heardTomas ? 'Barred from the tower side, like Tomas said.' : 'Barred. From the other side.' }) });
+  s.addInteract({ id: 'old-road-west', x: REFUGE.oldRoad, floor: GROUND, range: 40,
+    label: () => run.oldRoadOpen ? 'E: take the Old Road to the tower' : 'E: try the Old Road gate',
+    use: () => run.oldRoadOpen ? s.goTo('World', 'oldRoadEast')
+      : s.captions.say({ speaker: 'Rowan', text: run.heardTomas ? 'Barred from the tower side, like Tomas said.' : 'Barred. From the other side.' }) });
 
   // An ordinary household fire: rest works here, restoration does not.
   const hearth = s.addFire({ id: 'refuge-hearth', regionId: 'bridge', x: REFUGE.hearth, floor: GROUND, duration: 1000, spawnId: 'refuge', spent: () => true });

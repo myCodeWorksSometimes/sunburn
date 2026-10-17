@@ -664,10 +664,10 @@ So the canal and the tower courtyard stop requiring the ember, the tower interio
 | 5 Five-Hand | **Missing** (market exit currently opens when Mara is freed) | **Yes, simplified:** one card-tracking round and one hit for MVP; the full two rounds later. |
 | 6 Family at the refuge | **Done (17 Oct):** reunion and Nia's account, Tomas's hearth rule (required before the bridge), spent hearth with rest, Old Road west gate. Placeholder art. | — |
 | 7 Bridge works | Timed bridge exists; elite and gears missing | Partly: keep the timed crossing; Braced Shadow and gears can wait. |
-| 8 Playground | Mostly done | Small: drop the inscription line, update the drawing text; bird optional. |
-| 9 Canal | Mostly done (wheel, ledges, crossing) | Small: drop the ember requirement. |
-| 10 Three knocks | **Missing** (only "tap, tap" at the rescue) | **Yes:** the recognition scene and the Old Road release. |
-| 11 Last afternoon | Done (hold to take the ember) | Small: unlock it with `eliFound` instead of the cup. |
+| 8 Playground | **Done (17 Oct):** inscription removed, drawing/cup text updated, buried exit opens after the treehouse. Bird optional, not built. | — |
+| 9 Canal | **Done (17 Oct):** wheel no longer needs the ember. Lift ride not built (ledges instead). | — |
+| 10 Three knocks | **Done (17 Oct):** taps from the lit window, three-knock exchange, Eli steps in restored daylight and is pulled back, Old Road release and two-way travel. | — |
+| 11 Last afternoon | **Done (17 Oct):** unlocked by finding Eli; cellar passage leads to the market. | — |
 | 12 Tower mechanisms | Done (three bells) | No. |
 | 13 Bell Warden | Done (wards variant, 4 hits) | No (counterweight phase is polish). |
 | 14 What remains | Mostly done (rescue, fade, Eli stays, home coda) | Small: viewing-platform line, Nia's acknowledgement. |

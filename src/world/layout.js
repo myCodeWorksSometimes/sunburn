@@ -20,6 +20,7 @@ export const SPAWNS = {
   square: { x: 3520, y: GROUND },
   shortcut: { x: 3410, y: GROUND },
   refuge: { x: 5075, y: GROUND },
+  oldRoadWest: { x: 4935, y: GROUND },
   bridge: { x: 5370, y: GROUND },
   farBank: { x: 6170, y: GROUND },
   camp: { x: 6870, y: GROUND },
@@ -29,6 +30,7 @@ export const SPAWNS = {
   passage: { x: 11100, y: GROUND },
   canal: { x: 11600, y: GROUND },
   canalBank: { x: 12420, y: GROUND },
+  oldRoadEast: { x: 13160, y: GROUND },
   courtyard: { x: 13250, y: GROUND },
   mechanisms: { x: 14820, y: GROUND },
   crown: { x: 16500, y: GROUND },
@@ -38,6 +40,10 @@ export const SPAWNS = {
 export const MARA_STALL = { x1: 4345, x2: 4570, roof: 385, shutter: 4460, release: 4525, exitGate: 4780 };
 // barrier keeps Rowan out of the bridge fire's reach until Tomas has spoken.
 export const REFUGE = { oldRoad: 4885, nia: 4985, hearth: 5075, tomas: 5165, mara: 5245, barrier: 5285 };
+// Campaign Scene 10: Eli behind a lattice window high on the tower, seen from the
+// courtyard; the Old Road's east door and its release beside it.
+export const TOWER_WINDOW = { x: 13470, y: 290, knock: 13470 };
+export const OLD_ROAD_EAST = { door: 13150, release: 13085 };
 export const BRIDGE_GAP = { x1: 5480, x2: 6040 };
 export const YARD_GAP = { x1: 720, x2: 830 };
 export const CAMP_GAP = { x1: 7800, x2: 8120 };

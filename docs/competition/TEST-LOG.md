@@ -317,3 +317,28 @@ real key events dispatched to the page:
 Not checked: a full uninterrupted new-game route, the journal screen visually,
 reverse traversal from the far bank, audio by ear, other machines. Placeholder
 NPC art only.
+
+## 17 October 2026 — campaign route reorder (three knocks, Old Road)
+
+`npm test`: **17 passing** (route-order and old-save migration tests added; six
+older tests now call `findEli()` before taking the ember, matching the new rule).
+`npm run build` passed, bundle `index-qf6IFrgi.js`.
+
+Browser (Vite dev, `?test`, 1280×720, real key events), progress set by script to
+"canal crossed":
+- Objective "someone is tapping at the tower window"; walking in plays the two
+  taps. E at the window: three taps, Eli answers three, `eli-found` lines play,
+  objective → Old Road release. Window is lit; Eli visible behind the bars.
+- Held E at the release: gate opens, objective → "go home…". E at the Old Road
+  door → arrived at the refuge (`oldRoadWest`, x 4935), checkpoint saved.
+- Home (Rowan placed beside the front door to skip a ~20s walk): restored hearth
+  shows "You'll come this time?", hold E took the ember, objective → cellar
+  passage. Ladder down, latch → World market (x 3410); walked to the refuge door,
+  Old Road → courtyard (x 13160), objective "back to the tower… ring bell 1".
+- Courtyard restoration with Eli found: Eli steps forward; when the memory
+  ended he was pulled back and `eli-pulled` played.
+- Console: two errors from an intermediate hot-reload (a module saved before its
+  dependency); no errors in later runs.
+
+Not checked: bells/Warden/rescue in this pass (code unchanged), full new-game
+route, walking home on foot.

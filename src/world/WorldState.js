@@ -1,5 +1,5 @@
 import { BALANCE } from './balance.js';
-import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE } from './layout.js';
+import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE, TOWER_WINDOW, OLD_ROAD_EAST } from './layout.js';
 
 export const SAVE_KEY = 'embers-before-three-acts-v1';
 
@@ -24,6 +24,9 @@ export class WorldState {
     this.maraFreed = false;
     this.heardNia = false;
     this.heardTomas = false;
+    // Campaign Scene 10: Eli answers three knocks; the Old Road opens from the tower.
+    this.eliFound = false;
+    this.oldRoadOpen = false;
     this.campReturnOpen = false;
     this.swingReturnOpen = false;
     this.hasDrawing = false;
@@ -81,8 +84,19 @@ export class WorldState {
     this.heardTomas = true; return true;
   }
 
+  findEli() {
+    if (this.eliFound) return false;
+    this.eliFound = true; return true;
+  }
+
+  openOldRoad() {
+    if (!this.eliFound || this.oldRoadOpen) return false;
+    this.oldRoadOpen = true; return true;
+  }
+
+  // Rowan only takes the last ember once he knows Eli is alive and needs it.
   takeHearthEmber() {
-    if (!this.hasEmberCup || this.homeMemorySpent) return false;
+    if (!this.hasEmberCup || !this.eliFound || this.homeMemorySpent) return false;
     this.hasHearthEmber = true;
     this.homeMemorySpent = true;
     return true;
@@ -123,10 +137,13 @@ export class WorldState {
     if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', 6870);
     if (!this.swingReturnOpen) return goal('Act 2: restore the swing crossing', 'World', 8510);
     if (!this.hasDrawing) return goal('Act 2: restore the treehouse; find Eli’s drawing above', 'World', 10400, 380);
-    if (!this.hasHearthEmber) return goal('Act 2: take the home passage; bring the hearth’s last ember', 'World', 11100);
-    if (!this.canalGateOpen) return goal('Act 2: restore the canal; turn the sluice wheel above', 'World', 11820, 440);
+    if (!this.canalGateOpen && !this.hasHearthEmber) return goal('Act 2: restore the canal; turn the sluice wheel above', 'World', 11820, 440);
+    if (!this.eliFound) return goal('Act 3: someone is tapping at the tower window', 'World', TOWER_WINDOW.knock);
+    if (!this.oldRoadOpen && !this.hasHearthEmber) return goal('Act 3: release the Old Road gate in the courtyard', 'World', OLD_ROAD_EAST.release);
+    if (!this.hasHearthEmber) return goal('Go home through the market and take the hearth’s last ember', 'Hearth', 530, 430);
     const next = RELAYS.find(r => !this.litFinaleLamps[r.id]);
-    if (next) return goal(`Act 3: ring bell ${RELAYS.indexOf(next) + 1} in remembered time (${this.relayCount}/3 complete)`, 'World', next.x, next.floor);
+    if (next) return goal(this.relayCount ? `Act 3: ring bell ${RELAYS.indexOf(next) + 1} in remembered time (${this.relayCount}/3 complete)`
+      : `Act 3: back to the tower by the Old Road — ring bell ${RELAYS.indexOf(next) + 1} in remembered time`, 'World', next.x, next.floor);
     if (!this.clearedEncounters['bell-warden']) return goal('Act 3: the wards are broken — defeat the Bell Warden', 'World', 17120);
     return goal('Act 3: climb to Eli; hold E to give him the hearth ember', 'World', 17600, 380);
   }
@@ -157,6 +174,8 @@ export function decodeSave(text) {
     // the matching story has effectively happened.
     if (run.villageGateOpen) run.maraFreed = true;
     if (run.bridgeReturnOpen) run.heardNia = run.heardTomas = true;
+    // Saves from the old route took the ember before finding Eli.
+    if (run.hasHearthEmber || run.homeMemorySpent || run.rescuedEli) run.eliFound = run.oldRoadOpen = true;
     if (run.rescuedEli) { run.hasHearthEmber = false; run.homeMemorySpent = true; }
     run.checkpoint = { scene, spawnId }; return run;
   } catch { return null; }

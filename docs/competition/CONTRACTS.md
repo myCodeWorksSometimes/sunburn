@@ -5,7 +5,31 @@ production interactions. No uninterrupted new full run is claimed. Browser-local
 autosave is implemented; the original module proposals and earlier interfaces
 below are supplemented/superseded by this current chapter contract.
 
-## Campaign Act 1 contract (17 October 2026, latest)
+## Campaign route reorder contract (17 October 2026, latest)
+
+- Order: playground cup → canal (no ember needed) → tower courtyard: Eli at the
+  inspection window, three knocks, Old Road release → Old Road to the refuge →
+  market → home: take the ember → cellar passage to the market → Old Road back
+  to the tower → bells → Warden → rescue.
+- Code: `src/world/TowerStory.js` (`buildTowerStory`, `tickTowerStory`,
+  `towerMemory`) called from Chapters.js. Layout: `TOWER_WINDOW {x, y, knock}`,
+  `OLD_ROAD_EAST {door, release}`; spawns `oldRoadWest` (4935) and `oldRoadEast`
+  (13160).
+- State: `eliFound` (`findEli()`), `oldRoadOpen` (`openOldRoad()` requires
+  `eliFound`). `takeHearthEmber()` now requires `hasEmberCup` **and** `eliFound`.
+  decodeSave migration: holding/spent ember or a rescue ⇒ `eliFound` and
+  `oldRoadOpen`. Goals: canal → "tapping at the tower window" → "release the Old
+  Road gate" → (scene Hearth) "go home through the market…" → bells.
+- Story IDs: `eli-taps`, `eli-found`, `old-road-open`, `eli-step`, `eli-pulled`;
+  the crown's arrival line is now `eli-landing`.
+- Interactions: `eli-window` (three knocks, freezes Rowan ~3s), `eli-window-talk`,
+  `old-road-release` (hold 700ms), `old-road-east` and `old-road-west` (travel via
+  `goTo('World', spawnId)`). Removed: `playground-passage`. The playground gate at
+  11450 opens on `hasDrawing`. Cellar latch (Hearth) now leads to World `shortcut`
+  (market, x 3410) instead of the playground.
+- Drawing/cup text no longer has an inscription; the hearth rule comes from Tomas.
+
+## Campaign Act 1 contract (17 October 2026)
 
 - Story source: CAMPAIGN.md Scenes 4 and 6. Code in `src/world/Act1Story.js`
   (`buildAct1Story(scene, gate)`, `tickAct1Story(scene, delta)`), called from

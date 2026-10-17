@@ -3,6 +3,39 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 17 October 2026 — campaign route reorder: three knocks and the Old Road
+
+### Gameplay implemented (CAMPAIGN.md Scenes 8–11)
+
+- **New order:** playground → canal → tower courtyard (find Eli) → Old Road to
+  the refuge → market → home for the ember → cellar passage to the market → Old
+  Road back to the tower → bells, Warden and rescue as before.
+- **Three knocks (Scene 10):** two taps come from a lit lattice window high on
+  the tower. Rowan taps three; Eli answers three ("That's too many."), proving he
+  is alive. He explains he rang the bell to draw the shadows away; Rowan connects
+  it to Tomas and decides to fetch the ember. Restoring the courtyard lets Eli
+  step forward until the daylight fades and pulls him back.
+- **Old Road:** a release beside its east door in the courtyard opens it; the
+  doors at the tower and the refuge now travel both ways.
+- **The ember waits for Eli:** the hearth ember can only be taken after Eli is
+  found. The canal wheel and the playground exit no longer need it. The
+  playground "passage home" is gone; the cellar passage now leads to the market.
+- Drawing/cup text updated (no inscription). Objectives and journal entries
+  follow the new order. Old saves that already hold the ember migrate safely.
+
+### Verification and limits
+
+- `npm test` 17 passing (2 new; 6 older tests updated for the new ember rule).
+  `npm run build` passed (`index-qf6IFrgi.js`).
+- Browser checks with real key events: canal bank → window taps → three knocks →
+  Old Road release → travel to refuge; home: restore hearth → take ember →
+  ladder → cellar latch → market → refuge door → Old Road → courtyard (bell 1
+  objective); courtyard restoration: Eli steps and is pulled back. Details in
+  TEST-LOG.
+- Not checked in this pass: ringing the bells and the Warden (unchanged code;
+  my scripted jump onto the bell ledges missed), a full new-game run, the long
+  walk home on foot (Rowan was placed near the front door to save time).
+
 ## 17 October 2026 — campaign Act 1: Mara's stall and the Bridge Refuge
 
 ### Gameplay implemented (CAMPAIGN.md Scenes 4 and 6)
