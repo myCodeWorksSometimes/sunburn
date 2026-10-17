@@ -534,3 +534,11 @@ this art build, every seam under all camera positions, headphone mix and human
 asset/typography approval remain human-owned. No recorded human QA was invented.
 
 - Final canonical :4176 refresh: index-CFJLCN30.js, Title/Intro/Hearth and new survivor/satchel smoke check; zero page errors/warnings. Snapshot embers-playtest-Gl4NTI, process23900.
+
+- Post-publication:054d58b pushed to origin/main without force. H: dirty paths were
+  verified against the already-published91bea18 patch (plus the retained Act3
+  comment and owned claim notes), backed up with a named limited-path stash, then
+  fast-forwarded. No unknown teammate edits were stashed. H: npm test23/23 and
+  build index-CFJLCN30.js pass. .stfolder and assets/backgrounds.zip remain untracked.
+  Workspace sunburn fast-forwarded from3d4a82b; its untracked story draft remains.
+  Temporary owned4177/5174 servers stopped; only canonical4176 remains listening.

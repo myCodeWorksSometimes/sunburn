@@ -30,6 +30,9 @@ implemented work, validation and remaining limits. Preserve prior entries.
   checks for ladder, radial warmup/pause, boss intros/skip, Five-Hand pick+sweep,
   Braced charge/dodge/back hit, real gear puzzle/bridge/return, audio lifecycle,
   fresh title flow and menus at 1280x720 / 960x540. TEST-LOG records corrections.
+- Shared H:/projects/gameDev integration also passes23/23 tests and builds the
+  same index-CFJLCN30.js. Workspace sunburn fast-forwarded while preserving its
+  untracked story draft. Syncthing marker/archive files were left untouched.
 - Stable demo remains http://127.0.0.1:4176/ after refresh. Full fresh Act1/adventure,
   all three Braced cycles without fixtures, human art/difficulty and audio mix
   approval remain user testing. This is a tested production pass, not a claimed

@@ -18,6 +18,10 @@ checks pass. Human production acceptance is still pending, not certified.
 - Frozen demo: bundle index-CFJLCN30.js, snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-Gl4NTI, Node process23900. Source edits cannot reload it.
 - Verification: 23 Node tests, build, short Chrome fixtures/input checks. See the
   newest TEST-LOG entry and ACT1-PRODUCTION.md for evidence and human test steps.
+- Shared H:/projects/gameDev and this workspace sunburn are synchronized to the
+  published implementation. H: test23/23 + build verified identical CFJLCN30 bundle.
+  A named Git stash retains the already-published pre-production patch/owned claims
+  as a backup; it is not pending teammate work. Unrelated files were preserved.
 - Remaining: human fresh Act1 run, complete three-opening Braced fight, art/spacing
   judgment, audio listening/mix, longer whole-adventure/second-machine QA. No claim
   that later acts or an uninterrupted route were accepted in this iteration.
