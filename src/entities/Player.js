@@ -21,6 +21,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.hasLantern = false;
     this.wasAirborne = false;
     this.landedAt = 0;
+    this.lastGrounded = -1000;
+    this.jumpQueuedAt = -1000;
 
     const kb = scene.input.keyboard;
     this.keys = kb.addKeys({
@@ -58,14 +60,24 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   // Plays a one-shot animation with the player rooted in place, then calls done.
   act(key, done) {
+    this.cancelAction();
     this.acting = true;
     this.setVelocityX(0);
     this.play(key);
-    this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+    this.actionComplete = () => {
       this.acting = false;
+      this.actionComplete = null;
       done?.();
-    });
+    };
+    this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, this.actionComplete);
   }
+
+  cancelAction() {
+    if (this.actionComplete) this.off(Phaser.Animations.Events.ANIMATION_COMPLETE, this.actionComplete);
+    this.actionComplete = null; this.acting = false;
+  }
+
+  resetJump() { this.lastGrounded = -1000; this.jumpQueuedAt = -1000; this.airborneSince = null; this.wasAirborne = false; }
 
   startClimb(ladder) {
     this.climbing = true;
@@ -88,6 +100,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     const i = this.frozen ? {} : this.readInput();
     const onGround = this.body.blocked.down || this.body.touching.down || this.rampGround;
+    const now = this.scene.time.now;
+    if (onGround) this.lastGrounded = now;
+    if (i.jump) this.jumpQueuedAt = now;
 
     if (this.climbing) {
       const l = this.ladder;
@@ -101,9 +116,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       } else if ((i.left || i.right) && !i.up && !i.down && (this.feet <= l.top + 4 || this.feet >= l.bottom - 4)) {
         this.stopClimb();
       }
-      // No climb sheet yet: alternate the reaching jump poses.
-      this.anims.stop();
-      this.setTexture('hero_jump', vy !== 0 && Math.floor(this.scene.time.now / 180) % 2 ? 1 : 3);
+      if (vy) this.play('hero-climb', true);
+      else { this.anims.stop(); this.setTexture('hero_climb', 0); }
       return;
     }
 
@@ -121,7 +135,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const vx = i.left ? -RUN : i.right ? RUN : 0;
     this.setVelocityX(vx);
     if (vx) this.setFlipX(vx < 0);
-    if (i.jump && onGround) this.setVelocityY(-JUMP);
+    if (!this.frozen && now - this.jumpQueuedAt < 120 && now - this.lastGrounded < 100) {
+      this.setVelocityY(-JUMP);
+      this.jumpQueuedAt = -1000; this.lastGrounded = -1000;
+    }
 
     if (!onGround) {
       this.airborneSince ??= this.scene.time.now;

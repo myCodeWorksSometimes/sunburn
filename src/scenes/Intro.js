@@ -1,18 +1,17 @@
 import Phaser from 'phaser';
 import { Captions, FONT } from '../systems/Captions.js';
 
-// Opening cutscene: the last ordinary afternoon, the sun breaking, the meteors.
+// Meteor corruption, followed by the last ordinary afternoon's remembered world.
 const SHOTS = [
   {
     key: 'cut_01_before', duration: 9500,
     lines: [
-      'The last ordinary afternoon.',
-      { speaker: 'Brother', text: "I'm going to the playground!", color: '#ffe2a0' },
-      { speaker: 'Me', text: 'Be back before dark!', color: '#c8d8ff' },
+      { speaker: 'Eli', text: 'The tower today?', color: '#ffe2a0' },
+      { speaker: 'Rowan', text: 'After work. I promise.', color: '#c8d8ff' },
+      { speaker: 'Eli', text: 'I’ll be by the square.', color: '#ffe2a0' },
     ],
   },
-  { key: 'cut_02_sun_breaks', duration: 5000, shake: 0.004, lines: ['Then the sun broke.'] },
-  { key: 'cut_03_meteors', duration: 5000, shake: 0.012, flash: true, lines: ['And the sky fell.'] },
+  { key: 'cut_01_before', duration: 2500, impact: true, lines: ['A meteor struck. Daylight never returned.'] },
 ];
 
 export class Intro extends Phaser.Scene {
@@ -21,6 +20,7 @@ export class Intro extends Phaser.Scene {
   }
 
   create() {
+    this.done = false;
     const { width, height } = this.scale;
     this.captions = new Captions(this);
     this.add.text(width - 20, 20, '[Enter] skip', { fontFamily: FONT, fontSize: '16px', color: '#8a7a6a' }).setOrigin(1, 0).setDepth(200);
@@ -31,11 +31,17 @@ export class Intro extends Phaser.Scene {
 
   showShot() {
     const shot = SHOTS[this.index];
-    if (!shot) return this.blackout();
+    if (!shot) return this.finish();
     const { width, height } = this.scale;
     const img = this.add.image(width / 2, height / 2, shot.key).setScale(1.02);
     this.tweens.add({ targets: img, scale: 1.1, duration: shot.duration + 1000 });
     const cam = this.cameras.main;
+    if (shot.impact) {
+      const streak = this.add.graphics().lineStyle(8, 0xffbd7a, 1).lineBetween(990, 0, 650, 350);
+      const veil = this.add.rectangle(640, 360, 1280, 720, 0x100c1b).setAlpha(0).setDepth(5);
+      this.tweens.add({ targets: veil, alpha: 1, duration: 1200 });
+      this.time.delayedCall(1200, () => streak.destroy());
+    }
     cam.fadeIn(700);
     if (shot.shake) cam.shake(shot.duration, shot.shake);
     if (shot.flash) cam.flash(900, 255, 120, 60);
@@ -64,6 +70,6 @@ export class Intro extends Phaser.Scene {
     if (this.done) return;
     this.done = true;
     this.cameras.main.fadeOut(600, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Home'));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Hearth', { spawnId: 'cellar' }));
   }
 }

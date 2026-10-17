@@ -1,14 +1,17 @@
 // Bottom-of-screen story captions with a typewriter effect.
 
-export const FONT = '"Pixelify Sans", monospace';
+export const FONT = 'Trebuchet MS, sans-serif';
 
 export class Captions {
   constructor(scene, depth = 100) {
     this.scene = scene;
     const { width, height } = scene.scale;
-    this.box = scene.add.rectangle(width / 2, height - 70, width - 240, 64, 0x000000, 0.55).setScrollFactor(0).setDepth(depth).setAlpha(0);
+    // The cellar's walk line is y650: bottom captions would hide its pickups,
+    // hands and feet. Give the interior a clear upper caption band instead.
+    const captionY = scene.scene.key === 'Hearth' ? 212 : height - 70;
+    this.box = scene.add.rectangle(width / 2, captionY, width - 240, 72, 0x10131c, 0.9).setStrokeStyle(1, 0x766044, .75).setScrollFactor(0).setDepth(depth).setAlpha(0);
     this.text = scene.add
-      .text(width / 2, height - 70, '', { fontFamily: FONT, fontSize: '26px', color: '#f3e6d0', align: 'center', wordWrap: { width: width - 300 } })
+      .text(width / 2, captionY, '', { fontFamily: FONT, fontSize: '23px', color: '#f3e6d0', align: 'center', wordWrap: { width: width - 300 } })
       .setOrigin(0.5)
       .setScrollFactor(0)
       .setDepth(depth + 1);
@@ -40,8 +43,9 @@ export class Captions {
     this.busy = true;
     this.scene.tweens.killTweensOf([this.box, this.text]);
     const full = line.speaker ? `${line.speaker}: ${line.text}` : line.text;
+    this.full = full;
     this.text.setText('').setAlpha(1).setColor(line.color || '#f3e6d0');
-    this.box.setAlpha(0.55);
+    this.box.setAlpha(.95);
     let i = 0;
     this.typer = this.scene.time.addEvent({
       delay: 28,
@@ -50,6 +54,12 @@ export class Captions {
     });
     const hold = line.hold ?? 1400 + full.length * 45;
     this.timer = this.scene.time.delayedCall(full.length * 28 + hold, () => this.next());
+  }
+
+  advance() {
+    if (!this.busy) return;
+    if (this.text.text !== this.full) { this.typer?.remove(); this.text.setText(this.full); }
+    else { this.timer?.remove(); this.next(); }
   }
 }
 

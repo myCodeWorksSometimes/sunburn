@@ -1,0 +1,190 @@
+import { Crawler } from '../entities/Crawler.js';
+import { placeProp } from '../presentation/Scenery.js';
+import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, regionAt } from './layout.js';
+import { saveSession } from './WorldState.js';
+
+const point = (x, y = GROUND) => ({ x, y });
+function steps(s, regionId, start, permanent) {
+  return [[start, start + 110, 500], [start + 120, start + 230, 440], [start + 240, start + 460, 380]]
+    .map(([x1, x2, y]) => s.addSurface(x1, x2, y, { regionId, restoredOnly: true, permanent }));
+}
+function enemy(s, data) {
+  if (s.run.clearedEncounters[data.id]) return null;
+  const actor = new Crawler(s, data); s.enemies.push(actor); return actor;
+}
+function gate(s, x, isOpen, label) {
+  const object = s.addWall(x, GROUND, 350);
+  s.chapterGates.push({ ...object, isOpen });
+  s.addInteract({ id: `gate-${x}`, x: x - 50, floor: GROUND, when: () => !isOpen(), label, use: () => s.captions.say(label) });
+}
+
+export function buildChapters(s) {
+  s.transferRemaining = null; s.chapterGates = []; s.swingTime = 0;
+  const run = s.run;
+  s.addInteract({ id: 'home-door', x: 180, floor: GROUND, label: 'E: enter home', use: () => s.goTo('Hearth', 'front') });
+  s.addInteract({ id: 'square-passage', x: 3410, floor: GROUND, label: () => run.shortcutOpen ? 'E: passage home' : 'E: inspect the sealed passage',
+    use: () => run.shortcutOpen ? s.goTo('Hearth', 'shortcut') : s.captions.say('This old passage opens from the playground. The bell latch above the steps opens the village road.') });
+
+  // ACT 1: the original four village locations, with a real square gate puzzle.
+  placeProp(s, 'item-lantern', 4240, 380, 34, 44, 23);
+  s.addLabel(4240, 303, 'BELL LATCH', '#d3bc91', 13);
+  s.addInteract({ id: 'village-latch', x: 4240, floor: 380,
+    when: () => !run.villageGateOpen && s.memory.isRestored('square'), label: 'E: pull the bell latch — open the village road',
+    use: () => { run.villageGateOpen = true; s.audio.cue('take'); s.story('village-latch', { speaker: 'Rowan', text: 'The road to the playground. Still a way through.' }); } });
+  gate(s, 4990, () => run.villageGateOpen, 'Restore the market steps and pull the bell latch above.');
+  enemy(s, { id: 'lane-crawler', x: 2480, floor: GROUND, minX: 1820, maxX: 2860, regionId: 'lane' });
+  enemy(s, { id: 'camp-crawler', x: 7370, floor: GROUND, minX: 7090, maxX: 7640, regionId: 'camp' });
+  s.campSurface = s.addSurface(CAMP_GAP.x1, CAMP_GAP.x2, GROUND, { regionId: 'camp', restoredOnly: true, material: 'bridge', permanent: () => run.campReturnOpen });
+
+  // ACT 2: a moving restored swing, treehouse evidence, home return, canal wheel.
+  s.swingPlatform = s.addSurface(9240, 9380, 500, { regionId: 'swings', restoredOnly: true, material: 'timber' });
+  s.swingReturn = s.addSurface(SWING_GAP.x1, SWING_GAP.x2, GROUND, { regionId: 'swing-return', restoredOnly: true, material: 'bridge', permanent: () => run.swingReturnOpen });
+  s.swingRopes = s.add.graphics().setDepth(14);
+  s.addLabel(9300, 297, 'THE SWINGS', '#b3a38d', 15);
+  steps(s, 'treehouse', 10050);
+  const drawing = s.add.image(10395, 360, 'item_drawing').setDisplaySize(38, 32).setDepth(23).setVisible(!run.hasDrawing);
+  const cup = placeProp(s, 'item-cup', 10435, 380, 32, 28, 23).setVisible(!run.hasDrawing);
+  s.addInteract({ id: 'eli-drawing', x: 10400, floor: 380, label: 'E: take Eli’s drawing and the ember cup',
+    when: () => !run.hasDrawing && s.memory.isRestored('treehouse'),
+    use: () => {
+      if (!run.findDrawing()) return;
+      drawing.setVisible(false); cup.setVisible(false); s.audio.cue('take');
+      s.story('drawing-found', { speaker: 'Echo Eli', text: 'The tower has a shelter. Follow me!' },
+        { speaker: 'Rowan', text: 'He helped them. Then he went to the tower.' },
+        { text: '“A hearth remembers its own. Its last ember can call them home.”' },
+        { speaker: 'Rowan', text: 'Our hearth. The old passage below leads home.' });
+    } });
+  placeProp(s, 'door', 11100, GROUND, 78, 125);
+  s.addLabel(11100, 407, 'PASSAGE HOME', '#d3bc91', 13);
+  s.addInteract({ id: 'playground-passage', x: 11100, floor: GROUND, when: () => run.hasDrawing,
+    label: 'E: open the old passage home', use: () => { run.shortcutOpen = true; s.goTo('Hearth', 'shortcut'); } });
+  enemy(s, { id: 'playground-pouncer', x: 10860, floor: GROUND, minX: 10670, maxX: 11000, regionId: 'treehouse', kind: 'pouncer' });
+  gate(s, 11450, () => run.hasHearthEmber || run.rescuedEli, 'Take the passage home and bring the last hearth ember.');
+  s.addSurface(11680, 11790, 500, { regionId: 'canal', restoredOnly: true });
+  s.addSurface(11800, 11890, 440, { regionId: 'canal', restoredOnly: true });
+  s.canalSurface = s.addSurface(CANAL_GAP.x1, CANAL_GAP.x2, GROUND, { regionId: 'canal', restoredOnly: true, material: 'bridge', permanent: () => run.canalGateOpen || run.canalReturnOpen });
+  s.add.circle(11820, 415, 19, 0x252832).setStrokeStyle(4, 0xb69868).setDepth(23);
+  s.addInteract({ id: 'canal-wheel', x: 11820, floor: 440, hold: 800, label: 'Hold E: turn the sluice wheel — secure the tower road',
+    when: () => run.hasHearthEmber && !run.canalGateOpen && s.memory.isRestored('canal'),
+    use: () => { run.canalGateOpen = true; s.refreshSurface(s.canalSurface); s.audio.cue('take'); s.story('sluice-open', { speaker: 'Rowan', text: 'The crossing will hold now. The tower is close.' }); } });
+
+  // ACT 3: three different-height relays remove a guardian's wards.
+  gate(s, 13040, () => run.canalGateOpen, 'Restore the canal and turn its sluice wheel before entering the tower.');
+  s.addSurface(13510, 13620, 500, { regionId: 'tower-court', restoredOnly: true });
+  s.addSurface(13640, 13850, 440, { regionId: 'tower-court', restoredOnly: true });
+  steps(s, 'tower-base', 15100);
+  s.addSurface(16700, 16880, 500, { regionId: 'tower-crown', restoredOnly: true });
+  s.eliStairs = steps(s, 'tower-crown', 17200, () => run.relayCount === 3 && !!run.clearedEncounters['bell-warden']);
+  s.relaySprites = [];
+  for (const [index, relay] of RELAYS.entries()) {
+    const sprite = placeProp(s, 'item-lantern', relay.x, relay.floor, 38, 48, 23).setTint(run.litFinaleLamps[relay.id] ? 0xffffff : 0x716b7d);
+    s.relaySprites.push({ sprite, relay });
+    s.addLabel(relay.x, relay.floor - 75, `BELL ${index + 1}`, '#d3bc91', 13);
+    s.addInteract({ id: relay.id, x: relay.x, floor: relay.floor, hold: 650,
+      label: `Hold E: ring bell ${index + 1}`, when: () => !run.litFinaleLamps[relay.id] && run.hasHearthEmber && s.memory.isRestored(relay.regionId),
+      use: () => {
+        if (!run.ringRelay(relay.id)) return;
+        sprite.clearTint(); s.audio.cue('rescue');
+        s.story(relay.id, { text: run.relayCount === 3 ? 'The third bell breaks the Warden’s last ward.' : `Bell ${index + 1} answers. A ward breaks.` });
+        if (run.relayCount === 3) { s.warden?.wake(); s.warden && (s.warden.state = 'recovery', s.warden.elapsed = -900); }
+      } });
+  }
+  enemy(s, { id: 'court-crawler', x: 14300, floor: GROUND, minX: 14030, maxX: 14530, regionId: 'tower-court' });
+  enemy(s, { id: 'tower-pouncer', x: 15900, floor: GROUND, minX: 15680, maxX: 16180, regionId: 'tower-base', kind: 'pouncer' });
+  s.warden = enemy(s, { id: 'bell-warden', x: 17120, floor: GROUND, minX: 16880, maxX: 17430, regionId: 'tower-crown', kind: 'warden', dormant: run.relayCount < 3 });
+  s.bossText = s.addLabel(17120, 360, 'BELL WARDEN · 3 WARDS', '#e0bd9a', 16);
+  s.brother = s.add.sprite(17600, 380, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
+  s.add.image(17565, 370, 'ball-final').setDisplaySize(20, 20).setDepth(24);
+  s.brotherLabel = s.addLabel(17600, 265, '… tap, tap …', '#d6be89', 17);
+  s.addInteract({ id: 'rescue-eli', x: 17600, floor: 380, range: 85, priority: 10, hold: 1000,
+    label: 'Hold E: give the hearth ember to Eli',
+    when: () => run.hasHearthEmber && run.relayCount === 3 && !!run.clearedEncounters['bell-warden'] && s.transferRemaining == null,
+    use: () => {
+      s.transferRemaining = 2000; s.player.frozen = true; s.player.setVelocity(0); s.player.cancelAction();
+      s.memory.activate({ id: 'rescue-memory', regionId: 'tower-crown', duration: 10000 }); s.audio.cue('rescue');
+    } });
+  placeProp(s, 'door', 16500, GROUND, 75, 120);
+  s.homeRoadLabel = s.addLabel(16500, 395, 'OLD ROAD HOME', '#d3bc91', 14).setVisible(run.rescuedEli);
+  s.addInteract({ id: 'old-road-home', x: 16500, floor: GROUND, priority: 20, when: () => run.rescuedEli,
+    label: 'E: take the old road home together', use: () => { run.setCheckpoint('Hearth', 'front'); s.goTo('Hearth', 'front'); } });
+}
+
+export function tickChapters(s, delta) {
+  const run = s.run, x = s.player.x;
+  run.maxXReached = Math.max(run.maxXReached, x);
+  if (regionAt(x).act === 'Act 1') s.story('act-1', { text: 'ACT 1 — THE RUINED VILLAGE', hold: 1000 }, { speaker: 'Rowan', text: 'The playground is beyond the village. Keep going.' });
+  for (const g of s.chapterGates) { g.zone.body.enable = !g.isOpen(); g.image.setVisible(!g.isOpen()); }
+  if (x > CAMP_GAP.x2 + 35 && !run.campReturnOpen) {
+    run.campReturnOpen = true; s.refreshSurface(s.campSurface); run.setCheckpoint('World', 'playground');
+    s.story('act-2', { text: 'ACT 2 — THE PLAYGROUND', hold: 1000 }, { speaker: 'Rowan', text: 'The swings. He was supposed to be here.' });
+  }
+  if (x > SWING_GAP.x2 + 35 && !run.swingReturnOpen) {
+    run.swingReturnOpen = true; s.refreshSurface(s.swingReturn); run.setCheckpoint('World', 'swingBank'); s.notice('The return boardwalk is secured.');
+  }
+  if (x > CANAL_GAP.x2 + 35 && !run.canalReturnOpen) {
+    run.canalReturnOpen = true; s.refreshSurface(s.canalSurface); run.setCheckpoint('World', 'canalBank');
+  }
+  if (x > 13100) s.story('act-3', { text: 'ACT 3 — THE CLOCK TOWER', hold: 1000 }, { speaker: 'Rowan', text: 'I promised you the view. I’m here now.' });
+  if (x > 350) s.story('night-reveal', { speaker: 'Rowan', text: 'The clock’s stopped. The whole village is waiting.' });
+  if (s.memory.isRestored('swings')) {
+    s.swingTime += delta;
+    const platform = s.swingPlatform, old = platform.zone.x, next = 9310 + Math.sin(s.swingTime / 1050) * 100;
+    const carry = Math.abs(s.player.feet - 500) < 6 && Math.abs(s.player.x - old) < 90 && s.player.body.velocity.y >= 0;
+    platform.zone.x = next; platform.zone.body.updateFromGameObject(); platform.block.x = platform.edge.x = next - 70;
+    if (carry) { const dx = next - old; s.player.x += dx; s.player.body.x += dx; }
+  }
+  s.swingRopes.clear();
+  if (s.swingPlatform.block.visible) s.swingRopes.lineStyle(3, 0x9c835e).lineBetween(9280, 300, s.swingPlatform.zone.x - 45, 500).lineBetween(9340, 300, s.swingPlatform.zone.x + 45, 500);
+  if (s.warden?.active && s.warden.alive) s.bossText.setPosition(s.warden.x, GROUND - 165).setText(run.relayCount < 3 ? `BELL WARDEN · ${3 - run.relayCount} WARDS` : `BELL WARDEN · ${s.warden.health} / 4`);
+  else s.bossText.setVisible(false);
+  if (run.relayCount === 3 && run.clearedEncounters['bell-warden']) for (const stair of s.eliStairs) s.refreshSurface(stair);
+  if (x > 17320 && !run.rescuedEli) {
+    if (s.story('eli-found', { text: '… tap, tap …', color: '#ffe1a1' }, { speaker: 'Rowan', text: 'Eli. I’m here.' })) s.audio.cue('knock');
+  }
+  if (s.transferRemaining != null) {
+    s.transferRemaining -= delta;
+    if (s.transferRemaining <= 0) {
+      s.transferRemaining = null;
+      if (run.rescue()) {
+        s.player.frozen = false; s.memory.cancel('rescue');
+        s.enemies.forEach(e => e.active && e.disperse());
+        s.story('rescue', { speaker: 'Eli', text: 'Is it still night?' }, { speaker: 'Rowan', text: 'Yes. But you’re here.' }, { speaker: 'Eli', text: 'Then stay close.' }, { speaker: 'Rowan', text: 'We’re going home. Together.' });
+        saveSession(s);
+      } else s.player.frozen = false;
+    }
+  }
+  if (run.rescuedEli) {
+    s.homeRoadLabel.setVisible(true);
+    s.brother.clearTint().setAlpha(1);
+    const target = s.player.x + (s.player.flipX ? 60 : -60), dx = target - s.brother.x;
+    s.brother.x += Math.sign(dx) * Math.min(Math.abs(dx), delta * .24);
+    const floor = s.brother.x > 17440 ? 380 : s.brother.x > 17320 ? 440 : s.brother.x > 17200 ? 500 : GROUND;
+    s.brother.y = Math.min(floor, s.brother.y + delta * .45);
+    s.brother.setFlipX(dx < 0).play(Math.abs(dx) > 10 ? 'brother-run' : 'brother-idle', true);
+    s.brotherLabel.setText('ELI').setPosition(s.brother.x, s.brother.y - 100);
+  } else s.brother.setTint(0xffdc94).setAlpha(.3 + (s.memory.fire?.regionId === 'tower-crown' ? s.memory.alpha : 0) * .5);
+}
+
+export function memoryChapter(s, fire) {
+  if (fire.id === 'rescue-memory') return;
+  const id = fire.regionId;
+  if (id === 'yard') {
+    s.story('yard-memory', { speaker: 'Rowan', text: 'Daylight. Even the grass remembers.' });
+    s.echo([point(300), point(1350)]);
+  } else if (id === 'lane') {
+    s.notice('F: face a Crawler and sweep twice, or evade it from the crate.'); s.echo([point(1750), point(2950)]);
+  } else if (id === 'square') {
+    s.story('square-memory', { speaker: 'Echo Eli', text: 'The playground! This way!' }, { text: 'Jump up the restored steps and pull the bell latch.' });
+    s.echo([point(3560), point(3890), point(3970, 500), point(4070, 440), point(4240, 380)]);
+  } else if (id === 'bridge') {
+    s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5240), point(6300)]);
+  } else if (id === 'camp') {
+    s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(6930), point(8300)]);
+  } else if (id === 'swings') {
+    s.story('swing-memory', { text: 'The swing moves in remembered time. Jump onto its board, then to the far bank.' }); s.echo([point(8680), point(9230, 500), point(9620)]);
+  } else if (id === 'treehouse') {
+    s.story('treehouse-memory', { speaker: 'Echo Eli', text: 'The tower has room for everyone!' }, { speaker: 'Rowan', text: 'His drawing. Up in the treehouse.' });
+    s.echo([point(9980), point(10110, 500), point(10230, 440), point(10400, 380)]);
+  } else if (id === 'canal') s.story('canal-memory', { text: 'Climb the two restored ledges. Turn the wheel to secure the tower road.' });
+  else if (id.startsWith('tower-')) s.notice('Climb to the bell and hold E while this region is restored. M: map · J: journal');
+}

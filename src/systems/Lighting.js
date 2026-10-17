@@ -8,6 +8,7 @@ export class Lighting {
     this.scene = scene;
     this.darkness = darkness;
     this.lights = new Set();
+    this.restoredAreas = [];
     const { width, height } = scene.scale;
     this.w = Math.ceil(width / RES);
     this.h = Math.ceil(height / RES);
@@ -43,6 +44,12 @@ export class Lighting {
     ctx.fillStyle = `rgba(6,3,12,${this.darkness})`;
     ctx.fillRect(0, 0, this.w, this.h);
     ctx.globalCompositeOperation = 'destination-out';
+    // Restoration is daylight across the affected region, rather than a larger
+    // lantern halo. Adjacent corrupted regions retain their darkness.
+    for (const area of this.restoredAreas) {
+      ctx.fillStyle = `rgba(0,0,0,${Math.min(1, area.alpha) * 0.92})`;
+      ctx.fillRect((area.x - cam.scrollX) / RES, 0, area.width / RES, this.h);
+    }
 
     for (const l of this.lights) {
       if (l.follow) {

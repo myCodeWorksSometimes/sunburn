@@ -1,5 +1,12 @@
 # Background Asset List — Prologue + Act 1
 
+> **Legacy prototype reference.** Before using any prompt below, read
+> [the latest canon](../docs/competition/CANON.md). The meteor corrupted the world
+> into endless night; the sun did not explode. Fire restores local healthy
+> daylight, greenery and structures temporarily. Shattered-sun imagery and the
+> tower-as-final-level premise below are superseded. Reuse current assets for
+> gameplay first; final art production begins after the playable-core gate.
+
 Working title: **Embers of Before** (placeholder)
 Reference images to attach to every generation: `Campfire in the Ruined Village.png`, `Lantern Bearer in the Ruined Keep.png`
 

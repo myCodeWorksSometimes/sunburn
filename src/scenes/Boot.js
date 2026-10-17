@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { createTextures } from '../textures.js';
 import { FONT } from '../systems/Captions.js';
+import { getSession } from '../world/WorldState.js';
+import { createPresentationTextures } from '../presentation/textures.js';
 
 const BACKGROUNDS = [
   'bg_title_screen', 'cut_01_before', 'cut_02_sun_breaks', 'cut_03_meteors',
@@ -20,6 +22,13 @@ export class Boot extends Phaser.Scene {
     this.add.text(width / 2, height / 2 - 30, 'kindling…', { fontFamily: FONT, fontSize: '22px', color: '#d8c8b0' }).setOrigin(0.5);
     this.load.on('progress', (p) => (bar.width = 400 * p));
     for (const key of BACKGROUNDS) this.load.image(key, `bg/${key}.png`);
+    this.load.json('presentation-manifest', 'art/manifest.json');
+    this.load.once('filecomplete-json-presentation-manifest', (_key, _type, assets) => {
+      for (const [key, path] of Object.entries(assets)) {
+        if (path.endsWith('.svg')) this.load.svg(key, path);
+        else this.load.image(key, path);
+      }
+    });
 
     // Sprite sheets: frame sizes come from the manifest written by tools/extract_sprites.py.
     this.load.json('sprites', 'sprites/sprites.json');
@@ -32,9 +41,11 @@ export class Boot extends Phaser.Scene {
   }
 
   create() {
+    createPresentationTextures(this);
     createTextures(this);
     // ?scene=Yard jumps straight to a scene while developing.
     const start = new URLSearchParams(location.search).get('scene') || 'Title';
+    if (start === 'World') getSession(this).hasLantern = true;
     this.scene.start(start, ['Title', 'Intro', 'Home'].includes(start) ? undefined : { hasLantern: true });
   }
 }

@@ -1,0 +1,39 @@
+# Live implementation status
+
+Updated: 17 October 2026, complete original-chapter gameplay iteration.
+
+## Current truth
+
+- Current route: Title → Intro → Hearth ↔ continuous World → Hearth coda → Credits.
+- Prologue and original Act 1 identity are retained. Act 2 is The Playground; newly authored Act 3 is The Clock Tower. Original GitHub had no playable Act 2 or Act 3 script.
+- World is 18,000px across eleven regions. Existing art is reused; no new image generation in this iteration.
+- Act 1: square bell latch, corruption gate, 9s bridge, campfire and second timed walkway.
+- Act 2: moving restored swing crossing, treehouse jumps, drawing/cup pickup, home-return shortcut, protected hearth ember, canal wheel and persistent crossings.
+- Act 3: three elevation/bell puzzles, warded four-hit Bell Warden, permanent final steps, protected rescue, Eli follower, old-road return and playable home ending.
+- Crawler and fixed-direction Pouncer attacks; Warden has wards and faster low-health lunges. Existing health/flame/oil, sweep, rest, pause, cooldown and checkpoint rules retained.
+- I inventory has five cards. M map and J journal pause gameplay; objective text includes direction and location. Browser-local autosave and Title Continue restore a safe checkpoint and persistent progress. N / Pause restart starts fresh.
+- Thirteen Node tests and production build pass. Current production bundle: index-BMOqQZEt.js. Standard large-bundle warning remains.
+- Short Chrome checks passed for each chapter's critical interactions, actual moving-swing / treehouse / final stair jumps, resource guards, guardian tell/dodge/four-hit defeat, save/continue, rescue and home-to-credits coda. Fresh start and scaled five-card inventory passed.
+- These checks use independent fixtures and short input sequences. No fresh uninterrupted Prologue-to-credits run or human difficulty assessment is claimed for this build. Full route is human-owned per user instruction.
+
+## Current demo
+
+Canonical link: http://127.0.0.1:4176/ . Refreshed and verified with bundle index-BMOqQZEt.js; fresh Title/Intro skip/Hearth/map smoke check passed with no page errors. Frozen snapshot: C:/Users/owner/AppData/Local/Temp/embers-playtest-kxhzmY, Node process11964. Development preview :5173 was stopped after checks. Only :4176 remains listening among the project's demo/test ports. Source edits do not mutate this snapshot. Old temporary copies remain unserved after an earlier automatic deletion rejection.
+
+## Ownership / next action
+
+Implementation and local checks are complete; the integrator releases core editing claims at this handoff. No other local active claims were observed. Next human action: use the frozen demo and the eight-step checklist in ACTS-IMPLEMENTATION.md, then report route/difficulty failures. Git publication is recorded by the repository commit history and the final handoff message; cumulative WHAT_IS_CHANGED.md describes this iteration and prior local work.
+
+## Git handoff policy
+
+User explicitly requires a commit/push after each completed prompt. Root WHAT_IS_CHANGED.md is cumulative and retains earlier local iteration history. Fetch before pushing; integrate parallel changes without force-pushing or reverting other people's work. The first push from this session also includes prior local core/polish/planning work that had never been pushed.
+
+## Remaining limitations
+
+- Final art/painted joins and audio mix remain; no new raster generation is authorised. Existing three raster drafts predate that instruction. User owns image delivery.
+- Long fresh route, optional/reverse traversal, human navigation and difficulty, audio listening, second-machine/offline packaging and trailer remain human QA/release work.
+- Browser local save is origin/profile specific; another port or machine has a separate save. Continue resumes a safe checkpoint, not mid-jump or in an active memory. No cloud save.
+- Keyboard desktop controls; no touch/controller support or standalone executable packaging.
+- Legacy Home/Yard/A1 scenes remain development references, outside the current main route.
+
+Earlier baseline/core/polish evidence is retained chronologically in TEST-LOG.md; it does not certify the expanded build's full uninterrupted route.

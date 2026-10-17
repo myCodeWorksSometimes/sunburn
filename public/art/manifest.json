@@ -1,0 +1,17 @@
+{
+  "stone-ground": "art/stone-ground.png",
+  "eli-source": "art/eli-sheet.png",
+  "climb-source": "art/rowan-climb-sheet.png",
+  "item-lantern": "art/item-lantern.svg",
+  "item-cup": "art/item-cup.svg",
+  "item-oil": "art/item-oil.svg",
+  "item-ember": "art/item-ember.svg",
+  "health": "art/health.svg",
+  "ball-final": "art/ball-final.svg",
+  "timber": "art/timber.svg",
+  "crate": "art/crate.svg",
+  "door": "art/door.svg",
+  "ladder": "art/ladder.svg",
+  "corruption": "art/corruption.svg",
+  "marker": "art/marker.svg"
+}
