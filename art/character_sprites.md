@@ -75,12 +75,21 @@ Also attach `public/sprites/shadow_idle.png` so it reads as the same family as t
 
 ### Five-Hand (first boss, not in the MVP build yet)
 
-> Five-Hand: a mass of shadow and corruption roots tangled around a wooden market card-game counter, five long shadowy hands rising from it, each holding a large painted wooden playing card. Two pale glowing eyes in the dark mass behind the counter.
+**Art style: flat 2D side-view pixel art like everything else — not pseudo-3D.**
+The card game must still be readable from the side, so the cards are **held
+upright and face the player**, not lying on the counter.
+
+> Five-Hand: a mass of shadow and corruption roots tangled behind a wooden market card-game counter, seen strictly from the side like the rest of the game. Five long shadowy arms rise from it and hold their hands up in a row above the counter, each hand pinching the top of a large painted wooden playing card held flat toward the viewer, like a card dealer showing their cards. Two pale glowing eyes in the dark mass behind the counter. Flat 2D side-view pixel art matching the attached Rowan and shadow sheets, no perspective, no 3D rendering.
+
+Generate the creature **without cards in its hands** (empty pinching hands in
+the same row); the game draws the five cards separately so it can flip and swap
+them:
 
 `fivehand_idle.png` (4), `fivehand_sweep.png` (4, a telegraphed hand sweep),
 `fivehand_hurt.png` (2), `fivehand_dissolve.png` (4). Plus two single cards on
-green, each about 2:3: `card_back.png` (painted wooden card back, simple sun
-motif) and `card_lantern.png` (the card face with a painted lantern).
+green, upright and facing the viewer, about 2:3: `card_back.png` (painted wooden
+card back, simple sun motif) and `card_lantern.png` (the card face with a
+painted lantern).
 
 ### Bridge Braced Shadow (elite, not in the MVP build yet)
 
