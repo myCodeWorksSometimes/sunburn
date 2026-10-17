@@ -3,6 +3,23 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — shared-folder demo and implemented story audit
+
+- Inspected `H:/projects/gameDev` without changing Syncthing files. Captured a
+  hash-verified separate source/assets snapshot and built a frozen local demo at
+  http://127.0.0.1:4176/ (bundle `index-BO8Vb2s6.js`); replaced the previously
+  owned stale demo server. Future teammate edits do not mutate this playtest.
+- Added `docs/competition/STORY-AUDIT-2026-10-18.md`: actual chapter-by-chapter
+  story, comparison against earlier plans and adopted CAMPAIGN, and exact remaining
+  script/mechanics gaps. No gameplay or art changed.
+- Verification: isolated install/build passed; 19/19 Node tests passed; short
+  Chrome check passed Title → Intro → Hearth, movement and inventory open/close,
+  with no observed runtime/console/request errors. Full-route playthrough remains
+  with the team; late-game conclusions in this audit come from source inspection.
+- Published only these two documentation files from a separate checkout of the
+  latest GitHub main, preserving the shared tree's uncommitted teammate work and
+  all prior iteration history below.
+
 ## 18 October 2026 — Act 3 art brief: whole-background approach
 
 - `art/background_prompts_act3.md` rewritten: each Act 3 area (courtyard,
