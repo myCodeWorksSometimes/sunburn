@@ -22,6 +22,11 @@ export class Boot extends Phaser.Scene {
     this.add.text(width / 2, height / 2 - 30, 'kindling…', { fontFamily: FONT, fontSize: '22px', color: '#d8c8b0' }).setOrigin(0.5);
     this.load.on('progress', (p) => (bar.width = 400 * p));
     for (const key of BACKGROUNDS) this.load.image(key, `bg/${key}.png`);
+    // Region paintings added later (Act 2/3) are listed by tools/process_backgrounds.py.
+    this.load.json('bg-manifest', 'bg/manifest.json');
+    this.load.once('filecomplete-json-bg-manifest', (_key, _type, names) => {
+      for (const key of names) if (!BACKGROUNDS.includes(key)) this.load.image(key, `bg/${key}.png`);
+    });
     this.load.json('presentation-manifest', 'art/manifest.json');
     this.load.once('filecomplete-json-presentation-manifest', (_key, _type, assets) => {
       for (const [key, path] of Object.entries(assets)) {

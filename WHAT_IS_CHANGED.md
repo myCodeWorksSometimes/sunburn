@@ -3,6 +3,33 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Parallax backgrounds and layered art briefs
+
+### Presentation
+
+- The World backdrop is now layered: fixed star-field sky (the legacy broken-sun
+  sky image is no longer used), a looping skyline at 25% speed (the clock tower
+  is visible through the paintings' keyed skies), and the region paintings on one
+  70% layer. Paintings sit edge to edge in that layer, so the black gaps between
+  regions are gone, and each fades into its neighbour over 220px. Restored
+  paintings and the restored sky fade in per region as before.
+- The square's clock face now rides on the painting layer so it stays in the
+  painted tower.
+- Act 2/3 regions name their own art (`bg_a2_*`, `bg_a3_*`) with the borrowed
+  Act 1 painting as fallback. `tools/process_backgrounds.py` writes
+  `public/bg/manifest.json`; Boot loads everything listed, so delivered art
+  appears without code changes (walk line read at 62% of the image).
+- Art briefs rewritten for layers: paintings are scenery only (sky flat green,
+  flat unbroken ground, no holes or usable steps); optional ground strip, prop
+  cutouts and a foreground root strip listed in `art/ASSETS-README.md`.
+
+### Verification and limits
+
+- `npm test` 19 passing. Build passed. Browser: lane→square and square→bridge
+  seams blend, no gaps; bridge restored state shows restored sky, skyline and
+  painting; clock face sits in the tower.
+- Gameplay props (stall, steps, gears) are still code-drawn placeholders.
+
 ## 17 October 2026 — Bridge works: Braced Shadow and the gear puzzle
 
 ### Gameplay implemented (CAMPAIGN.md Scene 7)

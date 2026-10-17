@@ -5,6 +5,7 @@ images, scales everything to 720px tall and writes PNGs to public/bg/.
 
 Usage: python tools/process_backgrounds.py
 """
+import json
 import os
 import sys
 
@@ -17,7 +18,7 @@ DST = os.path.join(ROOT, "public", "bg")
 HEIGHT = 720
 
 # Images that use the green screen. Everything else is a full opaque frame.
-KEYED_PREFIXES = ("bg_skyline_", "bg_p2_", "bg_a1_", "fg_")
+KEYED_PREFIXES = ("bg_skyline_", "bg_p2_", "bg_a1_", "bg_a2_", "bg_a3_", "fg_", "prop_")
 
 
 def chroma_key(img):
@@ -51,6 +52,10 @@ def main():
         img = img.resize((w, HEIGHT), Image.LANCZOS)
         img.save(os.path.join(DST, base + ".png"), optimize=True)
         print(f"{base}: {w}x{HEIGHT}{' (keyed)' if img.mode == 'RGBA' else ''}")
+    # The game loads every background listed here, so new art needs no code change.
+    names = sorted(os.path.splitext(n)[0] for n in os.listdir(DST) if n.endswith(".png"))
+    with open(os.path.join(DST, "manifest.json"), "w") as f:
+        json.dump(names, f, indent=0)
 
 
 if __name__ == "__main__":

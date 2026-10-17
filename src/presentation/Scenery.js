@@ -34,9 +34,11 @@ export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = 
   return { block, edge };
 }
 
-export function addOutdoorAtmosphere(scene, width) {
-  scene.add.tileSprite(0, 0, width, 560, 'night-sky').setOrigin(0).setDepth(-30).setScrollFactor(.2, 1);
-  scene.add.tileSprite(0, 125, width, 440, 'bg_skyline_dark').setOrigin(0).setDepth(-20).setScrollFactor(.55, 1).setAlpha(.32).setTileScale(.8);
+export function addOutdoorAtmosphere(scene, width, { sky = true } = {}) {
+  if (sky) {
+    scene.add.tileSprite(0, 0, width, 560, 'night-sky').setOrigin(0).setDepth(-30).setScrollFactor(.2, 1);
+    scene.add.tileSprite(0, 125, width, 440, 'bg_skyline_dark').setOrigin(0).setDepth(-20).setScrollFactor(.55, 1).setAlpha(.32).setTileScale(.8);
+  }
   scene.add.particles(0, 0, 'mote', {
     x: { min: 0, max: 1280 }, y: { min: 240, max: 560 },
     lifespan: 6500, speedX: { min: -8, max: -22 }, speedY: { min: -5, max: 5 },

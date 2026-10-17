@@ -4,7 +4,8 @@
 **Deadline:** 18 October, 09:30 Karachi time.
 
 Right now Act 2 and Act 3 reuse Act 1's paintings, and Mara, Tomas and Nia are
-tinted copies of Rowan and Eli. These files list exactly what to generate to fix
+tinted copies of Rowan and Eli. New paintings show up in the game as soon as they
+are processed (`python tools/process_backgrounds.py`): no code change needed. These files list exactly what to generate to fix
 that, in priority order, with copy-paste prompts.
 
 | File | What it covers | Images |
@@ -23,58 +24,75 @@ that, in priority order, with copy-paste prompts.
 
 ---
 
-## How the game uses backgrounds (why the rules below exist)
+## How the game uses backgrounds (layers, since 18 Oct)
 
-- It's a **side-scroller**: one continuous world, the camera slides left to right.
-  Each area ("region") is **1600–1700 px wide** in a 1280×720 game window.
-- Each region gets **one complete 16:9 painting** (sky included), scaled up to
-  the region's width; only the part above the walk line is really seen. The dark version shows at night; when the player lights a fire,
-  the **restored** version fades in on top. The two must line up exactly.
-- The game draws its **own walkable ground strip** at a fixed height, plus its own
-  fires, steps, doors, bells, ladders and the swing board. The painting is the
-  scenery **behind** the play area.
-- Neighbouring paintings are placed **edge to edge**. I'll overlap them by about
-  150 px and blend the joint, so a close match is enough, but **matching ends
-  are a big plus**: same ground height, same horizon, same sky colour, and any
-  wall or building cut by the edge continues in the next image.
+It's a **side-scroller** in a 1280×720 window. The world is drawn as layers that
+slide at different speeds as Rowan walks:
+
+| Layer | Speed | What | Status |
+|---|---|---|---|
+| Sky | fixed | star field (night) / `bg_sky_restored` (day) | done |
+| Skyline | 25% | `bg_skyline_*`: distant spires and the clock tower | done |
+| **Region painting** | 70% | one 16:9 scene per area, **sky keyed out** | Act 1 done, **Act 2/3 needed** |
+| Ground strip | 100% | the stone ground Rowan walks on (game-drawn tile) | done (art optional) |
+| Props | 100% | stall, steps, swing, gears, doors, bells — anything Rowan touches | game-drawn (art optional) |
+
+What this means for paintings:
+
+- The painting moves **slower than Rowan**, so nothing in it lines up with
+  gameplay. **Never paint holes, steps, ledges or platforms the player must use**:
+  the crater, the canal gap, the steps up to the bells are drawn by the game in
+  front. The painting is pure scenery.
+- Neighbouring paintings **fade into each other** over ~220 px, so matching ends
+  are a nice bonus, not a requirement.
+- The **sky above the rooftops is flat pure green #00FF00**, like the Act 1
+  paintings: the game's own sky and skyline (with the clock tower) show through
+  and give the depth. Interiors have no sky, so no green there.
 
 ## Rules for every background
 
-1. **Aspect 16:9, 1920×1080** (the maximum the image tool produces). Don't go
-   wider.
+1. **Aspect 16:9, 1920×1080.** Don't go wider.
 2. **Strict side view**, camera at standing height, like a 2D platformer level.
    No perspective floor, no 3/4 angle, no top-down.
-3. **The walk line:** the ground people walk on is a **flat horizontal line 62%
-   down from the top** (≈ y 670 of 1080), straight across the whole image. Below
-   it, simple dark earth or stone (it's hidden by the game's ground strip).
-4. **Scale:** a standing adult is about **1/8 of the image height** (≈ 130 px of
-   1080); doors are a bit taller than that.
-5. **Complete scene, sky included.** No green screen, no transparency.
+3. **The walk line:** a **flat horizontal ground line 62% down** (≈ y 670 of
+   1080), straight and unbroken across the whole image. Below it, plain dark
+   earth or stone (the game covers it).
+4. **Scale:** a standing adult is about **1/8 of the image height** (≈ 130 px);
+   doors a bit taller.
+5. **Sky = flat pure green #00FF00** (hard edge against rooftops and trees, no
+   glow). Clouds, sun and stars come from the game's sky layer. Interior scenes:
+   no sky at all.
 6. **No characters, creatures, text, letters, signs with writing, UI or watermark.**
 7. **Canon (important):** a **meteor** corrupted the world into endless night.
-   - **Dark version:** deep indigo-violet night sky with faint stars and a low
-     violet haze. **No sun, no moon, no eclipse, no cracked sun, no meteors in the
-     sky.** Corruption shows as black thorny roots with cold violet cracks growing
-     over stone and wood.
-   - **Restored version:** the same place before the impact, a warm golden late
-     afternoon with a normal sun low in the sky, blue sky, green grass and leaves,
-     intact buildings.
-8. **Leave gameplay objects out.** Don't paint seats on the swing, doors on the
-   Old Road, bells, ladders, braziers or fire pits — the game draws those. Each
-   scene below says which areas to keep clear.
+   - **Dark version:** night colours, slate, plum and charcoal, faint violet haze
+     on distant shapes. **No sun, moon, eclipse, cracked sun or meteors.**
+     Corruption = black thorny roots with cold violet cracks over stone and wood.
+   - **Restored version:** the same place before the impact, warm golden late
+     afternoon light, green grass and leaves, intact and cared-for buildings.
+8. **No gameplay objects:** no holes in the ground, usable steps, swing seats,
+   doors on the Old Road, bells, ladders, braziers or fire pits.
 
-## How to generate a pair (dark + restored) with matching ends
+## How to generate a pair (dark + restored)
 
-1. **Go in route order** (Act 2: swings → treehouse → canal; Act 3: courtyard →
-   mechanisms → landing).
-2. **Dark version first.** Attach: the style references listed in the file, plus
-   **the previous region's dark image** (for the seam). Use the prompt and add the
-   seam line it gives.
-3. **Restored version.** Attach **this region's dark image** (for layout) and the
-   **previous region's restored image** (for the seam). Use the restored prompt.
-4. Check: overlay dark and restored at 50% — buildings, horizon and walk line
-   should line up. Put the two images side by side with the previous region —
-   the joint should look like one place.
+1. **Dark version first.** Attach the style references listed in the act's file
+   and (optionally) the previous region's dark image for a matching look.
+2. **Restored version:** attach **this region's dark image** and ask for the same
+   composition. Check by overlaying at 50%: buildings and the walk line should
+   line up (the game fades one into the other).
+
+## Optional layer art (only after the paintings and characters)
+
+All on flat #00FF00, side view, same pixel style; filenames go in
+`assets/backgrounds/`. The game already draws placeholders for all of these.
+
+| File | What | Size |
+|---|---|---|
+| `ground_cobble_dark` / `_restored` | A tileable strip of village cobbles: the top edge is the walk surface, ~25% of the height; below it, earth and foundation stones. Left and right edges must tile. Restored: grass tufts along the top edge. | 1920×540 |
+| `prop_market_stall_dark` / `_restored` | Mara's market stall, front-on side view: wooden counter, shuttered front, a sloped plank roof Rowan can stand on. About 2 adult heights tall, 2.2 wide. | 1080×1080 |
+| `prop_bell_dark` / `_restored` | One bronze bell in a small wooden frame (used three times). Dark: cracked, roots. | 1080×1080 |
+| `prop_waterwheel_dark` / `_restored` | Just the wheel, round, side view, nothing behind it (the game spins it). | 1080×1080 |
+| `prop_swing_dark` / `_restored` | One swing seat with two chains hanging straight down. | 1080×1080 |
+| `fg_roots` | A strip of black thorny root silhouettes for the very front (slides past fastest). | 1920×540 |
 
 ## Rules for every character/boss sprite strip
 

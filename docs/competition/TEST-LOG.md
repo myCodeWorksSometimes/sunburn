@@ -384,3 +384,10 @@ restoring: "seized". Restored, A, A, B, hold brake → `bridgeBrakeSet`, deck
 enabled. Separate run from "brake set": Five-Hand stays `defeated`; rest at the
 bridge fire → flame 100; relight → deck enabled; walked to 6723 (feet 560),
 `bridgeReturnOpen`, walkway notice, objective → campfire.
+
+## 18 October 2026 — Parallax backdrop
+
+- `npm test`: 19/19 pass. `npm run build`: pass.
+- Browser (`?scene=World&test`, teleport by script): x 2600 lane, x 3150 lane→square seam (soft, skyline visible
+  through keyed sky), x 4000 square (clock face in tower opening), x 6000 bridge dark and with `setMemoryVisual('bridge', 1)`
+  (restored sky, skyline and painting). Not replayed: full route.

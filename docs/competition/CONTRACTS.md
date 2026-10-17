@@ -253,3 +253,13 @@ Fire/memory/player/region/pause events may repeat; story completion is once per
 story ID per run. `game:completed` emits at the coda trigger. Listeners attached
 by later presentation modules must be cleaned up on shutdown. Current audio is
 called directly rather than subscribed through a separate event dispatcher.
+
+## 18 October 2026 — Parallax backdrop
+
+- `src/presentation/Backdrop.js`: `buildBackdrop(scene, REGIONS)` → `{ sky, skyPast, skyline, skylinePast, paintings }`;
+  `paintings.get(regionId)` = `{ x, y, scale, art, dark, past }` on the `PAINTING_SPEED` (0.7) layer.
+  `onPainting(backdrop, regionId, px, py)` maps painting pixels to layer coordinates (use scrollFactor `PAINTING_SPEED`).
+  `tickBackdrop` runs from `World.tick`; `World.setMemoryVisual` records `restoredView`.
+- Region `art` is the wanted key; `fallback` + `paintGround` describe the borrowed painting until `bg_${art}_dark` exists.
+  New art: walk line at 62% of the image height.
+- `public/bg/manifest.json` (written by `tools/process_backgrounds.py`) lists every background; Boot loads them all.

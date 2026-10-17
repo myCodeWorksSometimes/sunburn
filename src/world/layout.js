@@ -6,12 +6,12 @@ export const REGIONS = [
   { id: 'square', act: 'Act 1', name: 'Market square', x: 3200, width: 1650, art: 'a1_square', paintGround: 545 },
   { id: 'bridge', act: 'Act 1', name: 'Bridge Refuge', x: 4850, width: 2250, art: 'a1_bridge', paintGround: 410 },
   { id: 'camp', act: 'Act 1', name: 'Village campfire', x: 7100, width: 1700, art: 'a1_campfire', paintGround: 545 },
-  { id: 'swings', act: 'Act 2', name: 'The playground', x: 8800, width: 1600, art: 'p2_yard', paintGround: 508 },
-  { id: 'treehouse', act: 'Act 2', name: 'The treehouse', x: 10400, width: 1600, art: 'a1_campfire', paintGround: 545 },
-  { id: 'canal', act: 'Act 2', name: 'Canal road', x: 12000, width: 1600, art: 'a1_bridge', paintGround: 410 },
-  { id: 'tower-court', act: 'Act 3', name: 'Tower courtyard', x: 13600, width: 1600, art: 'a1_square', paintGround: 545 },
-  { id: 'tower-base', act: 'Act 3', name: 'The bell mechanisms', x: 15200, width: 1700, art: 'a1_lane', paintGround: 555 },
-  { id: 'tower-crown', act: 'Act 3', name: 'The clock tower', x: 16900, width: 1700, art: 'a1_square', paintGround: 545 },
+  { id: 'swings', act: 'Act 2', name: 'The playground', x: 8800, width: 1600, art: 'a2_swings', fallback: 'p2_yard', paintGround: 508 },
+  { id: 'treehouse', act: 'Act 2', name: 'The treehouse', x: 10400, width: 1600, art: 'a2_treehouse', fallback: 'a1_campfire', paintGround: 545 },
+  { id: 'canal', act: 'Act 2', name: 'Canal road', x: 12000, width: 1600, art: 'a2_canal', fallback: 'a1_bridge', paintGround: 410 },
+  { id: 'tower-court', act: 'Act 3', name: 'Tower courtyard', x: 13600, width: 1600, art: 'a3_courtyard', fallback: 'a1_square', paintGround: 545 },
+  { id: 'tower-base', act: 'Act 3', name: 'The bell mechanisms', x: 15200, width: 1700, art: 'a3_mechanisms', fallback: 'a1_lane', paintGround: 555 },
+  { id: 'tower-crown', act: 'Act 3', name: 'The clock tower', x: 16900, width: 1700, art: 'a3_landing', fallback: 'a1_square', paintGround: 545 },
 ];
 export const SPAWNS = {
   front: { x: 185, y: GROUND },
