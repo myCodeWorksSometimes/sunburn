@@ -21,6 +21,9 @@
   Node process12088. Snapshot: C:/Users/owner/AppData/Local/Temp/embers-playtest-vzv0Bl.
   Source edits/builds cannot mutate it. Temporary :4177 development/QA servers
   have been stopped; only :4176 remains served.
+- Shared H:/projects/gameDev was fast-forwarded to the published implementation;
+  its33 tests pass and its build matches index-DiDMO2Gy.js. Syncthing-related
+  untracked files remain untouched. Workspace retains the unrelated draft.
 - Ownership: Codex Act1 combat/presentation integration claim released at handoff.
   Other developer retains their Act3 claim. No Act3 coordinates, paintings or
   TowerStory source were changed. Unrelated CAMPAIGN-STORY-AND-MECHANICS-DRAFT.md

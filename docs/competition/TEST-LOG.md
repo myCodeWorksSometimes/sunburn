@@ -11,6 +11,9 @@ Only short fixtures/input sequences; extended runs remain human-owned.
   and recovery of a dropped lantern after Eli's rescue. Audio tests include the
   third boss loop in pause/mute ownership. `npm run build` passes; standard
   Phaser bundle-size warning remains. Release bundle: index-DiDMO2Gy.js.
+  Shared H:/projects/gameDev was fast-forwarded and independently ran33/33 tests
+  plus build, producing the identical bundle. Canonical :4176 Title/Enter smoke
+  passed with local font loaded and no page/asset errors. Only :4176 is served.
 - Actual X/F: sword texture/state loaded; two recovery-window counters reduced a
   feral from2→1→0 with flame100 unchanged. Moving away left light/drop behind;
   distant X refused, nearby X retrieved. Drawing during an incoming lunge is

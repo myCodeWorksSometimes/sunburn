@@ -41,6 +41,9 @@ implemented work, validation and remaining limits. Preserve prior entries.
 - Run `npm ci` then `npm run dev -- --host 127.0.0.1`, or build and `npm run demo`.
   Canonical frozen demo remains http://127.0.0.1:4176/; the handoff records its
   refreshed bundle. Prompt/source register: art/production/HORROR-ASSETS.md.
+- Shared-checkout verification: H:/projects/gameDev fast-forwarded to publication,
+  33 tests pass, identical index-DiDMO2Gy build; unrelated files preserved.
+  Canonical Title/start smoke passed; temporary demo servers are stopped.
 
 ## 18 October 2026 — active sound controls and survivor label audit
 
