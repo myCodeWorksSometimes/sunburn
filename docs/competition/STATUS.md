@@ -31,7 +31,7 @@ the earlier story order. MVP work, in order (details in CAMPAIGN.md → "MVP sta
 3. ~~Five-Hand~~ **Done 17 Oct** (two rounds, placeholder art).
 4. Small text fixes: ~~cup inscription, drawing text, viewing-platform line, Nia's
    acknowledgement~~ done 17 Oct; opening taps still to do.
-5. If time allows: Braced Shadow and gears at the bridge, canal lift, Nia's bird.
+5. ~~Braced Shadow and gears~~ **done 17 Oct**. If time allows: canal lift, Nia's bird, opening taps.
 
 ## Ownership / next action
 

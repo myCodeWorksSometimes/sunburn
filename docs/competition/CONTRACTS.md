@@ -5,7 +5,31 @@ production interactions. No uninterrupted new full run is claimed. Browser-local
 autosave is implemented; the original module proposals and earlier interfaces
 below are supplemented/superseded by this current chapter contract.
 
-## Five-Hand contract (17 October 2026, latest)
+## Bridge works contract (17 October 2026, latest)
+
+- **World shift:** every world x position ≥ 5300 moved +600 (bridge region width
+  1650 → 2250, WORLD_WIDTH 18000 → 18600, save cap follows). Fire durations were
+  not touched. Older coordinates quoted below this section predate the shift.
+- Code: `src/world/BridgeWorks.js` (`buildBridgeWorks`, `tickBridgeWorks`). Layout
+  `BRIDGE_WORKS {arenaMin 5340, arenaMax 5690, elite 5420, crate [5600,5680] at
+  y485, barrier 5700, leverA 5750, leverB 5805, brake 5865, bigGear, smallGear}`.
+  Bridge fire/spawn now 5970, BRIDGE_GAP 6080–6640.
+- Braced Shadow: pseudo-enemy `braced-shadow` (restoration-immune). States idle →
+  windup 1.3s (direction locked) → charge 360px/s → stunned 2.6s if it reaches the
+  barrier line (first impact breaks the barrier) / recover 0.9s otherwise. Only
+  sweeps from behind while stunned hurt it; 2 hits. Contact damage only while
+  charging on the ground. Death resets it (and an unbroken-defeat barrier).
+- Gears: big/small quarter-turn counters start 2/1; lever A +1 both, lever B +1
+  small, only while the bridge region is restored. Brake (hold 600ms) requires
+  both at 0 → `setBridgeBrake()` (requires `clearedEncounters['braced-shadow']`).
+- Surfaces accept `requires` (extra condition on top of restored time). The
+  bridge deck requires `bridgeBrakeSet`. Save migration: a crossed bridge ⇒ elite
+  cleared and brake set.
+- Story IDs: `braced-barrier`, `braced-defeated`, `bridge-gears-memory`,
+  `bridge-brake`; Tomas's hearth talk adds two lines about the works.
+- Fix: a Five-Hand already defeated when the scene builds stays `defeated`.
+
+## Five-Hand contract (17 October 2026)
 
 - Code: `src/world/FiveHand.js` (`buildFiveHand(scene)`), called after
   `buildAct1Story`. Layout `FIVE_HAND {body 4850, slots[5] 4595–4795, cardY 410,

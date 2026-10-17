@@ -5,6 +5,7 @@ import { saveSession } from './WorldState.js';
 import { buildAct1Story, tickAct1Story } from './Act1Story.js';
 import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
 import { buildFiveHand } from './FiveHand.js';
+import { buildBridgeWorks, tickBridgeWorks } from './BridgeWorks.js';
 import { MARA_STALL } from './layout.js';
 
 const point = (x, y = GROUND) => ({ x, y });
@@ -32,19 +33,20 @@ export function buildChapters(s) {
   // ACT 1: the village, Mara's stall in the market and the Bridge Refuge.
   buildAct1Story(s, gate);
   buildFiveHand(s);
+  buildBridgeWorks(s);
   enemy(s, { id: 'lane-crawler', x: 2480, floor: GROUND, minX: 1820, maxX: 2860, regionId: 'lane' });
-  enemy(s, { id: 'camp-crawler', x: 7370, floor: GROUND, minX: 7090, maxX: 7640, regionId: 'camp' });
+  enemy(s, { id: 'camp-crawler', x: 7970, floor: GROUND, minX: 7690, maxX: 8240, regionId: 'camp' });
   s.campSurface = s.addSurface(CAMP_GAP.x1, CAMP_GAP.x2, GROUND, { regionId: 'camp', restoredOnly: true, material: 'bridge', permanent: () => run.campReturnOpen });
 
   // ACT 2: a moving restored swing, treehouse evidence, home return, canal wheel.
-  s.swingPlatform = s.addSurface(9240, 9380, 500, { regionId: 'swings', restoredOnly: true, material: 'timber' });
+  s.swingPlatform = s.addSurface(9840, 9980, 500, { regionId: 'swings', restoredOnly: true, material: 'timber' });
   s.swingReturn = s.addSurface(SWING_GAP.x1, SWING_GAP.x2, GROUND, { regionId: 'swing-return', restoredOnly: true, material: 'bridge', permanent: () => run.swingReturnOpen });
   s.swingRopes = s.add.graphics().setDepth(14);
-  s.addLabel(9300, 297, 'THE SWINGS', '#b3a38d', 15);
-  steps(s, 'treehouse', 10050);
-  const drawing = s.add.image(10395, 360, 'item_drawing').setDisplaySize(38, 32).setDepth(23).setVisible(!run.hasDrawing);
-  const cup = placeProp(s, 'item-cup', 10435, 380, 32, 28, 23).setVisible(!run.hasDrawing);
-  s.addInteract({ id: 'eli-drawing', x: 10400, floor: 380, label: 'E: take Eli’s drawing and the ember cup',
+  s.addLabel(9900, 297, 'THE SWINGS', '#b3a38d', 15);
+  steps(s, 'treehouse', 10650);
+  const drawing = s.add.image(10995, 360, 'item_drawing').setDisplaySize(38, 32).setDepth(23).setVisible(!run.hasDrawing);
+  const cup = placeProp(s, 'item-cup', 11035, 380, 32, 28, 23).setVisible(!run.hasDrawing);
+  s.addInteract({ id: 'eli-drawing', x: 11000, floor: 380, label: 'E: take Eli’s drawing and the ember cup',
     when: () => !run.hasDrawing && s.memory.isRestored('treehouse'),
     use: () => {
       if (!run.findDrawing()) return;
@@ -55,25 +57,25 @@ export function buildChapters(s) {
         { speaker: 'Rowan', text: 'And his ember cup. He carried coals in this on every expedition.' },
         { text: 'The treehouse hatch opens onto the service path to the canal.', color: '#ebd5b0' });
     } });
-  enemy(s, { id: 'playground-pouncer', x: 10860, floor: GROUND, minX: 10670, maxX: 11000, regionId: 'treehouse', kind: 'pouncer' });
+  enemy(s, { id: 'playground-pouncer', x: 11460, floor: GROUND, minX: 11270, maxX: 11600, regionId: 'treehouse', kind: 'pouncer' });
   // The playground's way out is buried; the treehouse service hatch leads on.
-  gate(s, 11450, () => run.hasDrawing, 'Rubble buries the playground exit. Eli always used the treehouse — search up there.');
-  s.addSurface(11680, 11790, 500, { regionId: 'canal', restoredOnly: true });
-  s.addSurface(11800, 11890, 440, { regionId: 'canal', restoredOnly: true });
+  gate(s, 12050, () => run.hasDrawing, 'Rubble buries the playground exit. Eli always used the treehouse — search up there.');
+  s.addSurface(12280, 12390, 500, { regionId: 'canal', restoredOnly: true });
+  s.addSurface(12400, 12490, 440, { regionId: 'canal', restoredOnly: true });
   s.canalSurface = s.addSurface(CANAL_GAP.x1, CANAL_GAP.x2, GROUND, { regionId: 'canal', restoredOnly: true, material: 'bridge', permanent: () => run.canalGateOpen || run.canalReturnOpen });
-  s.add.circle(11820, 415, 19, 0x252832).setStrokeStyle(4, 0xb69868).setDepth(23);
-  s.addInteract({ id: 'canal-wheel', x: 11820, floor: 440, hold: 800, label: 'Hold E: turn the sluice wheel — secure the tower road',
+  s.add.circle(12420, 415, 19, 0x252832).setStrokeStyle(4, 0xb69868).setDepth(23);
+  s.addInteract({ id: 'canal-wheel', x: 12420, floor: 440, hold: 800, label: 'Hold E: turn the sluice wheel — secure the tower road',
     when: () => !run.canalGateOpen && s.memory.isRestored('canal'),
     use: () => { run.canalGateOpen = true; s.refreshSurface(s.canalSurface); s.audio.cue('take'); s.story('sluice-open', { speaker: 'Rowan', text: 'The crossing will hold now. The tower is close.' }); } });
 
   // ACT 3: Eli at the tower window, the Old Road, then three relays and the Warden.
   buildTowerStory(s);
-  gate(s, 13040, () => run.canalGateOpen, 'Restore the canal and turn its sluice wheel before entering the tower.');
-  s.addSurface(13510, 13620, 500, { regionId: 'tower-court', restoredOnly: true });
-  s.addSurface(13640, 13850, 440, { regionId: 'tower-court', restoredOnly: true });
-  steps(s, 'tower-base', 15100);
-  s.addSurface(16700, 16880, 500, { regionId: 'tower-crown', restoredOnly: true });
-  s.eliStairs = steps(s, 'tower-crown', 17200, () => run.relayCount === 3 && !!run.clearedEncounters['bell-warden']);
+  gate(s, 13640, () => run.canalGateOpen, 'Restore the canal and turn its sluice wheel before entering the tower.');
+  s.addSurface(14110, 14220, 500, { regionId: 'tower-court', restoredOnly: true });
+  s.addSurface(14240, 14450, 440, { regionId: 'tower-court', restoredOnly: true });
+  steps(s, 'tower-base', 15700);
+  s.addSurface(17300, 17480, 500, { regionId: 'tower-crown', restoredOnly: true });
+  s.eliStairs = steps(s, 'tower-crown', 17800, () => run.relayCount === 3 && !!run.clearedEncounters['bell-warden']);
   s.relaySprites = [];
   for (const [index, relay] of RELAYS.entries()) {
     const sprite = placeProp(s, 'item-lantern', relay.x, relay.floor, 38, 48, 23).setTint(run.litFinaleLamps[relay.id] ? 0xffffff : 0x716b7d);
@@ -88,28 +90,28 @@ export function buildChapters(s) {
         if (run.relayCount === 3) { s.warden?.wake(); s.warden && (s.warden.state = 'recovery', s.warden.elapsed = -900); }
       } });
   }
-  enemy(s, { id: 'court-crawler', x: 14300, floor: GROUND, minX: 14030, maxX: 14530, regionId: 'tower-court' });
-  enemy(s, { id: 'tower-pouncer', x: 15900, floor: GROUND, minX: 15680, maxX: 16180, regionId: 'tower-base', kind: 'pouncer' });
-  s.warden = enemy(s, { id: 'bell-warden', x: 17120, floor: GROUND, minX: 16880, maxX: 17430, regionId: 'tower-crown', kind: 'warden', dormant: run.relayCount < 3 });
-  s.bossText = s.addLabel(17120, 360, 'BELL WARDEN · 3 WARDS', '#e0bd9a', 16);
-  s.brother = s.add.sprite(17600, 380, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
+  enemy(s, { id: 'court-crawler', x: 14900, floor: GROUND, minX: 14630, maxX: 15130, regionId: 'tower-court' });
+  enemy(s, { id: 'tower-pouncer', x: 16500, floor: GROUND, minX: 16280, maxX: 16780, regionId: 'tower-base', kind: 'pouncer' });
+  s.warden = enemy(s, { id: 'bell-warden', x: 17720, floor: GROUND, minX: 17480, maxX: 18030, regionId: 'tower-crown', kind: 'warden', dormant: run.relayCount < 3 });
+  s.bossText = s.addLabel(17720, 360, 'BELL WARDEN · 3 WARDS', '#e0bd9a', 16);
+  s.brother = s.add.sprite(18200, 380, 'brother').setOrigin(.5, 1).setDepth(25).play('brother-idle');
   // After the rescue Eli walks with Rowan, so he starts beside him on any arrival.
   if (run.rescuedEli) s.brother.setPosition(s.player.x - 60, s.player.y);
   // The viewing platform in front of the tower's open arches (CAMPAIGN Scene 14).
-  s.addSurface(17670, 17940, 380, { regionId: 'tower-crown', restoredOnly: true, permanent: () => run.rescuedEli });
-  s.add.image(17565, 370, 'ball-final').setDisplaySize(20, 20).setDepth(24);
-  s.brotherLabel = s.addLabel(17600, 265, '… tap, tap …', '#d6be89', 17);
-  s.addInteract({ id: 'rescue-eli', x: 17600, floor: 380, range: 85, priority: 10, hold: 1000,
+  s.addSurface(18270, 18540, 380, { regionId: 'tower-crown', restoredOnly: true, permanent: () => run.rescuedEli });
+  s.add.image(18165, 370, 'ball-final').setDisplaySize(20, 20).setDepth(24);
+  s.brotherLabel = s.addLabel(18200, 265, '… tap, tap …', '#d6be89', 17);
+  s.addInteract({ id: 'rescue-eli', x: 18200, floor: 380, range: 85, priority: 10, hold: 1000,
     label: 'Hold E: give the hearth ember to Eli',
     when: () => run.hasHearthEmber && run.relayCount === 3 && !!run.clearedEncounters['bell-warden'] && s.transferRemaining == null,
     use: () => {
       s.transferRemaining = 2000; s.player.frozen = true; s.player.setVelocity(0); s.player.cancelAction();
       s.memory.activate({ id: 'rescue-memory', regionId: 'tower-crown', duration: 10000 }); s.audio.cue('rescue');
     } });
-  placeProp(s, 'door', 16500, GROUND, 75, 120);
-  s.homeRoadLabel = s.addLabel(16500, 395, 'OLD ROAD', '#d3bc91', 14).setVisible(run.rescuedEli);
+  placeProp(s, 'door', 17100, GROUND, 75, 120);
+  s.homeRoadLabel = s.addLabel(17100, 395, 'OLD ROAD', '#d3bc91', 14).setVisible(run.rescuedEli);
   // The Old Road leads back to the Bridge Refuge, where Nia is waiting.
-  s.addInteract({ id: 'old-road-home', x: 16500, floor: GROUND, priority: 20, when: () => run.rescuedEli,
+  s.addInteract({ id: 'old-road-home', x: 17100, floor: GROUND, priority: 20, when: () => run.rescuedEli,
     label: 'E: take the old road to the refuge together', use: () => s.goTo('World', 'oldRoadWest') });
 }
 
@@ -117,6 +119,7 @@ export function tickChapters(s, delta) {
   const run = s.run, x = s.player.x;
   tickAct1Story(s, delta);
   tickTowerStory(s, delta);
+  tickBridgeWorks(s);
   run.maxXReached = Math.max(run.maxXReached, x);
   if (regionAt(x).act === 'Act 1') s.story('act-1', { text: 'ACT 1 — THE RUINED VILLAGE', hold: 1000 }, { speaker: 'Rowan', text: 'The playground is beyond the village. Keep going.' });
   for (const g of s.chapterGates) { g.zone.body.enable = !g.isOpen(); g.image.setVisible(!g.isOpen()); }
@@ -130,21 +133,21 @@ export function tickChapters(s, delta) {
   if (x > CANAL_GAP.x2 + 35 && !run.canalReturnOpen) {
     run.canalReturnOpen = true; s.refreshSurface(s.canalSurface); run.setCheckpoint('World', 'canalBank');
   }
-  if (x > 13100) s.story('act-3', { text: 'ACT 3 — THE CLOCK TOWER', hold: 1000 }, { speaker: 'Rowan', text: 'I promised you the view. I’m here now.' });
+  if (x > 13700) s.story('act-3', { text: 'ACT 3 — THE CLOCK TOWER', hold: 1000 }, { speaker: 'Rowan', text: 'I promised you the view. I’m here now.' });
   if (x > 350) s.story('night-reveal', { speaker: 'Rowan', text: 'The clock’s stopped. The whole village is waiting.' });
   if (s.memory.isRestored('swings')) {
     s.swingTime += delta;
-    const platform = s.swingPlatform, old = platform.zone.x, next = 9310 + Math.sin(s.swingTime / 1050) * 100;
+    const platform = s.swingPlatform, old = platform.zone.x, next = 9910 + Math.sin(s.swingTime / 1050) * 100;
     const carry = Math.abs(s.player.feet - 500) < 6 && Math.abs(s.player.x - old) < 90 && s.player.body.velocity.y >= 0;
     platform.zone.x = next; platform.zone.body.updateFromGameObject(); platform.block.x = platform.edge.x = next - 70;
     if (carry) { const dx = next - old; s.player.x += dx; s.player.body.x += dx; }
   }
   s.swingRopes.clear();
-  if (s.swingPlatform.block.visible) s.swingRopes.lineStyle(3, 0x9c835e).lineBetween(9280, 300, s.swingPlatform.zone.x - 45, 500).lineBetween(9340, 300, s.swingPlatform.zone.x + 45, 500);
+  if (s.swingPlatform.block.visible) s.swingRopes.lineStyle(3, 0x9c835e).lineBetween(9880, 300, s.swingPlatform.zone.x - 45, 500).lineBetween(9940, 300, s.swingPlatform.zone.x + 45, 500);
   if (s.warden?.active && s.warden.alive) s.bossText.setPosition(s.warden.x, GROUND - 165).setText(run.relayCount < 3 ? `BELL WARDEN · ${3 - run.relayCount} WARDS` : `BELL WARDEN · ${s.warden.health} / 4`);
   else s.bossText.setVisible(false);
   if (run.relayCount === 3 && run.clearedEncounters['bell-warden']) for (const stair of s.eliStairs) s.refreshSurface(stair);
-  if (x > 17320 && !run.rescuedEli) {
+  if (x > 17920 && !run.rescuedEli) {
     if (s.story('eli-landing', { text: '… tap, tap …', color: '#ffe1a1' }, { speaker: 'Rowan', text: 'Eli. I brought it. I’m here.' })) s.audio.cue('knock');
   }
   if (s.transferRemaining != null) {
@@ -160,7 +163,7 @@ export function tickChapters(s, delta) {
       } else s.player.frozen = false;
     }
   }
-  if (run.rescuedEli && x > 17760 && s.player.feet < 400) {
+  if (run.rescuedEli && x > 18360 && s.player.feet < 400) {
     if (s.story('view-platform', { speaker: 'Eli', text: 'You can see our house.' }, { speaker: 'Rowan', text: 'Yes.' },
       { speaker: 'Rowan', text: 'Come on. Let’s go home.' })) saveSession(s);
   }
@@ -169,7 +172,7 @@ export function tickChapters(s, delta) {
     s.brother.clearTint().setAlpha(1);
     const target = s.player.x + (s.player.flipX ? 60 : -60), dx = target - s.brother.x;
     s.brother.x += Math.sign(dx) * Math.min(Math.abs(dx), delta * .24);
-    const floor = s.brother.x > 17440 ? 380 : s.brother.x > 17320 ? 440 : s.brother.x > 17200 ? 500 : GROUND;
+    const floor = s.brother.x > 18040 ? 380 : s.brother.x > 17920 ? 440 : s.brother.x > 17800 ? 500 : GROUND;
     s.brother.y = Math.min(floor, s.brother.y + delta * .45);
     s.brother.setFlipX(dx < 0).play(Math.abs(dx) > 10 ? 'brother-run' : 'brother-idle', true);
     s.brotherLabel.setText('ELI').setPosition(s.brother.x, s.brother.y - 100);
@@ -192,14 +195,15 @@ export function memoryChapter(s, fire) {
     }
     s.echo([point(MARA_STALL.shutter - 30), point(MARA_STALL.shutter - 30), point(3890), point(3970, 500), point(4070, 440), point(4240, 380), point(MARA_STALL.release - 40, MARA_STALL.roof)], { delay: 1600 });
   } else if (id === 'bridge') {
-    s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5300), point(6300)]);
+    if (!run.bridgeBrakeSet) s.story('bridge-gears-memory', { text: 'The bridge machinery wakes. Lever A turns both gears, lever B the small one. Line up both marks, then set the brake.', color: '#ebd5b0' });
+    else { s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5900), point(6900)]); }
   } else if (id === 'camp') {
-    s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(6930), point(8300)]);
+    s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(7530), point(8900)]);
   } else if (id === 'swings') {
-    s.story('swing-memory', { text: 'The swing moves in remembered time. Jump onto its board, then to the far bank.' }); s.echo([point(8680), point(9230, 500), point(9620)]);
+    s.story('swing-memory', { text: 'The swing moves in remembered time. Jump onto its board, then to the far bank.' }); s.echo([point(9280), point(9830, 500), point(10220)]);
   } else if (id === 'treehouse') {
     s.story('treehouse-memory', { speaker: 'Echo Eli', text: 'The tower has room for everyone!' }, { speaker: 'Rowan', text: 'His drawing. Up in the treehouse.' });
-    s.echo([point(9980), point(10110, 500), point(10230, 440), point(10400, 380)]);
+    s.echo([point(10580), point(10710, 500), point(10830, 440), point(11000, 380)]);
   } else if (id === 'canal') s.story('canal-memory', { text: 'Climb the two restored ledges. Turn the wheel to secure the tower road.' });
   else if (id === 'tower-court' && towerMemory(s)) return;
   else if (id.startsWith('tower-')) s.notice(run.hasHearthEmber ? 'Climb to the bell and hold E while this region is restored. M: map · J: journal' : 'The bells answer only to the hearth’s ember.');

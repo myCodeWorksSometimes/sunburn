@@ -64,19 +64,19 @@ export class Adventure extends Phaser.Scene {
     this.events.once('shutdown', () => { this.memory.cancel('shutdown'); this.clearEchoes(); this.lighting.destroy(); });
   }
 
-  addSurface(x1, x2, y, { regionId, restoredOnly = false, permanent, material = 'stone' } = {}) {
+  addSurface(x1, x2, y, { regionId, restoredOnly = false, permanent, requires, material = 'stone' } = {}) {
     const zone = this.add.zone((x1 + x2) / 2, y + 16, x2 - x1, 32);
     this.solids.add(zone);
     zone.body.checkCollision.down = zone.body.checkCollision.left = zone.body.checkCollision.right = false;
     const { block, edge } = surfaceArt(this, x1, x2, y, { material, regionId });
-    const surface = { zone, block, edge, regionId, restoredOnly, permanent };
+    const surface = { zone, block, edge, regionId, restoredOnly, permanent, requires };
     this.surfaces.push(surface);
     this.refreshSurface(surface);
     return surface;
   }
 
   refreshSurface(s) {
-    const enabled = !s.restoredOnly || !!s.permanent?.() || this.memory.isRestored(s.regionId);
+    const enabled = !s.restoredOnly || !!s.permanent?.() || (this.memory.isRestored(s.regionId) && (!s.requires || s.requires()));
     s.zone.body.enable = enabled;
     s.block.setVisible(enabled); s.edge.setVisible(enabled);
   }

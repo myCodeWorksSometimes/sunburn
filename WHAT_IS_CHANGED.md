@@ -3,6 +3,34 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 17 October 2026 — Bridge works: Braced Shadow and the gear puzzle
+
+### Gameplay implemented (CAMPAIGN.md Scene 7)
+
+- Made room: everything from the bridge fire onward moved 600px right, so the
+  works sit between the refuge and the bridge.
+- **Braced Shadow (elite):** an armoured front that turns sweeps aside and a long,
+  readable charge. Bait it into the cracked barrier (dodge onto the crate or
+  jump); the impact breaks the barrier and stuns it with its back open. Two hits
+  to its back defeat it.
+- **Gears:** restore the bridge fire; lever A turns both gears, lever B only the
+  small one; line both marks up with the arrows, then hold E on the brake. The
+  brake persists. The bridge deck now only returns once the brake is set.
+- Tomas explains the works; journal entries and objectives follow the steps.
+- Fixed: after reloading, a defeated Five-Hand kept running its fight invisibly.
+
+### Verification and limits
+
+- `npm test` 19 passing (1 new, 1 updated). Build passed.
+- Browser, stepping the game clock from the script (the app window was hidden,
+  which throttles the page): front sweep rejected; charge west dodged by
+  retreating; slipped past during recovery; crate dodge; charge stunned at the
+  barrier (barrier broke); two back hits → defeated; levers refused outside
+  restored time; A, A, B then brake → `bridgeBrakeSet`; rest, relight, deck
+  enabled, crossed, walkway notice, objective → campfire.
+- Not checked: the rest of the world after the 600px shift by playing (positions
+  were shifted mechanically; tests on regions/spawns/gaps pass).
+
 ## 17 October 2026 — Five-Hand boss (placeholder art) and 16:9 art briefs
 
 ### Gameplay implemented (CAMPAIGN.md Scene 5)

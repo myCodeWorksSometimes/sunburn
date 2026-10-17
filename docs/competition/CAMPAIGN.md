@@ -663,7 +663,7 @@ So the canal and the tower courtyard stop requiring the ember, the tower interio
 | 4 Mara's stall | **Done (17 Oct):** knocking, shutter, restored steps to the roof release, Mara freed with her lines, recorded card-trick echo. Placeholder art. | — |
 | 5 Five-Hand | **Done (17 Oct), placeholder art:** two rounds (2 slow swaps, then 3 with a crossing), pick by standing under a card + E, knot window for a lantern sweep, telegraphed hand sweep on a wrong pick, two hits to win; clears the market exit. No slower-shuffle option yet. | — |
 | 6 Family at the refuge | **Done (17 Oct):** reunion and Nia's account, Tomas's hearth rule (required before the bridge), spent hearth with rest, Old Road west gate. Placeholder art. | — |
-| 7 Bridge works | Timed bridge exists; elite and gears missing | Partly: keep the timed crossing; Braced Shadow and gears can wait. |
+| 7 Bridge works | **Done (17 Oct), placeholder art:** Braced Shadow (armoured front, long windup, bait it into the cracked barrier from the crate, two hits to its back), linked gears (lever A both, lever B small, in restored time), present-day brake, timed crossing that needs the brake, walkway kept on the far bank. | — |
 | 8 Playground | **Done (17 Oct):** inscription removed, drawing/cup text updated, buried exit opens after the treehouse. Bird optional, not built. | — |
 | 9 Canal | **Done (17 Oct):** wheel no longer needs the ember. Lift ride not built (ledges instead). | — |
 | 10 Three knocks | **Done (17 Oct):** taps from the lit window, three-knock exchange, Eli steps in restored daylight and is pulled back, Old Road release and two-way travel. | — |

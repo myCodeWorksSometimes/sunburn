@@ -187,7 +187,12 @@ test('campaign Act 1: Mara, Nia and Tomas progress in order, once each', () => {
   assert.equal(state.hearNia(), true); assert.equal(state.hearNia(), false);
   assert.match(state.objective, /Tomas/);
   assert.equal(state.hearTomas(), true); assert.equal(state.hearTomas(), false);
-  assert.match(state.objective, /broken bridge/);
+  assert.match(state.objective, /Braced Shadow/);
+  assert.equal(state.setBridgeBrake(), false, 'the brake is behind the barrier the elite breaks');
+  state.clearEncounter('braced-shadow');
+  assert.match(state.objective, /gear marks/);
+  assert.equal(state.setBridgeBrake(), true); assert.equal(state.setBridgeBrake(), false);
+  assert.match(state.objective, /cross before it falls apart/);
 });
 
 test('campaign Act 1 flags survive saving; older saves migrate safely', () => {
@@ -248,4 +253,11 @@ test('after the rescue: viewing platform, then the refuge with Nia, then home', 
   assert.match(state.objective, /refuge/);
   state.completeStory('nia-eli');
   assert.equal(state.goal.scene, 'Hearth'); assert.match(state.objective, /home together/);
+});
+
+test('saves from before the bridge works keep a crossed bridge crossable', () => {
+  const old = new WorldState(); old.bridgeReturnOpen = true; old.setCheckpoint('World', 'farBank');
+  const json = JSON.parse(JSON.stringify(old)); delete json.bridgeBrakeSet;
+  const loaded = decodeSave(JSON.stringify(json));
+  assert.equal(loaded.bridgeBrakeSet, true); assert.equal(loaded.clearedEncounters['braced-shadow'], true);
 });

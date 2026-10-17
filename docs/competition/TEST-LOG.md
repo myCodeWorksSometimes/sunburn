@@ -369,3 +369,18 @@ warning). Round 2 correct → hit 2 → `defeated`, `villageGateOpen` and
 Refuge", reunion played on arrival. Separate run: health 1 + wrong pick → death →
 respawn at the square, fight back to `waiting` with 0 hits; then win and run
 ahead → stall Mara hidden, refuge Mara shown.
+
+## 17 October 2026 — Bridge works (Braced Shadow, gears)
+
+`npm test` 19 passing; build passed (`index-DDBhTDzn.js`). The app window was
+hidden (page throttled to ~2fps), so the browser test stopped Phaser's loop and
+stepped `game.step()` at 16.67ms per frame from the script, dispatching real key
+events between steps. Results: front sweep → "Its braced front turns the light
+aside", health 2/2; windup → charge west, Rowan at 5250 untouched, elite stopped
+at 5340 in `recover`; moved to 5550 past it; windup with chargeDir +1; jumped to
+the crate (feet 464); elite stunned at 5658 (barrier broken, story played);
+dropped to 5590, two sweeps → defeated, objective → gears. Levers before
+restoring: "seized". Restored, A, A, B, hold brake → `bridgeBrakeSet`, deck
+enabled. Separate run from "brake set": Five-Hand stays `defeated`; rest at the
+bridge fire → flame 100; relight → deck enabled; walked to 6723 (feet 560),
+`bridgeReturnOpen`, walkway notice, objective → campfire.

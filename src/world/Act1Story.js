@@ -30,6 +30,8 @@ const HEARTH_LINES = [
   { speaker: 'Mara', text: 'I brought an ember from our hearth. Then he could take my hand.' },
   { speaker: 'Tomas', text: 'The house hasn’t remembered since.' },
   { speaker: 'Rowan', text: 'An ember from home… can bring someone back.' },
+  { speaker: 'Tomas', text: 'Something braced in iron guards the bridge works. Its front turns any blow. Make it charge the cracked barrier.' },
+  { speaker: 'Tomas', text: 'Inside, line up both gear marks in remembered time, then set the brake. The brake holds in any time.' },
 ];
 
 export function buildAct1Story(s, gate) {
@@ -126,7 +128,7 @@ export function buildAct1Story(s, gate) {
         s.events.emit('story:completed', { storyId: 'refuge-hearth' }); saveSession(s); return;
       }
       s.captions.say(run.heardTomas
-        ? { speaker: 'Tomas', text: 'The bridge fire still remembers the crossing. Be quick on it.' }
+        ? { speaker: 'Tomas', text: run.bridgeBrakeSet ? 'The brake’s set. The bridge fire will hold the deck — be quick.' : 'Bait it into the cracked barrier, then hit its back. Lever A turns both gears, lever B the small one.' }
         : { speaker: 'Tomas', text: 'Mara? Is Mara with you? She went back for supplies.' });
     } });
   s.addInteract({ id: 'talk-mara-stall', x: STALL.shutter, floor: GROUND, range: 50, priority: 3, when: () => stallMara.visible && !stallMara.walking,

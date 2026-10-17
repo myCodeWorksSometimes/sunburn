@@ -82,6 +82,8 @@ export function buildFiveHand(s) {
   show(!defeated());
 
   const go = (state) => { fight.state = state; fight.elapsed = 0; };
+  // Already beaten (loaded save or revisit): stay dormant for good.
+  if (defeated()) fight.state = 'defeated';
   fight.reset = () => {
     if (defeated()) return;
     resetCards(); knot.setVisible(false); warn.setVisible(false); sweep.clear();

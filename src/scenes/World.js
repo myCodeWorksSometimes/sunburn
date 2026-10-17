@@ -39,7 +39,8 @@ export class World extends Adventure {
       if (x2 > x1) this.addSurface(x1, x2, GROUND, { regionId: region.id });
     }
     this.addSurface(YARD_GAP.x1, YARD_GAP.x2, GROUND, { restoredOnly: true, regionId: 'yard', material: 'timber' });
-    this.bridgeSurface = this.addSurface(BRIDGE_GAP.x1, BRIDGE_GAP.x2, GROUND, { restoredOnly: true, regionId: 'bridge', material: 'bridge', permanent: () => this.run.bridgeReturnOpen });
+    // The deck only returns once the bridge works' brake is set (CAMPAIGN Scene 7).
+    this.bridgeSurface = this.addSurface(BRIDGE_GAP.x1, BRIDGE_GAP.x2, GROUND, { restoredOnly: true, regionId: 'bridge', material: 'bridge', permanent: () => this.run.bridgeReturnOpen, requires: () => this.run.bridgeBrakeSet });
     this.addSurface(2060, 2240, 485, { material: 'crate' });
     this.addSurface(3900, 4005, 500, { restoredOnly: true, regionId: 'square' });
     this.addSurface(4010, 4120, 440, { restoredOnly: true, regionId: 'square' });
@@ -47,10 +48,10 @@ export class World extends Adventure {
     for (const fire of FIRES) this.addFire(fire);
     placeProp(this, 'door', 180, GROUND, 78, 125);
     placeProp(this, 'door', 3410, GROUND, 70, 112).setTint(0x9a91a2);
-    placeProp(this, 'marker', 5445, GROUND, 52, 65);
+    placeProp(this, 'marker', 6045, GROUND, 52, 65);
     // Water below the gap keeps its silhouette readable in either time state.
     this.water = this.add.graphics().setDepth(1);
-    for (let i = 0; i < 19; i++) this.water.lineStyle(1, i % 3 ? 0x5d687b : 0xa18471, .35).lineBetween(5500 + (i * 29) % 160, 607 + i * 6, 5920 + (i * 37) % 100, 607 + i * 6);
+    for (let i = 0; i < 19; i++) this.water.lineStyle(1, i % 3 ? 0x5d687b : 0xa18471, .35).lineBetween(6100 + (i * 29) % 160, 607 + i * 6, 6520 + (i * 37) % 100, 607 + i * 6);
     // The face is mounted in the supplied tower's upper opening.
     this.add.circle(4400, 160, 26, 0x1c202c).setStrokeStyle(2, 0xa38d6b).setDepth(18);
     const ticks = this.add.graphics().setDepth(19).lineStyle(1, 0xc4ad7e);
@@ -71,7 +72,7 @@ export class World extends Adventure {
       this.run.bridgeReturnOpen = true;
       this.refreshSurface(this.bridgeSurface);
       this.run.setCheckpoint('World', 'farBank');
-      this.notice('The return walkway is secured.');
+      this.notice('You release the maintenance walkway — the way back stays open.');
     }
     tickChapters(this, delta);
   }

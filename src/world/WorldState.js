@@ -1,5 +1,5 @@
 import { BALANCE } from './balance.js';
-import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE, TOWER_WINDOW, OLD_ROAD_EAST } from './layout.js';
+import { FIRES, RELAYS, SPAWNS, MARA_STALL, REFUGE, TOWER_WINDOW, OLD_ROAD_EAST, BRIDGE_WORKS } from './layout.js';
 
 export const SAVE_KEY = 'embers-before-three-acts-v1';
 
@@ -24,6 +24,8 @@ export class WorldState {
     this.maraFreed = false;
     this.heardNia = false;
     this.heardTomas = false;
+    // Campaign Scene 7: the bridge works' brake, set after aligning the gears.
+    this.bridgeBrakeSet = false;
     // Campaign Scene 10: Eli answers three knocks; the Old Road opens from the tower.
     this.eliFound = false;
     this.oldRoadOpen = false;
@@ -100,6 +102,11 @@ export class WorldState {
   }
 
   // Rowan only takes the last ember once he knows Eli is alive and needs it.
+  setBridgeBrake() {
+    if (this.bridgeBrakeSet || !this.clearedEncounters['braced-shadow']) return false;
+    this.bridgeBrakeSet = true; return true;
+  }
+
   takeHearthEmber() {
     if (!this.hasEmberCup || !this.eliFound || this.homeMemorySpent) return false;
     this.hasHearthEmber = true;
@@ -131,8 +138,8 @@ export class WorldState {
     if (!this.hasLantern) return goal('Find the lantern in the cellar', 'Hearth', 650, 650);
     if (!this.completedStory['home-first-memory']) return goal('Climb upstairs and remember the hearth', 'Hearth', 530, 430);
     if (this.completed) return goal('Together, at last', 'Hearth', 530, 430);
-    if (this.rescuedEli && !this.completedStory['view-platform']) return goal('Walk out to the tower arches with Eli', 'World', 17860, 380);
-    if (this.rescuedEli && !this.completedStory['nia-eli']) return goal('Take the old road to the refuge together', 'World', 16500);
+    if (this.rescuedEli && !this.completedStory['view-platform']) return goal('Walk out to the tower arches with Eli', 'World', 18460, 380);
+    if (this.rescuedEli && !this.completedStory['nia-eli']) return goal('Take the old road to the refuge together', 'World', 17100);
     if (this.rescuedEli) return goal('Walk home together', 'Hearth', 530, 430);
     // Older saves opened the market without Mara; they skip straight to the bridge.
     if (!this.maraFreed && !this.villageGateOpen) return this.completedStory['mara-knock']
@@ -141,19 +148,21 @@ export class WorldState {
     if (this.maraFreed && !this.villageGateOpen) return goal('Act 1: defeat Five-Hand at the market exit', 'World', MARA_STALL.exitGate - 140);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: follow Mara to the Bridge Refuge', 'World', REFUGE.mara);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
-    if (!this.bridgeReturnOpen) return goal('Act 1: restore and cross the broken bridge', 'World', 5370);
-    if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', 6870);
-    if (!this.swingReturnOpen) return goal('Act 2: restore the swing crossing', 'World', 8510);
-    if (!this.hasDrawing) return goal('Act 2: restore the treehouse; find Eli’s drawing above', 'World', 10400, 380);
-    if (!this.canalGateOpen && !this.hasHearthEmber) return goal('Act 2: restore the canal; turn the sluice wheel above', 'World', 11820, 440);
+    if (!this.bridgeReturnOpen && !this.clearedEncounters['braced-shadow']) return goal('Act 1: bait the Braced Shadow into the cracked barrier', 'World', BRIDGE_WORKS.crate[0]);
+    if (!this.bridgeReturnOpen && !this.bridgeBrakeSet) return goal('Act 1: restore the bridge fire, line up both gear marks, then set the brake', 'World', BRIDGE_WORKS.brake);
+    if (!this.bridgeReturnOpen) return goal('Act 1: restore the bridge fire and cross before it falls apart', 'World', 5970);
+    if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', 7470);
+    if (!this.swingReturnOpen) return goal('Act 2: restore the swing crossing', 'World', 9110);
+    if (!this.hasDrawing) return goal('Act 2: restore the treehouse; find Eli’s drawing above', 'World', 11000, 380);
+    if (!this.canalGateOpen && !this.hasHearthEmber) return goal('Act 2: restore the canal; turn the sluice wheel above', 'World', 12420, 440);
     if (!this.eliFound) return goal('Act 3: someone is tapping at the tower window', 'World', TOWER_WINDOW.knock);
     if (!this.oldRoadOpen && !this.hasHearthEmber) return goal('Act 3: release the Old Road gate in the courtyard', 'World', OLD_ROAD_EAST.release);
     if (!this.hasHearthEmber) return goal('Go home through the market and take the hearth’s last ember', 'Hearth', 530, 430);
     const next = RELAYS.find(r => !this.litFinaleLamps[r.id]);
     if (next) return goal(this.relayCount ? `Act 3: ring bell ${RELAYS.indexOf(next) + 1} in remembered time (${this.relayCount}/3 complete)`
       : `Act 3: back to the tower by the Old Road — ring bell ${RELAYS.indexOf(next) + 1} in remembered time`, 'World', next.x, next.floor);
-    if (!this.clearedEncounters['bell-warden']) return goal('Act 3: the wards are broken — defeat the Bell Warden', 'World', 17120);
-    return goal('Act 3: climb to Eli; hold E to give him the hearth ember', 'World', 17600, 380);
+    if (!this.clearedEncounters['bell-warden']) return goal('Act 3: the wards are broken — defeat the Bell Warden', 'World', 17720);
+    return goal('Act 3: climb to Eli; hold E to give him the hearth ember', 'World', 18200, 380);
   }
 
   get objective() { return this.goal.text; }
@@ -169,7 +178,7 @@ export function decodeSave(text) {
     for (const key of Object.keys(run)) {
       if (typeof run[key] === 'boolean') run[key] = data[key] === true;
     }
-    for (const [key, cap] of [['health', 3], ['flame', 100], ['oil', 1], ['deaths', 999999], ['maxXReached', 18000]]) {
+    for (const [key, cap] of [['health', 3], ['flame', 100], ['oil', 1], ['deaths', 999999], ['maxXReached', 18600]]) {
       if (Number.isFinite(data[key])) run[key] = Math.max(key === 'health' ? 1 : 0, Math.min(cap, Math.floor(data[key])));
     }
     for (const key of ['completedStory', 'clearedEncounters']) {
@@ -181,7 +190,10 @@ export function decodeSave(text) {
     // Saves from before the campaign: an open market or a crossed bridge means
     // the matching story has effectively happened.
     if (run.villageGateOpen) run.maraFreed = true;
-    if (run.bridgeReturnOpen) run.heardNia = run.heardTomas = true;
+    if (run.bridgeReturnOpen) {
+      run.heardNia = run.heardTomas = run.bridgeBrakeSet = true;
+      run.clearedEncounters['braced-shadow'] = true;
+    }
     // Saves from the old route took the ember before finding Eli.
     if (run.hasHearthEmber || run.homeMemorySpent || run.rescuedEli) run.eliFound = run.oldRoadOpen = true;
     if (run.rescuedEli) { run.hasHearthEmber = false; run.homeMemorySpent = true; }
