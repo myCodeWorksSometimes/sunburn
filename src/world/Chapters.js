@@ -4,6 +4,7 @@ import { CAMP_GAP, SWING_GAP, CANAL_GAP, RELAYS, GROUND, regionAt } from './layo
 import { saveSession } from './WorldState.js';
 import { buildAct1Story, tickAct1Story } from './Act1Story.js';
 import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
+import { buildFiveHand } from './FiveHand.js';
 import { MARA_STALL } from './layout.js';
 
 const point = (x, y = GROUND) => ({ x, y });
@@ -30,6 +31,7 @@ export function buildChapters(s) {
 
   // ACT 1: the village, Mara's stall in the market and the Bridge Refuge.
   buildAct1Story(s, gate);
+  buildFiveHand(s);
   enemy(s, { id: 'lane-crawler', x: 2480, floor: GROUND, minX: 1820, maxX: 2860, regionId: 'lane' });
   enemy(s, { id: 'camp-crawler', x: 7370, floor: GROUND, minX: 7090, maxX: 7640, regionId: 'camp' });
   s.campSurface = s.addSurface(CAMP_GAP.x1, CAMP_GAP.x2, GROUND, { regionId: 'camp', restoredOnly: true, material: 'bridge', permanent: () => run.campReturnOpen });

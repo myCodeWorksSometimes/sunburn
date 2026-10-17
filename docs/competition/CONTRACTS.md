@@ -5,7 +5,28 @@ production interactions. No uninterrupted new full run is claimed. Browser-local
 autosave is implemented; the original module proposals and earlier interfaces
 below are supplemented/superseded by this current chapter contract.
 
-## Campaign ending contract (17 October 2026, latest)
+## Five-Hand contract (17 October 2026, latest)
+
+- Code: `src/world/FiveHand.js` (`buildFiveHand(scene)`), called after
+  `buildAct1Story`. Layout `FIVE_HAND {body 4850, slots[5] 4595–4795, cardY 410,
+  arenaStart 4560}`; the market exit gate moved to `MARA_STALL.exitGate` 4830.
+- State: `freeMara()` no longer opens the exit. `defeatFiveHand()` (requires
+  `maraFreed`) sets `villageGateOpen` and `clearedEncounters['five-hand']`. A save
+  with the exit already open counts Five-Hand as defeated. Goal after Mara is
+  freed: "defeat Five-Hand at the market exit".
+- Fight states: waiting → observe (1.8s, face up) → flipdown → shuffle (swaps
+  `[[1,3],[0,2]]` at 950ms, then `[[0,4],[1,2],[3,1]]` at 750ms) → select (E under
+  a slot; interactions `five-hand-card-0..4`) → reveal → window (4.2s, knot hit by
+  the normal lantern sweep) or punish (900ms ground warning, 650ms sweep, one
+  `combat.damage`). Missed window/punish restart the same round. Two hits win.
+  Walking 320px left of the arena or dying resets to waiting.
+- It is registered in `scene.enemies` as a pseudo-enemy (`restorationImmune`,
+  `touches()` false) so `CombatSystem.sweep` reaches it. Emits
+  `five-hand:defeated`. Story IDs: `five-hand-wake`, `five-hand-defeated`.
+- Mara stays in her stall until the win, then walks off; the refuge Mara appears
+  when she leaves or when Rowan passes the exit.
+
+## Campaign ending contract (17 October 2026)
 
 - After `rescue()`: no dialogue (story `rescue` completed silently). A permanent
   viewing ledge (x 17670–17940, y 380, shown after the rescue) triggers

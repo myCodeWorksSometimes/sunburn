@@ -37,7 +37,9 @@ export const SPAWNS = {
 };
 // Campaign Act 1 positions. The stall's roof is reached from the square's
 // restored steps (top tread 4130–4330 at y380).
-export const MARA_STALL = { x1: 4345, x2: 4570, roof: 385, shutter: 4460, release: 4525, exitGate: 4780 };
+export const MARA_STALL = { x1: 4345, x2: 4570, roof: 385, shutter: 4460, release: 4525, exitGate: 4830 };
+// Five-Hand: rooted at the market exit; five card slots hover over the arena.
+export const FIVE_HAND = { body: 4850, slots: [4595, 4645, 4695, 4745, 4795], cardY: 410, arenaStart: 4560 };
 // barrier keeps Rowan out of the bridge fire's reach until Tomas has spoken.
 export const REFUGE = { oldRoad: 4885, nia: 4985, hearth: 5075, tomas: 5165, mara: 5245, barrier: 5285 };
 // Campaign Scene 10: Eli behind a lattice window high on the tower, seen from the

@@ -661,7 +661,7 @@ So the canal and the tower courtyard stop requiring the ember, the tower interio
 | 2 House remembers | Mostly done | Small: restored-stairs door latch. |
 | 3 Village lane | Mostly done (Crawler, raised route, fire) | No (sign lure optional). |
 | 4 Mara's stall | **Done (17 Oct):** knocking, shutter, restored steps to the roof release, Mara freed with her lines, recorded card-trick echo. Placeholder art. | — |
-| 5 Five-Hand | **Missing** (market exit currently opens when Mara is freed) | **Yes, simplified:** one card-tracking round and one hit for MVP; the full two rounds later. |
+| 5 Five-Hand | **Done (17 Oct), placeholder art:** two rounds (2 slow swaps, then 3 with a crossing), pick by standing under a card + E, knot window for a lantern sweep, telegraphed hand sweep on a wrong pick, two hits to win; clears the market exit. No slower-shuffle option yet. | — |
 | 6 Family at the refuge | **Done (17 Oct):** reunion and Nia's account, Tomas's hearth rule (required before the bridge), spent hearth with rest, Old Road west gate. Placeholder art. | — |
 | 7 Bridge works | Timed bridge exists; elite and gears missing | Partly: keep the timed crossing; Braced Shadow and gears can wait. |
 | 8 Playground | **Done (17 Oct):** inscription removed, drawing/cup text updated, buried exit opens after the treehouse. Bird optional, not built. | — |

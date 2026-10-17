@@ -3,6 +3,36 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 17 October 2026 — Five-Hand boss (placeholder art) and 16:9 art briefs
+
+### Gameplay implemented (CAMPAIGN.md Scene 5)
+
+- Freeing Mara no longer clears the market exit: Five-Hand, a shadow rooted in
+  her card counter, holds it. Mara waits in her stall and gives a hint.
+- The fight: five cards face up with the lantern card, then face down and swapped
+  in plain view (2 slow swaps, then 3 including a crossing). Stand under a card
+  and press E. Right card: the knot is exposed for 4.2s for a lantern sweep (F).
+  Wrong card: a 0.9s ground warning, then a hand sweep you can jump or back away
+  from. Two hits win; the exit clears; Mara leaves for the refuge.
+- Placeholder look: a large shadow behind a wooden counter, five cards and arms
+  drawn in code.
+
+### Art briefs
+
+- All art briefs now respect a 16:9 maximum: backgrounds are 1920×1080 with the
+  walk line at 62%; heights above the walk line recalculated; sprite sheets fit
+  16:9 (six frames as two rows of three).
+
+### Verification and limits
+
+- `npm test` 18 passing (Act 1 test updated for Five-Hand). Build passed.
+- Browser (real key events): fight starts on approach; correct pick → window →
+  sweep hit; wrong pick → warning → hand sweep (hit taken because the script
+  waited out the warning); round 2 → second hit → defeated, exit open, objective
+  to the refuge, reunion triggered. Death mid-fight resets it to waiting at 0
+  hits. Mara hands over to the refuge copy without a duplicate.
+- Not done: a slower-shuffle accessibility option; final Five-Hand art.
+
 ## 17 October 2026 — Act 3 ending completed and played end to end
 
 ### Implemented (CAMPAIGN.md Scene 14)

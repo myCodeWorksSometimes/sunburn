@@ -356,3 +356,16 @@ ledge: "You can see our house." / "Yes." → Old Road door → refuge (x 4935, E
 4875) → `nia-eli` lines (verified in full on a replay) → market passage → Hearth
 cellar (Eli on Rowan's floor) → ladder (Eli followed to y 430) → hold E sit →
 "… tap, tap …" + "E: tap twice back" → E → `completed` → Credits.
+
+## 17 October 2026 — Five-Hand
+
+`npm test` 18 passing; build passed. Browser (Vite dev, `?test`, 1280×720, real
+key events), state "Mara freed": objective "defeat Five-Hand"; approaching the
+arena starts the fight (`observe` → `shuffle` → `select`). Round 1: E under the
+lantern slot → `window` → F from x 4760 → hit 1, round 2 starts. Wrong pick →
+`punish`, ground warning, sweep dealt one damage (script moved only after the
+warning). Round 2 correct → hit 2 → `defeated`, `villageGateOpen` and
+`clearedEncounters['five-hand']` set, objective "follow Mara to the Bridge
+Refuge", reunion played on arrival. Separate run: health 1 + wrong pick → death →
+respawn at the square, fight back to `waiting` with 0 hits; then win and run
+ahead → stall Mara hidden, refuge Mara shown.

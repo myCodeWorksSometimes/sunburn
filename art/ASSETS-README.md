@@ -27,8 +27,8 @@ that, in priority order, with copy-paste prompts.
 
 - It's a **side-scroller**: one continuous world, the camera slides left to right.
   Each area ("region") is **1600–1700 px wide** in a 1280×720 game window.
-- Each region gets **one complete painting** (sky included) scaled to the
-  region's width. The dark version shows at night; when the player lights a fire,
+- Each region gets **one complete 16:9 painting** (sky included), scaled up to
+  the region's width; only the part above the walk line is really seen. The dark version shows at night; when the player lights a fire,
   the **restored** version fades in on top. The two must line up exactly.
 - The game draws its **own walkable ground strip** at a fixed height, plus its own
   fires, steps, doors, bells, ladders and the swing board. The painting is the
@@ -40,15 +40,15 @@ that, in priority order, with copy-paste prompts.
 
 ## Rules for every background
 
-1. **Aspect 21:9, ultrawide** (2520×1080 or the model's 21:9 size). If your tool
-   can't do 21:9, use 16:9 and say so — I'll adapt the scaling.
+1. **Aspect 16:9, 1920×1080** (the maximum the image tool produces). Don't go
+   wider.
 2. **Strict side view**, camera at standing height, like a 2D platformer level.
    No perspective floor, no 3/4 angle, no top-down.
-3. **The walk line:** the ground people walk on is a **flat horizontal line 82%
-   down from the top** (≈ y 885 of 1080), straight across the whole image. Below
-   it, simple dark earth or stone (it's mostly hidden by the game's ground strip).
-4. **Scale:** a standing adult is about **1/6 of the image height**; doors are a
-   bit taller than that.
+3. **The walk line:** the ground people walk on is a **flat horizontal line 62%
+   down from the top** (≈ y 670 of 1080), straight across the whole image. Below
+   it, simple dark earth or stone (it's hidden by the game's ground strip).
+4. **Scale:** a standing adult is about **1/8 of the image height** (≈ 130 px of
+   1080); doors are a bit taller than that.
 5. **Complete scene, sky included.** No green screen, no transparency.
 6. **No characters, creatures, text, letters, signs with writing, UI or watermark.**
 7. **Canon (important):** a **meteor** corrupted the world into endless night.
@@ -78,8 +78,9 @@ that, in priority order, with copy-paste prompts.
 
 ## Rules for every character/boss sprite strip
 
-1. **One animation per image**, frames in **one horizontal row**, equal-width
-   cells, no gaps, no frame borders, no labels.
+1. **One animation per image, at most 16:9** (1920×1080). Up to **5 frames in
+   one row**; **6 frames as two rows of 3**. Equal-size cells, no gaps, no frame
+   borders, no labels.
 2. **Flat solid pure green background (#00FF00)**, hard edges, no glow or shadow
    on the green. (I remove it.) Real transparency is also fine.
 3. All characters **face right**, same scale and same feet line in every frame.

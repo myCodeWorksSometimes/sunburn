@@ -36,8 +36,8 @@ Region 1600 px wide. Gameplay positions, measured from the left edge:
 - **0–3%:** a corruption barrier (the game draws it).
 - **~5–10%:** the **Old Road gate**: an arched gap in the courtyard's left wall where an old road leads away. Paint the **archway in the wall only** — the game draws the door and its release lever in front.
 - **~16%:** the courtyard fire — clear ground.
-- **~25–33%, high up:** the **inspection window**. Keep a plain stretch of the tower's stone wall here, **about 40% of the image height above the walk line** — the game draws a barred window with Eli behind it. Directly below, at ground level, keep clear ground (Rowan knocks here).
-- **~32–55%:** the game draws two stone ledges rising to **bell 1** (about 1/6 of the image height above the walk line). A wooden bell frame or support beam behind that spot is welcome, but **no bell**.
+- **~25–33%, high up:** the **inspection window**. Keep a plain stretch of the tower's stone wall here, **about 30% of the image height above the walk line** — the game draws a barred window with Eli behind it. Directly below, at ground level, keep clear ground (Rowan knocks here).
+- **~32–55%:** the game draws two stone ledges rising to **bell 1** (about 1/8 of the image height above the walk line). A wooden bell frame or support beam behind that spot is welcome, but **no bell**.
 - **~65–95%:** open courtyard (a shadow patrols here).
 - **100%:** the tower's main entrance — a tall arched doorway at the right edge leading inside (the next image is the interior).
 
@@ -54,7 +54,7 @@ Region 1600 px wide. Gameplay positions, measured from the left edge:
 Region 1700 px wide. Gameplay positions:
 - **0–5%:** the inside of the main doorway (continues from the courtyard's right edge).
 - **~13%:** the mechanisms fire — clear floor.
-- **29–56%:** the game draws three rising steps up to **bell 2** (about a quarter of the image height above the walk line, near 51%). Behind them, paint the **clockwork**: huge gears, a hanging counterweight on chains, a wooden catwalk. **No bell.**
+- **29–56%:** the game draws three rising steps up to **bell 2** (about a fifth of the image height above the walk line, near 51%). Behind them, paint the **clockwork**: huge gears, a hanging counterweight on chains, a wooden catwalk. **No bell.**
 - **~64–93%:** open floor (a pouncing shadow patrols here).
 - **100%:** a stone staircase or arch leading up and to the right (toward the landing).
 
@@ -70,9 +70,9 @@ Region 1700 px wide. Gameplay positions:
 
 Region 1700 px wide. This is the boss arena, the rescue and the final view.
 - **~12%:** the landing fire, and the Old Road home door (both drawn by the game) — clear floor and plain wall.
-- **24–34%:** a low platform the game draws, with **bell 3** on it (about 1/10 of the image height up). Keep clear.
+- **24–34%:** a low platform the game draws, with **bell 3** on it (about 1/16 of the image height up). Keep clear.
 - **34–67%:** the **Bell Warden's arena** — a wide open stone floor with good contrast for a large dark creature. No tall objects here.
-- **53–80%:** the game draws final steps up to the **upper landing** where Eli waits (about a quarter of the image height above the walk line, near 76%).
+- **53–80%:** the game draws final steps up to the **upper landing** where Eli waits (about a fifth of the image height above the walk line, near 76%).
 - **Right third, behind Eli: the view.** Tall open arches looking out and down over the whole village far below — rooftops, the market, the canal, the playground's big tree, and one small cottage on the far edge of town (the brothers' home).
 
 **Dark prompt:**

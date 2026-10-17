@@ -10,8 +10,8 @@ const FREED_LINES = [
   { speaker: 'Mara', text: 'Rowan? Oh, thank the fire.' },
   { speaker: 'Rowan', text: 'Mara. Have you seen Eli?' },
   { speaker: 'Mara', text: 'He came back for the little ones. Took them toward the bridge.' },
-  { speaker: 'Mara', text: 'Nia was with them. I have to get to the refuge.' },
-  { speaker: 'Rowan', text: 'Go. I’m right behind you.' },
+  { speaker: 'Mara', text: 'Nia was with them. But that thing at my counter is blocking the way out.' },
+  { speaker: 'Rowan', text: 'Stay behind the shutter. I’ll deal with it.' },
 ];
 
 const REUNION_LINES = [
@@ -54,7 +54,13 @@ export function buildAct1Story(s, gate) {
   };
   drawLever(run.maraFreed);
   const releaseLabel = s.addLabel(STALL.release, STALL.roof - 70, 'SHUTTER RELEASE', '#d3bc91', 12).setVisible(!run.maraFreed);
-  const stallMara = new Npc(s, 'mara', STALL.shutter, GROUND, { visible: false });
+  // Mara stays in her stall until Five-Hand is gone, then leaves for the refuge.
+  const stallMara = new Npc(s, 'mara', STALL.shutter, GROUND, { visible: run.maraFreed && !run.villageGateOpen });
+  // She walks off toward the refuge; tickAct1Story swaps her to the refuge copy
+  // once she leaves (or as soon as Rowan goes on ahead).
+  const onFiveHandDefeated = () => s.time.delayedCall(6000, () => stallMara.walkTo(STALL.exitGate + 90, { hide: true }));
+  s.events.on('five-hand:defeated', onFiveHandDefeated);
+  s.events.once('shutdown', () => s.events.off('five-hand:defeated', onFiveHandDefeated));
   s.npcs.push(stallMara);
 
   s.addInteract({ id: 'mara-shutter', x: STALL.shutter, floor: GROUND, range: 70, when: () => !run.maraFreed,
@@ -77,15 +83,13 @@ export function buildAct1Story(s, gate) {
       shutter.setVisible(false); opening.setVisible(true);
       stallMara.setVisible(true);
       s.audio.cue('take');
-      s.notice('The shutter opens. The tendrils over the market exit wither.');
+      s.notice('The shutter opens.');
       s.story('mara-freed', ...FREED_LINES);
-      // She heads for the refuge once she has told Rowan where Eli went.
-      s.time.delayedCall(9000, () => stallMara.walkTo(STALL.exitGate + 90, { hide: true }));
       saveSession(s);
     } });
 
-  // Five-Hand's tendrils will hold this exit later; for now Mara's release clears it.
-  gate(s, STALL.exitGate, () => run.villageGateOpen, 'Corruption chokes the market exit. Someone is knocking in the stalls behind you.');
+  // Five-Hand's tendrils hold this exit until it is defeated (FiveHand.js).
+  gate(s, STALL.exitGate, () => run.villageGateOpen, run.maraFreed ? 'Five-Hand’s tendrils hold the market exit.' : 'Corruption chokes the market exit. Someone is knocking in the stalls behind you.');
 
   // ---- Bridge Refuge: the family, their spent hearth and the Old Road's west gate.
   placeProp(s, 'door', REFUGE.oldRoad, GROUND, 80, 128).setTint(0x6d6878);
@@ -104,10 +108,10 @@ export function buildAct1Story(s, gate) {
 
   const nia = new Npc(s, 'nia', REFUGE.nia, GROUND);
   const tomas = new Npc(s, 'tomas', REFUGE.tomas, GROUND);
-  const mara = new Npc(s, 'mara', REFUGE.mara, GROUND, { visible: run.maraFreed });
+  const mara = new Npc(s, 'mara', REFUGE.mara, GROUND, { visible: run.maraFreed && run.villageGateOpen });
   if (run.heardNia) mara.sprite.x = REFUGE.nia + 50;
   s.npcs.push(nia, tomas, mara);
-  s.refuge = { mara };
+  s.refuge = { mara, stallMara };
 
   s.addInteract({ id: 'talk-nia', x: REFUGE.nia, floor: GROUND, range: 34, priority: 4, label: 'E: talk to Nia',
     use: () => s.captions.say(run.heardNia
@@ -125,6 +129,8 @@ export function buildAct1Story(s, gate) {
         ? { speaker: 'Tomas', text: 'The bridge fire still remembers the crossing. Be quick on it.' }
         : { speaker: 'Tomas', text: 'Mara? Is Mara with you? She went back for supplies.' });
     } });
+  s.addInteract({ id: 'talk-mara-stall', x: STALL.shutter, floor: GROUND, range: 50, priority: 3, when: () => stallMara.visible && !stallMara.walking,
+    label: 'E: talk to Mara', use: () => s.captions.say({ speaker: 'Mara', text: run.villageGateOpen ? 'Thank you. I’m going to Nia now.' : 'Watch the lantern card. Its heart hides under it.' }) });
   s.refuge.talkMara = s.addInteract({ id: 'talk-mara', x: mara.x, floor: GROUND, range: 34, priority: 4, when: () => run.maraFreed && mara.visible,
     label: 'E: talk to Mara',
     use: () => s.captions.say({ speaker: 'Mara', text: 'He came back for my girl. Go and bring him home.' }) });
@@ -134,6 +140,10 @@ export function tickAct1Story(s, delta) {
   const run = s.run, x = s.player.x;
   for (const npc of s.npcs) npc.tick(delta, s.player);
   s.refuge.talkMara.x = s.refuge.mara.x;
+  const { stallMara, mara } = s.refuge;
+  if (run.villageGateOpen && !mara.visible && (!stallMara.visible || x > STALL.exitGate + 20)) {
+    stallMara.setVisible(false); mara.setVisible(true);
+  }
 
   // Coming home with Eli: Nia sees him (CAMPAIGN Scene 14).
   if (run.rescuedEli && Math.abs(x - REFUGE.nia) < 260 && s.story('nia-eli',

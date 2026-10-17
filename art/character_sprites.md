@@ -2,8 +2,9 @@
 
 Read [ASSETS-README.md](ASSETS-README.md) first (strip rules). Summary:
 
-- **One animation per image**, frames in **one horizontal row**, equal-width
-  cells, nothing between them, **no labels or frame borders**.
+- **One animation per image, at most 16:9 (1920×1080).** Up to **5 frames in
+  one row**; **6 frames as two rows of 3** (read left to right, top row first).
+  Equal-size cells, nothing between them, **no labels or frame borders**.
 - **Flat solid pure green background (#00FF00)**, hard edges, no glow or ground
   shadow on the green. (Real transparency is also fine.)
 - Everyone **faces right**, same scale and feet line in every frame.
@@ -13,12 +14,13 @@ Read [ASSETS-README.md](ASSETS-README.md) first (strip rules). Summary:
 
 **In-game heights** (so the sizes relate): Rowan 106 px, Eli 76 px. Mara about
 98 px, Tomas about 106 px, Nia about 64 px (a head shorter than Eli). Make every
-cell about **3× as tall as wide** with the figure filling ~85% of the height. The
+cell roughly **twice as tall as wide or taller**, with the figure filling ~85% of
+the cell height. The
 size relationship between characters matters more than exact pixels.
 
 ## Style block (start of every character prompt)
 
-> Side-scrolling 2D game character sprite strip, detailed hand-painted pixel art matching the attached Rowan and Eli sprite sheets exactly in style, outline, palette and proportions (realistic, not chibi, not anime). Medieval village clothing, worn and muted: umber, slate blue, plum, faded red. Character faces right, full body, side view at standing height. Frames in a single horizontal row of equal cells on a flat solid pure green #00FF00 background, no labels, no borders, no shadow, no other objects.
+> Side-scrolling 2D game character sprite sheet, 16:9 canvas, detailed hand-painted pixel art matching the attached Rowan and Eli sprite sheets exactly in style, outline, palette and proportions (realistic, not chibi, not anime). Medieval village clothing, worn and muted: umber, slate blue, plum, faded red. Character faces right, full body, side view at standing height. Frames in a single horizontal row of equal cells on a flat solid pure green #00FF00 background, no labels, no borders, no shadow, no other objects.
 
 ---
 
@@ -30,7 +32,7 @@ size relationship between characters matters more than exact pixels.
 |---|---|---|
 | `mara_idle.png` | 4 | Standing, gentle breathing; frame 3 she glances back over her shoulder; frame 4 settles. Hands clasped at her apron. |
 | `mara_talk.png` | 3 | Talking: one hand lifts and gestures forward, open palm, then back to the apron. |
-| `mara_walk.png` | 6 | Brisk walking cycle (she hurries to the refuge). |
+| `mara_walk.png` | 6 (2 rows × 3) | Brisk walking cycle (she hurries to the refuge). |
 
 ## Tomas — the bridge keeper, Mara's partner
 

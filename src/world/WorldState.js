@@ -67,11 +67,16 @@ export class WorldState {
     return this.health;
   }
 
-  // Releasing the stall shutter frees Mara. Until Five-Hand is built, this also
-  // clears the market exit (villageGateOpen).
+  // Releasing the stall shutter frees Mara; Five-Hand still holds the market exit.
   freeMara() {
     if (this.maraFreed) return false;
-    this.maraFreed = true; this.villageGateOpen = true; return true;
+    this.maraFreed = true; return true;
+  }
+
+  // Defeating Five-Hand clears the market exit (villageGateOpen).
+  defeatFiveHand() {
+    if (!this.maraFreed || this.villageGateOpen) return false;
+    this.villageGateOpen = true; this.clearedEncounters['five-hand'] = true; return true;
   }
 
   hearNia() {
@@ -133,6 +138,7 @@ export class WorldState {
     if (!this.maraFreed && !this.villageGateOpen) return this.completedStory['mara-knock']
       ? goal('Act 1: restore the market; climb the steps to the stall roof release', 'World', MARA_STALL.release, MARA_STALL.roof)
       : goal('Act 1: someone is knocking inside a market stall', 'World', MARA_STALL.shutter);
+    if (this.maraFreed && !this.villageGateOpen) return goal('Act 1: defeat Five-Hand at the market exit', 'World', MARA_STALL.exitGate - 140);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: follow Mara to the Bridge Refuge', 'World', REFUGE.mara);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
     if (!this.bridgeReturnOpen) return goal('Act 1: restore and cross the broken bridge', 'World', 5370);

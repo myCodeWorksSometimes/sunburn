@@ -178,7 +178,10 @@ test('campaign Act 1: Mara, Nia and Tomas progress in order, once each', () => {
   assert.equal(state.hearNia(), false, 'the refuge story needs Mara freed first');
   assert.equal(state.freeMara(), true);
   assert.equal(state.freeMara(), false);
-  assert.equal(state.villageGateOpen, true, 'freeing Mara clears the market exit until Five-Hand exists');
+  assert.equal(state.villageGateOpen, false, 'Five-Hand still holds the market exit');
+  assert.match(state.objective, /Five-Hand/);
+  assert.equal(state.defeatFiveHand(), true); assert.equal(state.defeatFiveHand(), false);
+  assert.equal(state.villageGateOpen, true); assert.equal(state.clearedEncounters['five-hand'], true);
   assert.match(state.objective, /Bridge Refuge/);
   assert.equal(state.hearTomas(), false, 'Tomas speaks after the reunion');
   assert.equal(state.hearNia(), true); assert.equal(state.hearNia(), false);
@@ -204,7 +207,7 @@ test('campaign Act 1 flags survive saving; older saves migrate safely', () => {
 test('campaign route: canal, then Eli at the window, Old Road, then the ember', () => {
   const state = new WorldState();
   state.hasLantern = true; state.completedStory['home-first-memory'] = true;
-  state.freeMara(); state.hearNia(); state.hearTomas();
+  state.freeMara(); state.defeatFiveHand(); state.hearNia(); state.hearTomas();
   state.bridgeReturnOpen = state.campReturnOpen = state.swingReturnOpen = true;
   state.findDrawing();
   assert.match(state.objective, /canal/, 'the canal no longer waits for the ember');
