@@ -1,5 +1,22 @@
 # Canon — latest user-approved world rules
 
+## Latest production decision — 18 October 2026
+
+Restoration spreads outward from the source fire through a soft circular light
+field. Only the illuminated pocket becomes the past; the surrounding night stays
+corrupted. Art, daylight removal and temporary surface collision use that same
+field. “Region” below is a story/location identifier, not a whole-screen switch.
+The useful countdown starts after the 1.2-second expansion. Ordinary firelight
+illuminates without restoring; an awakened memory adds the wider restorative halo.
+
+Act1 production now permits generated assets. Follow the slightly pixelated
+village/hero style, never hyperrealism. Use the latest user-approved Gemini
+survivor sheet, not its earlier version. Preserve the real supplied backgrounds.
+Minimal readable UI takes priority over repeated instructions and decorative copy.
+Real locally bundled CC0 music/foley/creature recordings replace oscillator beeps.
+See ACT1-PRODUCTION.md and the newest STATUS/TEST-LOG entries for actual evidence.
+
+
 ## Latest story revision — adopted campaign (17 October 2026)
 
 The user adopted **CAMPAIGN.md** as the target story and gameplay design. Where it

@@ -69,6 +69,7 @@ export class Crawler extends Phaser.GameObjects.Sprite {
     if (!this.alive) return;
     this.alive = false; this.state = 'dispersing'; this.tell.setVisible(false);
     this.scene.run.clearEncounter(this.id);
+    this.scene.audio.cue('monster-death');
     this.play('shadow-dissolve');
     const dissolve = this.scene.add.sprite(this.x, this.floor - 25, 'fx_dissolve').setScale(.65).setDepth(28).play('fx-dissolve');
     dissolve.once('animationcomplete', () => dissolve.destroy());
@@ -78,6 +79,7 @@ export class Crawler extends Phaser.GameObjects.Sprite {
   hit(direction) {
     if (this.kind === 'warden' && this.scene.run.relayCount < 3) { this.scene.notice('Ring all three bells to break the Warden’s wards.'); return false; }
     if (!this.alive || this.dormant) return false;
+    this.scene.audio.cue('monster-hit');
     this.health--;
     if (this.health <= 0) this.disperse();
     else {

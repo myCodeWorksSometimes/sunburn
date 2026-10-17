@@ -3,6 +3,7 @@ import { createTextures } from '../textures.js';
 import { FONT } from '../systems/Captions.js';
 import { getSession } from '../world/WorldState.js';
 import { createPresentationTextures } from '../presentation/textures.js';
+import { prepareProductionAssets } from '../presentation/productionAssets.js';
 
 const BACKGROUNDS = [
   'bg_title_screen', 'cut_01_before', 'cut_02_sun_breaks', 'cut_03_meteors',
@@ -21,6 +22,11 @@ export class Boot extends Phaser.Scene {
     const bar = this.add.rectangle(width / 2 - 200, height / 2, 0, 6, 0xffc864).setOrigin(0, 0.5);
     this.add.text(width / 2, height / 2 - 30, 'kindling…', { fontFamily: FONT, fontSize: '22px', color: '#d8c8b0' }).setOrigin(0.5);
     this.load.on('progress', (p) => (bar.width = 400 * p));
+    for (const name of ['score','fire','step-stone','step-wood','knock','door','impact','take','sweep','monster-roar','monster-hit','monster-death']) this.load.audio(`audio-${name}`, `audio/${name}.ogg`);
+    this.load.image('production-ui','art/production/ui-atlas.png');
+    this.load.image('production-stall','art/production/mara-stall.png');
+    this.load.image('production-bosses','art/production/boss-atlas.png');
+    for(const who of ['mara','tomas','nia']) this.load.spritesheet(`npc-${who}`,`art/production/npc-${who}.png`,{frameWidth:96,frameHeight:112});
     for (const key of BACKGROUNDS) this.load.image(key, `bg/${key}.png`);
     // Region paintings added later (Act 2/3) are listed by tools/process_backgrounds.py.
     this.load.json('bg-manifest', 'bg/manifest.json');
@@ -48,6 +54,7 @@ export class Boot extends Phaser.Scene {
   create() {
     createPresentationTextures(this);
     createTextures(this);
+    prepareProductionAssets(this);
     // ?scene=Yard jumps straight to a scene while developing.
     const start = new URLSearchParams(location.search).get('scene') || 'Title';
     if (start === 'World') getSession(this).hasLantern = true;

@@ -21,11 +21,11 @@ export const SPAWNS = {
   lane: { x: 1710, y: GROUND },
   square: { x: 3250, y: GROUND },
   shortcut: { x: 3410, y: GROUND },
-  refuge: { x: 5075, y: GROUND },
+  refuge: { x: 5350, y: GROUND },
   oldRoadWest: { x: 4935, y: GROUND },
-  bridge: { x: 5970, y: GROUND },
-  farBank: { x: 6770, y: GROUND },
-  camp: { x: 7470, y: GROUND },
+  bridge: { x: 6350, y: GROUND },
+  farBank: { x: 6950, y: GROUND },
+  camp: { x: 8120, y: GROUND },
   playground: { x: 9110, y: GROUND },
   swingBank: { x: 10130, y: GROUND },
   treehouse: { x: 10520, y: GROUND },
@@ -43,7 +43,7 @@ export const MARA_STALL = { x1: 3630, x2: 3870, roof: 385, shutter: 3790, releas
 // Five-Hand: rooted at the market exit; five card slots hover over the arena.
 export const FIVE_HAND = { body: 4785, slots: [4140, 4270, 4400, 4530, 4660], cardY: 405, arenaStart: 4080 };
 // barrier keeps Rowan out of the bridge fire's reach until Tomas has spoken.
-export const REFUGE = { oldRoad: 4885, nia: 4985, hearth: 5075, tomas: 5165, mara: 5245, barrier: 5285 };
+export const REFUGE = { oldRoad: 4910, nia: 5060, hearth: 5350, tomas: 5500, mara: 5205, barrier: 5580 };
 // Campaign Scene 10: Eli behind a lattice window high on the tower, seen from the
 // courtyard; the Old Road's east door and its release beside it.
 export const TOWER_WINDOW = { x: 14230, y: 190, knock: 14230 };
@@ -64,9 +64,9 @@ export const A3 = {
 };
 // Bridge works (CAMPAIGN Scene 7), in the space before the bridge fire: the
 // Braced Shadow's arena, a crate to dodge onto, the cracked barrier and the gear bay.
-export const BRIDGE_WORKS = { arenaMin: 5340, arenaMax: 5690, elite: 5420, crate: [5600, 5680], barrier: 5700,
-  leverA: 5750, leverB: 5805, brake: 5865, bigGear: { x: 5790, y: 405, r: 44 }, smallGear: { x: 5866, y: 372, r: 26 } };
-export const BRIDGE_GAP = { x1: 6080, x2: 6640 };
+export const BRIDGE_WORKS = { arenaMin: 5660, arenaMax: 6090, elite: 5740, crate: [5940, 6030], barrier: 6110,
+  leverA: 6170, leverB: 6230, brake: 6300, bigGear: { x: 6200, y: 405, r: 44 }, smallGear: { x: 6276, y: 372, r: 26 } };
+export const BRIDGE_GAP = { x1: 6460, x2: 6880 };
 export const YARD_GAP = { x1: 780, x2: 1100 };
 export const CAMP_GAP = { x1: 8400, x2: 8720 };
 export const SWING_GAP = { x1: 9760, x2: 10060 };
@@ -81,10 +81,10 @@ export const FIRES = [
   { id: 'yard-fire', regionId: 'yard', x: 490, floor: GROUND, duration: 14000, spawnId: 'yard' },
   { id: 'lane-fire', regionId: 'lane', x: 1710, floor: GROUND, duration: 14000, spawnId: 'lane' },
   { id: 'square-fire', regionId: 'square', x: 3250, floor: GROUND, duration: 18000, spawnId: 'square' },
-  { id: 'bridge-fire', regionId: 'bridge', x: 5970, floor: GROUND, duration: 9000, spawnId: 'bridge' },
-  { id: 'camp-fire', regionId: 'camp', x: 7470, floor: GROUND, duration: 20000, spawnId: 'camp' },
-  { id: 'swing-fire', regionId: 'swings', x: 9110, floor: GROUND, duration: 16000, spawnId: 'playground' },
-  { id: 'treehouse-fire', regionId: 'treehouse', x: 10520, floor: GROUND, duration: 20000, spawnId: 'treehouse' },
+  { id: 'bridge-fire', regionId: 'bridge', x: 6350, floor: GROUND, radius: 800, duration: 14000, spawnId: 'bridge' },
+  { id: 'camp-fire', regionId: 'camp', x: 8120, floor: GROUND, radius: 720, duration: 20000, spawnId: 'camp' },
+  { id: 'swing-fire', regionId: 'swings', x: 9110, floor: GROUND, radius: 1060, duration: 16000, spawnId: 'playground' },
+  { id: 'treehouse-fire', regionId: 'treehouse', x: 10520, floor: GROUND, radius: 900, duration: 20000, spawnId: 'treehouse' },
   { id: 'canal-fire', regionId: 'canal', x: 12200, floor: GROUND, duration: 16000, spawnId: 'canal' },
   { id: 'court-fire', regionId: 'tower-court', x: 14000, floor: GROUND, duration: 18000, spawnId: 'courtyard' },
   { id: 'mechanism-fire', regionId: 'tower-base', x: 14990, floor: GROUND, duration: 20000, spawnId: 'mechanisms' },

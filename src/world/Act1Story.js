@@ -40,21 +40,12 @@ export function buildAct1Story(s, gate) {
   s.knockClock = 0;
 
   // ---- Market: Mara's stall. Its roof is reached from the remembered steps.
-  const width = STALL.x2 - STALL.x1;
-  const body = s.add.graphics().setDepth(9);
-  body.fillStyle(0x2c2326).fillRect(STALL.x1 + 6, STALL.roof + 30, width - 12, GROUND - STALL.roof - 30);
-  for (let x = STALL.x1, i = 0; x < STALL.x2; x += 25, i++) body.fillStyle(i % 2 ? 0x7a3a34 : 0xa88f62).fillRect(x, STALL.roof + 36, Math.min(25, STALL.x2 - x), 20);
-  body.fillStyle(0x4a3a30).fillRect(STALL.x1 + 14, GROUND - 58, width - 28, 10);
-  s.addSurface(STALL.x1, STALL.x2, STALL.roof, { material: 'timber' });
-  const opening = s.add.rectangle(STALL.shutter, GROUND - 56, 92, 112, 0x15121a).setDepth(9).setVisible(run.maraFreed);
-  const shutter = s.add.graphics().setDepth(10).setVisible(!run.maraFreed);
-  shutter.fillStyle(0x352b27).fillRect(STALL.shutter - 46, GROUND - 115, 92, 115);
-  for (let y = GROUND - 111; y < GROUND - 6; y += 13) {
-    shutter.fillStyle(y % 2 ? 0x67513d : 0x594432).fillRect(STALL.shutter - 43, y, 86, 10);
-    shutter.lineStyle(1, 0x8d7352).lineBetween(STALL.shutter - 41, y, STALL.shutter + 41, y);
-  }
-  shutter.fillStyle(0x9c8866).fillRect(STALL.shutter - 13, GROUND - 32, 26, 4);
-  s.addLabel(STALL.shutter, STALL.roof + 80, 'MARA’S STALL', '#d3bc91', 12);
+  const width=STALL.x2-STALL.x1,cx=(STALL.x1+STALL.x2)/2;
+  const opening=s.add.image(cx,GROUND,'stall-open').setOrigin(.5,1).setDisplaySize(width+20,185).setDepth(10).setVisible(run.maraFreed);
+  const shutter=s.add.image(cx,GROUND,'stall-closed').setOrigin(.5,1).setDisplaySize(width+20,185).setDepth(10).setVisible(!run.maraFreed);
+  const roof=s.addSurface(STALL.x1,STALL.x2,STALL.roof,{material:'timber'});roof.block.setAlpha(0);roof.edge.setAlpha(0);
+  s.add.ellipse(cx,GROUND+5,width+40,15,0x08090d,.45).setDepth(9);
+  s.addLabel(cx,STALL.roof-25,'MARA’S TOY STALL','#d3bc91',12);
   const lever = s.add.graphics().setDepth(22);
   const drawLever = (pulled) => {
     lever.clear().fillStyle(0x6e5a44).fillRect(STALL.release - 3, STALL.roof - 34, 6, 34);
@@ -117,7 +108,7 @@ export function buildAct1Story(s, gate) {
   const nia = new Npc(s, 'nia', REFUGE.nia, GROUND);
   const tomas = new Npc(s, 'tomas', REFUGE.tomas, GROUND);
   const mara = new Npc(s, 'mara', REFUGE.mara, GROUND, { visible: run.maraFreed && run.villageGateOpen });
-  if (run.heardNia) mara.sprite.x = REFUGE.nia + 50;
+  if (run.heardNia) mara.sprite.x = REFUGE.mara;
   s.npcs.push(nia, tomas, mara);
   s.refuge = { mara, stallMara };
 
@@ -169,7 +160,7 @@ export function tickAct1Story(s, delta) {
   if (run.maraFreed && !run.heardNia && x > REFUGE.oldRoad - 40 && x < REFUGE.barrier + 200) {
     if (run.hearNia()) {
       s.story('refuge-reunion', ...REUNION_LINES);
-      s.refuge.mara.walkTo(REFUGE.nia + 50);
+      s.refuge.mara.walkTo(REFUGE.mara);
       saveSession(s);
     }
   }

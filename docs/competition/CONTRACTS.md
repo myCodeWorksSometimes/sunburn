@@ -287,3 +287,40 @@ called directly rather than subscribed through a separate event dispatcher.
   arena while Mara is freed, Rowan is in the court and Five-Hand is undefeated.
 - Wrong pick:900ms tell,650ms sweep. Bright front damages within34px of its x
   and when feet are within34px of ground. The dim trailing area is harmless.
+
+
+## Act 1 production interfaces — 18 Oct 2026
+
+- MemorySystem WARMUP_MS=1200. activate normalizes/copies fire x/floor. Countdown
+  starts after expansion; cooldown/resource rules unchanged. isRestored(region)
+  remains a story-phase predicate; **isRestoredAt(region,x,y)** is the physical
+  world-circle predicate, including across adjacent region boundaries. Use the
+  latter for surfaces/enemies. fieldRadius / fieldContains live in RestorationField.
+- RestorationField owns one world-space soft-disc external WebGL mask (Phaser4
+  filters, not legacy setMask). regionVisuals entries must be actual filterable
+  display objects. Act2 pairs now register their past image directly. Both surface
+  endpoints must lie inside the field; permanent callbacks override expiry.
+- lighting.restoredAreas now contains {x,y,radius,alpha}, not rectangular region
+  bounds. Camera zoom is included in light projection. Ordinary fire halo remains
+  distinct from the wider restorative illumination.
+- BossIntroduction.play({id,name,subtitle,sprite,x,y,onComplete}) requires sprite
+  pose(index). It freezes physics, scene clock, tweens and gameplay clocks while
+  update(delta) animates the camera; Enter skips. completedStory['intro-'+id]
+  prevents repeat intros. A separate screen camera keeps HUD/bars unscaled.
+- Boss poses 0 front / 1 idle / 2 attack / 3 hurt or exposed. Braced has 3 health,
+  one hit per stun; resetEncounter restores all 3. Five-Hand keeps two rounds;
+  death fully resets the fight, retreat retains earned rounds. Clear flags persist.
+- Act1 layout: refuge hearth5350, NPCs5060/5205/5500, arena5660..6090,
+  barrier6110, gear levers6170/6230, brake6300, bridge fire6350 (800 radius,14s),
+  bridge6460..6880, campfire8120 (720 radius,20s). Derive objectives from FIRES.
+  Swing/treehouse radii1060/900 retain existing later-act platform reach.
+- AudioCues owns exactly one score loop and one proximity fire loop per Adventure;
+  shutdown destroys both. update(delta), cue(id), pause/resume, toggleMute and
+  setVolume('music'|'effects',0..1). Local key embers-audio-v1 stores settings.
+- Survivor strips use npc-mara/tomas/nia, 96x112 frames; feet are bottom registered.
+  Latest Gemini source hash and regeneration instructions are in art/production.
+- UI body uses high-resolution Trebuchet text; Georgia is reserved for headings.
+  Consistent title-case labels, left alignment and restrained text density. Controls
+  are on-demand in Pause (C), not a permanent HUD strip. Gameplay bindings unchanged.
+- Shutdown cancellation clears logical memory without touching already-released
+  bodies or mask textures. Ordinary death/expiry/replacement still refresh visuals.

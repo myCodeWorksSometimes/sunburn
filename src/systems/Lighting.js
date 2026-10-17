@@ -44,11 +44,13 @@ export class Lighting {
     ctx.fillStyle = `rgba(6,3,12,${this.darkness})`;
     ctx.fillRect(0, 0, this.w, this.h);
     ctx.globalCompositeOperation = 'destination-out';
-    // Restoration is daylight across the affected region, rather than a larger
-    // lantern halo. Adjacent corrupted regions retain their darkness.
+    // The restorative halo uses the exact same centre/radius as the artwork mask.
+    // Everything beyond its feathered edge remains in the corrupted present.
     for (const area of this.restoredAreas) {
-      ctx.fillStyle = `rgba(0,0,0,${Math.min(1, area.alpha) * 0.92})`;
-      ctx.fillRect((area.x - cam.scrollX) / RES, 0, area.width / RES, this.h);
+      const sx=((area.x-cam.scrollX-640)*cam.zoom+640)/RES,sy=((area.y-cam.scrollY-360)*cam.zoom+360)/RES;
+      const r=Math.max(.1,area.radius*cam.zoom/RES),g=ctx.createRadialGradient(sx,sy,0,sx,sy,r);
+      g.addColorStop(0,`rgba(0,0,0,${area.alpha*.94})`);g.addColorStop(.78,`rgba(0,0,0,${area.alpha*.9})`);g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g;ctx.fillRect(sx-r,sy-r,r*2,r*2);
     }
 
     for (const l of this.lights) {
@@ -58,19 +60,20 @@ export class Lighting {
       }
       const flick = l.flicker ? 1 + Math.sin(this.time * 0.013 + l.x) * l.flicker * 0.5 + (Math.random() - 0.5) * l.flicker : 1;
       const r = Math.max(1, l.radius * flick * (l.on ? 1 : 0));
-      const sx = (l.x - cam.scrollX) / RES;
-      const sy = (l.y - cam.scrollY) / RES;
+      const sx = ((l.x - cam.scrollX-640)*cam.zoom+640) / RES;
+      const sy = ((l.y - cam.scrollY-360)*cam.zoom+360) / RES;
       if (l.glow) {
         l.glow.setPosition(l.x, l.y).setScale((r * 2.2) / 256).setAlpha(l.on ? 0.28 * l.intensity * this.darkness : 0);
       }
       if (!l.on || l.intensity <= 0) continue;
-      const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r / RES);
+      const screenRadius=r*cam.zoom;
+      const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, screenRadius / RES);
       const i = Math.min(1, l.intensity);
       g.addColorStop(0, `rgba(0,0,0,${i})`);
       g.addColorStop(0.5, `rgba(0,0,0,${i * 0.85})`);
       g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g;
-      ctx.fillRect(sx - r / RES, sy - r / RES, (r * 2) / RES, (r * 2) / RES);
+      ctx.fillRect(sx - screenRadius / RES, sy - screenRadius / RES, (screenRadius * 2) / RES, (screenRadius * 2) / RES);
     }
     this.tex.refresh();
   }

@@ -1,3 +1,4 @@
+import { panel } from '../presentation/ui.js';
 // Bottom-of-screen story captions with a typewriter effect.
 
 export const FONT = 'Trebuchet MS, sans-serif';
@@ -9,10 +10,10 @@ export class Captions {
     // The cellar's walk line is y650: bottom captions would hide its pickups,
     // hands and feet. Give the interior a clear upper caption band instead.
     const captionY = scene.scene.key === 'Hearth' ? 212 : height - 70;
-    this.box = scene.add.rectangle(width / 2, captionY, width - 240, 72, 0x10131c, 0.9).setStrokeStyle(1, 0x766044, .75).setScrollFactor(0).setDepth(depth).setAlpha(0);
+    this.box = panel(scene,width/2,captionY,width-240,72,{depth,alpha:.95}).setAlpha(0);
     this.text = scene.add
-      .text(width / 2, captionY, '', { fontFamily: FONT, fontSize: '23px', color: '#f3e6d0', align: 'center', wordWrap: { width: width - 300 } })
-      .setOrigin(0.5)
+      .text(190, captionY, '', { fontFamily: FONT, fontSize: '21px', color: '#f3e6d0', align: 'left', resolution:2, fixedWidth:900, lineSpacing:6, wordWrap: { width: 900 } })
+      .setOrigin(0,0.5)
       .setScrollFactor(0)
       .setDepth(depth + 1);
     this.queue = [];
@@ -30,7 +31,8 @@ export class Captions {
     this.timer?.remove();
     this.typer?.remove();
     this.busy = false;
-    this.scene.tweens.add({ targets: [this.box, this.text], alpha: 0, duration: 200 });
+    this.scene.tweens.killTweensOf([this.box,this.text]);
+    this.box.setAlpha(0);this.text.setText('').setAlpha(0);
   }
 
   next() {

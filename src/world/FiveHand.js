@@ -1,12 +1,14 @@
 import { FONT } from '../systems/Captions.js';
 import { GROUND, FIVE_HAND as FH } from './layout.js';
 import { saveSession } from './WorldState.js';
+import { paintedBoss } from '../presentation/productionAssets.js';
+import { bossHud } from '../presentation/bossHud.js';
 
 // CAMPAIGN Scene 5 — Five-Hand, a shadow rooted in Mara's card counter at the
 // market exit. Watch the lantern card, track the swaps, stand under your pick
 // and press E. A correct pick exposes its knot for a lantern sweep; a wrong pick
 // earns a telegraphed hand sweep along the ground. Two hits defeat it.
-// Placeholder art: a large shadow behind a counter, cards and arms drawn in code.
+// Painted pixel poses; fine threads connect the creature to readable game cards.
 
 const ROUNDS = [
   { swaps: [[1, 3], [0, 2]], swapMs: 950 },
@@ -50,9 +52,10 @@ export function buildFiveHand(s) {
 
   // The rooted body: a large shadow behind Mara's card counter, with a violet aura.
   const aura = s.add.image(FH.body, GROUND - 70, 'glow').setTint(0x8a4cff).setBlendMode('ADD').setScale(1.3, 1).setAlpha(0.35).setDepth(17);
-  const body = s.add.sprite(FH.body, GROUND, 'shadow_idle').setOrigin(0.5, 1).setScale(1.25).setFlipX(true).setDepth(18).play('shadow-idle');
+  const body = paintedBoss(s,'fivehand',FH.body,GROUND,230);
+  fight.sprite=body;
+  const hud=bossHud(s,'Five-Hand');
   const counter = s.add.graphics().setDepth(19);
-  counter.fillStyle(0x4a3424).fillRect(FH.body - 60, GROUND - 42, 120, 42).fillStyle(0x6b4a2c).fillRect(FH.body - 66, GROUND - 48, 132, 8);
   const knot = s.add.circle(FH.body - 12, GROUND - 82, 13, 0xb47cff).setStrokeStyle(3, 0xfff0ff).setDepth(21).setVisible(false);
   const arms = s.add.graphics().setDepth(20);
   const label = s.add.text(FH.body, GROUND - 190, '', { fontFamily: FONT, fontSize: '15px', color: '#e0bd9a', stroke: '#11101b', strokeThickness: 4 }).setOrigin(0.5).setDepth(24);
@@ -84,9 +87,11 @@ export function buildFiveHand(s) {
   const go = (state) => { fight.state = state; fight.elapsed = 0; };
   // Already beaten (loaded save or revisit): stay dormant for good.
   if (defeated()) fight.state = 'defeated';
-  fight.reset = () => {
+  fight.reset = ({full=false}={}) => {
     if (defeated()) return;
     resetCards(); knot.setVisible(false); warn.setVisible(false); sweep.clear();
+    body.clearTint().pose(1);
+    if(full){fight.hits=0;fight.round=0;}
     fight.round = Math.min(fight.round, ROUNDS.length - 1); fight.swapIndex = 0; go('waiting');
   };
 
@@ -102,11 +107,11 @@ export function buildFiveHand(s) {
   // A pseudo-enemy so the existing lantern sweep can strike the exposed knot.
   const target = {
     id: 'five-hand', active: true, alive: !defeated(), x: FH.body, floor: GROUND, regionId: 'square', restorationImmune: true,
-    tick: (delta) => update(delta), touches: () => false, resetEncounter: () => fight.reset(), disperse: () => {},
+    tick: (delta) => update(delta), touches: () => false, resetEncounter: () => fight.reset({full:true}), disperse: () => {},
     hit: () => {
       if (fight.state !== 'window') { s.notice('Its knot is hidden. Find the lantern card first.'); return false; }
-      fight.hits++; knot.setVisible(false); body.setTint(0xffb276);
-      s.time.delayedCall(250, () => body.clearTint()); s.audio.cue('take');
+      fight.hits++; knot.setVisible(false); body.setTint(0xffb276).pose(3);
+      s.time.delayedCall(250, () => {body.clearTint();body.pose(1);}); s.audio.cue('monster-hit');
       if (fight.hits >= ROUNDS.length) { win(); return true; }
       fight.round++; fight.swapIndex = 0; resetCards(); go('observe');
       s.notice('A hit! It gathers its cards again.');
@@ -116,7 +121,7 @@ export function buildFiveHand(s) {
   s.enemies.push(target);
 
   const win = () => {
-    target.alive = false; go('defeated');
+    target.alive = false; go('defeated');hud.update(false,0,2,'');s.audio.cue('monster-death');
     run.defeatFiveHand();
     s.tweens.add({ targets: [aura, body, counter, arms, label, ...cards.map(c => c.c)], alpha: 0, duration: 900, onComplete: () => show(false) });
     const fx = s.add.sprite(FH.body, GROUND - 20, 'fx_dissolve').setScale(0.9).setDepth(28).play('fx-dissolve');
@@ -131,18 +136,22 @@ export function buildFiveHand(s) {
   function update(delta) {
     if (fight.state === 'defeated') return;
     const p = s.player;
+    hud.update(fight.state!=='waiting'&&fight.state!=='introducing'&&p.x>FH.arenaStart-180&&p.x<FH.body+100,2-fight.hits,2,
+      {observe:'Watch the lantern card',shuffle:'Follow the swaps',select:'Stand beneath your card · E',window:'Heart exposed · F',punish:'Jump the moving hand'}[fight.state]??'');
     fight.elapsed += delta;
     // Arms reach from the body up to each card.
-    arms.clear().lineStyle(7, 0x0b0812, 0.95);
+    arms.clear().lineStyle(2, 0x826083, 0.55);
     for (const card of cards) arms.beginPath().moveTo(FH.body - 10, GROUND - 95).lineTo((FH.body + card.c.x) / 2, card.c.y - 55).lineTo(card.c.x, card.c.y - 22).strokePath();
-    label.setText(`FIVE-HAND  ·  ${fight.hits} / ${ROUNDS.length}`);
+    label.setText('');
 
     if (fight.state === 'waiting') {
-      if (run.maraFreed && p.x > FH.arenaStart - 20) {
+      if (run.maraFreed && !defeated() && p.x > FH.arenaStart - 20 && p.x < FH.body+100) {
         s.story('five-hand-wake', { text: 'Beyond the stall, five cards rise over the abandoned game court.', color: '#ebd5b0' },
           { speaker: 'Mara', text: 'It took my card game! Watch the lantern card — its heart hides under that one.' },
           { text: 'Track the lantern card. Stand under it and press E, then sweep with F.', color: '#ebd5b0' });
-        go('observe');
+        go('introducing');
+        if(!s.cinematic.play({id:'five-hand',name:'FIVE-HAND',subtitle:'Keeper of the lost cards',sprite:body,x:FH.body,y:GROUND-115,
+          onComplete:()=>{s.audio.cue('monster-roar');go('observe');}}))go('observe');
       }
       return;
     }
@@ -162,7 +171,7 @@ export function buildFiveHand(s) {
       } else {
         const slot = fight.cardAt.indexOf(LANTERN); flip(cards[LANTERN], true);
         s.notice(`Wrong card — the lantern was card ${slot + 1}. Jump or back away!`);
-        warn.setVisible(true); go('punish'); fight.hitDealt = false;
+        warn.setVisible(true);body.pose(2);s.audio.cue('monster-roar'); go('punish'); fight.hitDealt = false;
       }
     } else if (fight.state === 'window') {
       knot.setScale(1 + Math.sin(fight.elapsed / 120) * 0.12);
@@ -176,7 +185,7 @@ export function buildFiveHand(s) {
         // Only the visible moving front hits. The fading trail is not a second
         // invisible hazard after Rowan has already jumped over the hand.
         if (!fight.hitDealt && Math.abs(p.x - front) < 34 && p.x < FH.body + 65 && p.feet > GROUND - 34) { fight.hitDealt = true; s.combat.damage(FH.body); }
-        if (t >= 1) { sweep.clear(); warn.setVisible(false); resetCards(); go('observe'); }
+        if (t >= 1) { sweep.clear(); warn.setVisible(false); body.pose(1);resetCards(); go('observe'); }
       }
     }
   }

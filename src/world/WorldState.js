@@ -151,8 +151,8 @@ export class WorldState {
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
     if (!this.bridgeReturnOpen && !this.clearedEncounters['braced-shadow']) return goal('Act 1: bait the Braced Shadow into the cracked barrier', 'World', BRIDGE_WORKS.crate[0]);
     if (!this.bridgeReturnOpen && !this.bridgeBrakeSet) return goal('Act 1: restore the bridge fire, line up both gear marks, then set the brake', 'World', BRIDGE_WORKS.brake);
-    if (!this.bridgeReturnOpen) return goal('Act 1: restore the bridge fire and cross before it falls apart', 'World', 5970);
-    if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', 7470);
+    if (!this.bridgeReturnOpen) return goal('Act 1: restore the bridge fire and cross before it falls apart', 'World', FIRES.find(f => f.id === 'bridge-fire').x);
+    if (!this.campReturnOpen) return goal('Act 1: remember the campfire; cross toward the playground', 'World', FIRES.find(f => f.id === 'camp-fire').x);
     if (!this.swingReturnOpen) return goal('Act 2: restore the swing crossing', 'World', 9110);
     if (!this.hasDrawing) return goal('Act 2: restore the treehouse; find Eli’s drawing above', 'World', 11000, 380);
     if (!this.canalGateOpen && !this.hasHearthEmber) return goal('Act 2: restore the canal; turn the sluice wheel above', 'World', 12420, 440);

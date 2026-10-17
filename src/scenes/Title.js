@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { FONT } from '../systems/Captions.js';
 import { newSession, readSave, resumeSession } from '../world/WorldState.js';
-import { UI } from '../presentation/ui.js';
+import { UI, panel } from '../presentation/ui.js';
+import { homePainting } from '../presentation/Act1Presentation.js';
 
 export class Title extends Phaser.Scene {
   constructor() {
@@ -10,9 +11,8 @@ export class Title extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-    const bg = this.add.image(width / 2, height / 2, 'bg_p1_home_dark').setAlpha(0.45);
+    const bg = this.add.image(width / 2, height / 2, homePainting(this,'dark')).setAlpha(0.45);
     this.tweens.add({ targets: bg, scale: 1.05, duration: 20000, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
-    this.add.rectangle(1090, 0, 190, 300, 0x11101b).setOrigin(0);
 
     // Drifting embers.
     this.add.particles(0, height + 10, 'spark', {
@@ -22,12 +22,14 @@ export class Title extends Phaser.Scene {
 
     this.add.text(74, 87, 'EMBERS OF', { fontFamily: UI.title, fontSize: '31px', color: '#c5ab84', letterSpacing: 6 }).setShadow(3, 3, '#000', 0);
     this.add.text(70, 120, 'BEFORE', { fontFamily: UI.title, fontSize: '96px', color: '#f3d8ab', letterSpacing: 4 }).setShadow(4, 4, '#000', 0);
+    panel(this,320,333,520,150,{depth:0,fixed:false,alpha:.82});
+    this.add.image(760,340,'kit-medallion').setDisplaySize(145,145).setAlpha(.75);
     const saved = readSave(), canContinue = saved && !saved.completed;
-    const press = this.add.text(70, 250, canContinue ? '[ Enter ]  continue adventure' : '[ Enter ]  begin', { fontFamily: FONT, fontSize: '26px', color: '#f3e6d0' }).setShadow(2, 2, '#000', 0);
-    const fresh = this.add.text(70, 298, canContinue ? '[ N ]  new adventure' : 'Prologue · The Ruined Village · The Playground · The Clock Tower', { fontFamily: FONT, fontSize: '18px', color: '#c4b69e' });
-    this.add.text(70, 355, 'Light the past. Bring him home.', { fontFamily: FONT, fontSize: '20px', color: '#e8b070' });
-    this.add.text(72, 649, 'A village held in night. A promise still burning.', { fontFamily: FONT, fontSize: '16px', color: '#aaa4a4' });
-    this.tweens.add({ targets: press, alpha: 0.3, yoyo: true, repeat: -1, duration: 900 });
+    const press = this.add.text(100, canContinue?282:315, canContinue ? 'Enter · Continue' : 'Enter · Begin', { fontFamily: FONT, fontSize: '25px', color: '#f3e6d0',resolution:2 }).setShadow(2, 2, '#000', 0);
+    const fresh = this.add.text(100, 345, canContinue ? 'N · New adventure' : '', { fontFamily: FONT, fontSize: '20px', color: '#c4b69e',resolution:2 });
+    this.add.text(96, 446, 'Light the past. Bring him home.', { fontFamily: FONT, fontSize: '20px', color: '#e8b070' });
+
+    this.tweens.add({ targets: press, alpha: 0.7, yoyo: true, repeat: -1, duration: 900 });
 
     this.cameras.main.fadeIn(1200);
     let started = false;

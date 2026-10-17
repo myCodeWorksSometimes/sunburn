@@ -46,10 +46,10 @@ export class World extends Adventure {
     // is a pavement hatch instead of a freestanding house door.
     cellarHatch(this, 3410, GROUND);
     buildMarketCourt(this);
-    placeProp(this, 'marker', 6045, GROUND, 52, 65);
+    placeProp(this, 'marker', BRIDGE_GAP.x1-40, GROUND, 52, 65);
     // Water below the gap keeps its silhouette readable in either time state.
     this.water = this.add.graphics().setDepth(1);
-    for (let i = 0; i < 19; i++) this.water.lineStyle(1, i % 3 ? 0x5d687b : 0xa18471, .35).lineBetween(6100 + (i * 29) % 160, 607 + i * 6, 6520 + (i * 37) % 100, 607 + i * 6);
+    for (let i = 0; i < 19; i++) this.water.lineStyle(1, i % 3 ? 0x5d687b : 0xa18471, .35).lineBetween(BRIDGE_GAP.x1+15+(i*29)%90,607+i*6,BRIDGE_GAP.x2-30+(i*37)%40,607+i*6);
     // The face is mounted in the square painting's tower, so it moves with that layer.
     const face = onPainting(this.backdrop, 'square', 1120, 145), k = face.scale;
     this.add.circle(face.x, face.y, 26 * k, 0x1c202c).setStrokeStyle(2, 0xa38d6b).setDepth(-3);
@@ -81,6 +81,9 @@ export class World extends Adventure {
       this.notice('You release the maintenance walkway — the way back stays open.');
     }
     tickChapters(this, delta);
+    if(this.player.x>1950&&this.player.x<2200&&!this.run.completedStory['supply-ledge']){
+      this.run.completeStory('supply-ledge');this.notice('Raised supply ledge · jump up to evade the Crawler’s ground lunge.');
+    }
   }
 
   setMemoryVisual(regionId, alpha) { super.setMemoryVisual(regionId, alpha); this.restoredView = { regionId, alpha }; }

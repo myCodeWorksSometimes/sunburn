@@ -2,14 +2,16 @@ import Phaser from 'phaser';
 import { FONT } from '../systems/Captions.js';
 import { GROUND, BRIDGE_WORKS as BW } from './layout.js';
 import { saveSession } from './WorldState.js';
+import { paintedBoss } from '../presentation/productionAssets.js';
+import { bossHud } from '../presentation/bossHud.js';
 
 // CAMPAIGN Scene 7 — the bridge works, between the refuge and the bridge fire.
 // 1. The Braced Shadow: its armoured front turns any sweep. Bait its long, readable
 //    charge into the cracked barrier (dodge onto the crate or jump); the impact
-//    breaks the barrier and stuns it with its back exposed. Two hits to its back.
+//    breaks the barrier and stuns it with its back exposed. Three committed openings, one hit per stagger.
 // 2. The linked gears (in remembered time): lever A turns both gears, lever B
 //    only the small one. Line up both marks, then set the present-day brake.
-// Placeholder art: the existing shadow sheet with a drawn plank-and-iron shield.
+// Pixel-art poses share the same baseline and readable armour silhouette.
 
 const WINDUP_MS = 1300, CHARGE_SPEED = 360, STUN_MS = 2600, RECOVER_MS = 900;
 const GEAR_START = { big: 2, small: 1 }; // quarter turns away from the marks
@@ -42,28 +44,28 @@ export function buildBridgeWorks(s) {
   setBarrier(barrier.broken);
 
   // ---- The Braced Shadow (pseudo-enemy so the normal sweep and death reset reach it).
-  const sprite = s.add.sprite(BW.elite, GROUND, 'shadow_idle').setOrigin(0.5, 1).setScale(0.8).setDepth(22).play('shadow-idle');
+  const sprite = paintedBoss(s,'braced',BW.elite,GROUND,185);
+  const hud=bossHud(s,'Braced Shadow');
   const shield = s.add.graphics().setDepth(23);
   const tell = s.add.text(BW.elite, GROUND - 130, '!', { fontFamily: FONT, fontSize: '28px', color: '#ff9a6a', stroke: '#11101b', strokeThickness: 5 }).setOrigin(0.5).setDepth(26).setVisible(false);
   const label = s.add.text(BW.elite, GROUND - 150, '', { fontFamily: FONT, fontSize: '14px', color: '#e0bd9a', stroke: '#11101b', strokeThickness: 4 }).setOrigin(0.5).setDepth(24);
   const elite = {
     id: 'braced-shadow', active: !eliteCleared(), alive: !eliteCleared(), x: BW.elite, floor: GROUND, regionId: 'bridge', restorationImmune: true,
-    health: 2, state: 'idle', elapsed: 0, facing: -1, chargeDir: 1, hitDealt: false,
+    health: 3, state: 'idle', elapsed: 0, facing: -1, chargeDir: 1, hitDealt: false,hitUsed:false,
   };
   if (!elite.alive) for (const o of [sprite, shield, tell, label]) o.setVisible(false);
   const go = (state) => { elite.state = state; elite.elapsed = 0; };
 
-  const drawShield = () => {
-    shield.clear();
-    if (!elite.alive) return;
-    const fx = elite.x + elite.facing * 30;
-    shield.fillStyle(0x4a3426).fillRect(fx - 9, GROUND - 92, 18, 84);
-    shield.fillStyle(0x7a7f8c).fillRect(fx - 10, GROUND - 82, 20, 6).fillRect(fx - 10, GROUND - 46, 20, 6).fillRect(fx - 10, GROUND - 22, 20, 6);
-  };
 
   elite.tick = (delta) => {
     if (!elite.alive) return;
     const p = s.player;
+    if(s.run.heardTomas&&p.x>BW.arenaMin-60&&p.x<BW.barrier+120&&!s.run.completedStory['intro-braced-shadow']) {
+      if(s.cinematic.play({id:'braced-shadow',name:'THE BRACED SHADOW',subtitle:'Break the charge. Strike the exposed heart.',sprite,x:elite.x,y:GROUND-100,
+        onComplete:()=>s.audio.cue('monster-roar')}))return;
+    }
+    hud.update(p.x>BW.arenaMin-90&&p.x<BW.barrier+30,elite.health,3,
+      elite.state==='stunned'?(elite.hitUsed?'Retreat · prepare for its next charge':'Exposed back · F'):elite.state==='windup'?'Charge incoming · climb the supply ledge':'Lure it into the cracked barrier');
     elite.elapsed += delta;
     const sameLevel = Math.abs(p.feet - GROUND) < 60;
     const dx = p.x - elite.x;
@@ -75,27 +77,26 @@ export function buildBridgeWorks(s) {
       }
     } else if (elite.state === 'windup') {
       tell.setAlpha(0.5 + Math.abs(Math.sin(elite.elapsed / 90)) * 0.5);
-      if (elite.elapsed > WINDUP_MS) { go('charge'); tell.setVisible(false); sprite.clearTint().play('shadow-move'); elite.hitDealt = false; }
+      if (elite.elapsed > WINDUP_MS) { go('charge'); tell.setVisible(false); sprite.clearTint(); elite.hitDealt = false;s.audio.cue('monster-roar'); }
     } else if (elite.state === 'charge') {
       elite.x += elite.chargeDir * CHARGE_SPEED * delta / 1000;
       if (elite.chargeDir > 0 && elite.x >= BW.barrier - 42) {
         // Slams into the barrier: it breaks, and the elite is stunned facing it.
         elite.x = BW.barrier - 42; go('stunned');
-        sprite.setTint(0xffb276).play('shadow-hurt'); s.cameras.main.shake(220, 0.006); s.audio.cue('death');
+        elite.hitUsed=false;sprite.setTint(0xffb276); s.cameras.main.shake(220, 0.006); s.audio.cue('impact');
         if (!barrier.broken) {
           setBarrier(true);
           s.story('braced-barrier', { text: 'The barrier splinters. Its back is open — strike it!', color: '#ebd5b0' });
         } else s.notice('It slams into the iron frame. Strike its back!');
       } else if (elite.x <= BW.arenaMin || elite.x >= BW.arenaMax || elite.elapsed > 1400) {
-        elite.x = Phaser.Math.Clamp(elite.x, BW.arenaMin, BW.arenaMax); go('recover'); sprite.play('shadow-idle');
+        elite.x = Phaser.Math.Clamp(elite.x, BW.arenaMin, BW.arenaMax); go('recover');
       }
     } else if (elite.state === 'stunned') {
-      if (elite.elapsed > STUN_MS) { go('recover'); sprite.clearTint().play('shadow-idle'); elite.facing = -elite.chargeDir; }
+      if (elite.elapsed > STUN_MS) { go('recover'); sprite.clearTint(); elite.facing = -elite.chargeDir; }
     } else if (elite.state === 'recover' && elite.elapsed > RECOVER_MS) go('idle');
-    sprite.setPosition(elite.x, GROUND).setFlipX(elite.facing < 0);
+    sprite.pose(elite.state==='charge'?2:elite.state==='stunned'?3:1).setPosition(elite.x, GROUND).setFlipX(elite.state==='stunned'?elite.facing<0:elite.facing>0);
     tell.setPosition(elite.x, GROUND - 130);
-    label.setPosition(elite.x, GROUND - 150).setText(`BRACED SHADOW · ${elite.health} / 2`);
-    drawShield();
+    label.setText('');
   };
 
   elite.touches = (p) => elite.alive && elite.state === 'charge' && Math.abs(p.x - elite.x) < 40 && Math.abs(p.feet - GROUND) < 65;
@@ -104,11 +105,11 @@ export function buildBridgeWorks(s) {
     if (!elite.alive) return false;
     // Only its back is open, and only while stunned against the barrier.
     const fromBehind = Math.sign(s.player.x - elite.x) === -elite.facing;
-    if (elite.state !== 'stunned' || !fromBehind) {
+    if (elite.state !== 'stunned' || !fromBehind || elite.hitUsed) {
       s.notice('Its braced front turns the light aside. Bait it into the barrier.'); s.audio.cue('notice');
       return false;
     }
-    elite.health--; s.audio.cue('take');
+    elite.health--;elite.hitUsed=true;s.audio.cue('monster-hit');
     sprite.setTint(0xffffff); s.time.delayedCall(120, () => elite.alive && sprite.setTint(0xffb276));
     if (elite.health <= 0) defeat();
     return true;
@@ -117,7 +118,7 @@ export function buildBridgeWorks(s) {
   const defeat = () => {
     elite.alive = false; elite.state = 'gone';
     run.clearEncounter('braced-shadow');
-    sprite.play('shadow-dissolve');
+    hud.update(false,0,3,'');s.audio.cue('monster-death');
     const fx = s.add.sprite(elite.x, GROUND - 20, 'fx_dissolve').setScale(0.7).setDepth(28).play('fx-dissolve');
     fx.once('animationcomplete', () => fx.destroy());
     s.tweens.add({ targets: [sprite, label], alpha: 0, duration: 600, onComplete: () => { sprite.setVisible(false); label.setVisible(false); } });
@@ -128,8 +129,8 @@ export function buildBridgeWorks(s) {
   };
   elite.resetEncounter = () => {
     if (!elite.alive) return;
-    elite.x = BW.elite; elite.health = 2; elite.facing = -1; go('idle');
-    sprite.clearTint().play('shadow-idle'); tell.setVisible(false);
+    elite.x = BW.elite; elite.health = 3; elite.facing = -1;elite.hitUsed=false; go('idle');
+    sprite.clearTint().pose(1); tell.setVisible(false);
     if (!eliteCleared()) setBarrier(false);
   };
   elite.disperse = () => {};

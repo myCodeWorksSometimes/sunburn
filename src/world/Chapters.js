@@ -230,9 +230,9 @@ export function memoryChapter(s, fire) {
     s.echo([point(3250), point(3335, 500), point(3450, 440), point(3580, 380), point(MARA_STALL.release - 40, MARA_STALL.roof)], { delay: 1600 });
   } else if (id === 'bridge') {
     if (!run.bridgeBrakeSet) s.story('bridge-gears-memory', { text: 'The bridge machinery wakes. Lever A turns both gears, lever B the small one. Line up both marks, then set the brake.', color: '#ebd5b0' });
-    else { s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(5900), point(6900)]); }
+    else { s.story('bridge-memory', { speaker: 'Rowan', text: 'Quick. Across before it falls apart.' }); s.echo([point(6350), point(6950)]); }
   } else if (id === 'camp') {
-    s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(7530), point(8900)]);
+    s.story('camp-memory', { speaker: 'Echo Eli', text: 'I’ll be by the swings!' }, { text: 'The campfire restores the walkway to the playground.' }); s.echo([point(8120), point(8900)]);
   } else if (id === 'swings') {
     s.story('swing-memory', { text: 'The swing moves in remembered time. Jump onto its board, then to the far bank.' }); s.echo([point(9280), point(9830, 500), point(10220)]);
   } else if (id === 'treehouse') {

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { panel, menuText, UI } from '../presentation/ui.js';
 import { newSession } from '../world/WorldState.js';
-import { REGIONS, regionAt } from '../world/layout.js';
+import { REGIONS, regionAt, WORLD_WIDTH, FIVE_HAND, BRIDGE_WORKS, REFUGE } from '../world/layout.js';
 
 export class Pause extends Phaser.Scene {
   constructor() { super('Pause'); }
@@ -11,6 +11,10 @@ export class Pause extends Phaser.Scene {
     this.add.rectangle(640, 360, 1280, 720, 0x080c15, .88);
     panel(this, 640, 348, 1020, 590, { fixed: false, depth: 0 });
     const text = (y, label, size = 24) => menuText(this, 640, y, label, size);
+    const tab = (x, title, data) => menuText(this,x,88,title,17,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.scene.restart({owner:this.owner,...data}));
+    tab(310,'I · Satchel',{inventory:true}); tab(510,'M · Map',{map:true}); tab(710,'J · Journal',{journal:true}); tab(910,'Pause',{});
+    this.add.image(178,88,this.map?'kit-map':this.journal?'kit-journal':this.inventory?'kit-lantern':'kit-time').setDisplaySize(30,35);
+
     if (this.map || this.journal) {
       this.explorationView(source, text);
       for (const key of ['ESC', 'M', 'J']) this.input.keyboard.on(`keydown-${key}`, () => this.resume());
@@ -18,33 +22,33 @@ export class Pause extends Phaser.Scene {
     }
     if (this.inventory) {
       const run = source.run;
-      text(102, 'THE THINGS WE KEEP', 32).setFontFamily(UI.title).setColor(UI.gold);
-      text(149, 'SATCHEL   /   STORY ITEMS AND SUPPLIES', 13).setColor('#9c9caa').setLetterSpacing(3);
+      menuText(this,220,140,'Satchel',36).setOrigin(0,.5).setFontFamily(UI.title).setColor(UI.gold);
+
       const items = [
-        { key: 'item-lantern', title: 'Grandfather’s lantern', owned: run.hasLantern, status: run.hasLantern ? 'CARRIED' : 'NOT FOUND',
-          detail: 'An ordinary light with an extraordinary memory.\nE at an old fire: restore its world for 25 flame.   F: lantern sweep, 20 flame.' },
-        { key: 'item-cup', title: 'Ember cup', owned: run.hasEmberCup, status: run.hasEmberCup ? '1 / 1  ·  KEY ITEM' : '0 / 1  ·  KEY ITEM',
-          detail: 'A vessel made to carry the last warmth of a home.\nFound with Eli’s drawing in the remembered playground treehouse.' },
-        { key: 'item-ember', title: 'The hearth’s last ember', owned: run.hasHearthEmber, status: run.hasHearthEmber ? '1 / 1  ·  PROTECTED' : run.rescuedEli ? 'GIVEN TO ELI' : 'NOT YET TAKEN',
-          detail: run.rescuedEli ? 'The warmth has found its way home. Eli remains in the present.' : 'An anchor for someone caught between moments.\nSeparate from flame fuel. Attacks and oil can never consume this ember.' },
-        { key: 'item-oil', title: 'Lamp oil', owned: run.oil > 0, status: `${run.oil} / 1  ·  SUPPLY`,
-          detail: 'Q while playing: restore up to 35 flame. Full flame keeps the vial.\nHold R for two seconds beside a fire to recover health, flame and one vial.' },
-        { key: 'item_drawing', title: 'Eli’s drawing', owned: run.hasDrawing, status: run.hasDrawing ? '1 / 1  ·  CLUE' : 'NOT FOUND',
-          detail: 'The tower, two brothers and a promise.\nEli led the children from the playground to the clock tower shelter.' },
+        { key: 'kit-lantern', title: 'Lantern', owned: run.hasLantern, status: run.hasLantern ? 'Carried' : 'Missing',
+          detail: 'Grandfather’s lantern wakes old fires.\nE · Remember (25 flame)     F · Sweep (20 flame)' },
+        { key: 'kit-cup', title: 'Ember cup', owned: run.hasEmberCup, status: run.hasEmberCup ? 'Carried' : 'Missing',
+          detail: 'Carries a memory ember safely.\nFound in the playground treehouse.' },
+        { key: 'kit-flame', title: 'Hearth ember', owned: run.hasHearthEmber, status: run.hasHearthEmber ? 'Protected' : run.rescuedEli ? 'Given to Eli' : 'Missing',
+          detail: run.rescuedEli ? 'The warmth has found its way home. Eli remains in the present.' : 'Brings Eli back into the present.\nProtected: combat never consumes this ember.' },
+        { key: 'kit-oil', title: 'Lamp oil', owned: run.oil > 0, status: `${run.oil} / 1`,
+          detail: 'Q · Restore 35 flame. A full lantern keeps the oil.\nHold R at a fire to refill supplies.' },
+        { key: 'kit-journal', title: 'Eli’s drawing', owned: run.hasDrawing, status: run.hasDrawing ? 'Carried' : 'Missing',
+          detail: 'Eli’s route leads from the playground to the tower.' },
       ];
       this.cards = items.map((item, i) => {
         const x = 280 + i * 180;
         const card = panel(this, x, 280, 172, 200, { depth: 1, fixed: false, alpha: .8 });
         this.add.image(x, 254, item.key).setDisplaySize(65, 78).setDepth(2).setAlpha(item.owned ? 1 : .22);
-        menuText(this, x, 318, item.title, 15, item.owned ? '#e7d8b9' : '#8f8d99').setWordWrapWidth(160).setDepth(2);
-        menuText(this, x, 354, item.status, 11, item.owned ? '#d9b675' : '#858392').setDepth(2);
+        menuText(this, x, 318, item.title, 17, item.owned ? '#e7d8b9' : '#8f8d99').setWordWrapWidth(145).setDepth(2);
+        menuText(this, x, 354, item.status, 14, item.owned ? '#d9b675' : '#858392').setDepth(2);
         const hit = this.add.zone(x, 280, 172, 200).setDepth(3).setInteractive({ useHandCursor: true });
         hit.on('pointerover', () => this.select(i)).on('pointerdown', () => this.select(i));
         return { card, item };
       });
       this.selection = this.add.rectangle(280, 280, 172, 200).setStrokeStyle(2, 0xd7b778).setFillStyle(0, 0).setDepth(4);
-      this.itemHeading = menuText(this, 640, 416, '', 22, UI.gold).setFontFamily(UI.title);
-      this.itemDetail = menuText(this, 640, 462, '', 16);
+      this.itemHeading = menuText(this, 225, 422, '', 26, UI.gold).setFontFamily(UI.title).setOrigin(0,.5);
+      this.itemDetail = menuText(this,225,474,'',20).setOrigin(0,.5).setAlign('left').setWordWrapWidth(820);
       this.select = (i) => {
         this.selected = (i + items.length) % items.length;
         this.selection.x = 280 + this.selected * 180;
@@ -52,22 +56,30 @@ export class Pause extends Phaser.Scene {
         this.itemDetail.setText(items[this.selected].detail);
       };
       this.select(0);
-      text(525, `HEALTH  ${run.health} / 3       FLAME  ${run.flame} / 100       OIL  ${run.oil} / 1`, 15).setColor('#aeb4bd');
-      text(557, 'Quest items stay with you. Time and danger are paused.', 13).setColor('#9496a1');
-      this.button(603, 'I / Esc  —  Return', () => this.resume());
+
+      menuText(this,1060,562,'← → Select',15,'#aaa294').setOrigin(1,.5);
+      this.button(603, 'Esc · Return', () => this.resume());
       this.input.keyboard.on('keydown-LEFT', () => this.select(this.selected - 1));
       this.input.keyboard.on('keydown-RIGHT', () => this.select(this.selected + 1));
       this.input.keyboard.on('keydown-ESC', () => this.resume());
       this.input.keyboard.on('keydown-I', () => this.resume());
       return;
     }
-    text(161, 'THE EMBERS WAIT', 36).setFontFamily(UI.title).setColor(UI.gold);
-    text(211, 'The world is still. Take a breath.', 18).setColor('#a4a6b3');
-    this.button(287, 'Esc  —  Resume', () => this.resume());
-    this.muteText = this.button(348, '', () => this.mute());
+    menuText(this,220,140,'Paused',36).setOrigin(0,.5).setFontFamily(UI.title).setColor(UI.gold);
+
+    this.button(242, 'Esc · Resume', () => this.resume());
+    this.muteText = this.button(292, '', () => this.mute());
     this.updateMute();
-    this.button(409, 'R  —  Begin again', () => this.restart());
-    text(535, 'A/D move · Space jump · W/S climb · E interact\nF sweep · Q oil · I satchel · M map · J journal\nHold R at a fire: rest · Enter: advance captions', 17);
+    this.volumeLabels={};
+    for(const [channel,y] of [['music',347],['effects',397]]) {
+      menuText(this,470,y,channel==='music'?'Music':'Sound effects',19,'#bdb1a0');
+      this.volumeLabels[channel]=menuText(this,700,y,'',18,UI.gold);
+      for(const [x,amount,label] of [[620,-.1,'−'],[780,.1,'+']]) menuText(this,x,y,label,27,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>{source.audio.setVolume(channel,source.audio.settings[channel]+amount);this.updateVolumes(source);});
+    }
+    this.updateVolumes(source);
+    this.button(456, 'R · New adventure', () => this.restart());
+    this.button(540,'C · Controls',()=>this.showControls());
+    this.input.keyboard.on('keydown-C',()=>this.showControls());
     this.input.keyboard.on('keydown-ESC', () => this.resume());
     this.input.keyboard.on('keydown-M', () => this.mute());
     this.input.keyboard.on('keydown-R', event => { if (!event.repeat) this.restart(); });
@@ -75,25 +87,34 @@ export class Pause extends Phaser.Scene {
   }
   explorationView(source, text) {
     const run = source.run, goal = source.getGoal();
-    text(104, this.map ? 'THE ROAD WE REMEMBER' : 'ROWAN’S JOURNAL', 31).setFontFamily(UI.title).setColor(UI.gold);
-    text(153, goal.text, 17).setWordWrapWidth(930);
+    menuText(this,220,140,this.map?'Map':'Journal',36).setOrigin(0,.5).setFontFamily(UI.title).setColor(UI.gold);
+    text(190, goal.text.replace(/^Act \d: /,''),20).setWordWrapWidth(930);
     if (this.map) {
       const current = source.scene.key === 'World' ? regionAt(source.player.x).id : 'home';
       const target = goal.scene === 'World' ? regionAt(goal.x).id : 'home';
-      for (const [row, regions] of [REGIONS.slice(0, 5), REGIONS.slice(5, 8), REGIONS.slice(8)].entries()) {
-        const y = 254 + row * 113;
-        menuText(this, 640, y - 53, ['PROLOGUE / ACT 1 — THE RUINED VILLAGE', 'ACT 2 — THE PLAYGROUND', 'ACT 3 — THE CLOCK TOWER'][row], 12, '#bda882');
-        regions.forEach((r, i) => {
-          const w = row ? 242 : 170, x = row ? 360 + i * 280 : 280 + i * 180;
-          this.add.rectangle(x, y, w, 76, run.maxXReached >= r.x ? 0x282e3c : 0x171b26).setStrokeStyle(target === r.id ? 2 : 1, target === r.id ? 0xf3cc87 : 0x55515b);
-          menuText(this, x, y - 9, r.name, 15, run.maxXReached >= r.x ? '#ded5c5' : '#83828d');
-          if (current === r.id) {
-            const dotX = x - w / 2 + 12 + (source.player.x - r.x) / r.width * (w - 24);
-            this.add.circle(dotX, y + 20, 5, 0x8fced8);
-          }
-        });
+      const scaleX=x=>225+x/WORLD_WIDTH*840;
+      // A continuous road, rather than unrelated level cards. Home has its own branch.
+      const road=this.add.graphics().lineStyle(3,0x7a6549);
+      road.lineBetween(225,332,1065,332);
+      for(const r of REGIONS) {
+        const x=scaleX(r.x),w=r.width/WORLD_WIDTH*840,seen=run.maxXReached>=r.x;
+        this.add.rectangle(x+w/2,332,w-3,54,seen?0x302c28:0x151923).setStrokeStyle(target===r.id?2:1,target===r.id?0xf3cc87:0x655640);
+        const names={yard:'Garden',lane:'Lane',square:'Market',bridge:'Refuge',camp:'Campfire',swings:'Swings',treehouse:'Treehouse',canal:'Canal','tower-court':'Tower\ncourt','tower-base':'Bell\nworks','tower-crown':'Tower\ncrown'};
+        menuText(this,x+w/2,332,names[r.id],16,seen?'#e0cba4':'#85808a').setLineSpacing(3);
       }
-      text(553, `${current === 'home' ? 'You are inside the family home.  ' : ''}${target === 'home' ? 'Objective: family hearth.  ' : ''}Blue: you   ·   Gold frame: objective   ·   Roads can be revisited`, 14).setColor('#b3b8c3');
+      for(const [a,b,label] of [[0,8800,'PROLOGUE / ACT 1'],[8800,13600,'ACT 2'],[13600,WORLD_WIDTH,'ACT 3']]) menuText(this,scaleX((a+b)/2),238,label,15,UI.gold);
+      const px=current==='home'?185:scaleX(source.player.x),py=current==='home'?440:382;
+      this.add.image(px,py,'kit-lantern').setDisplaySize(20,26);menuText(this,px,py+26,'You',14,'#9bd3db');
+      road.lineBetween(225,332,185,440);menuText(this,185,483,'Home',16,UI.gold);
+      this.add.image(185,440,'kit-door').setDisplaySize(31,38);
+      if(target==='home')this.add.circle(185,440,26).setStrokeStyle(2,0xf3cc87).setFillStyle(0,0);
+      else {const gx=scaleX(goal.x);this.add.triangle(gx,285,-6,-8,6,-8,0,5,0xf3cc87);}
+      for(const [x,label] of [[FIVE_HAND.body,'Five-Hand'],[BRIDGE_WORKS.elite,'Braced Shadow'],[REFUGE.hearth,'Refuge']]) {
+        const gx=scaleX(x);road.lineBetween(gx,360,gx,432);menuText(this,gx+(label==='Braced Shadow'?55:label==='Refuge'?15:-50),label==='Refuge'?485:448,label,14,'#b29e88');
+      }
+      if(run.shortcutOpen) {road.lineBetween(185,440,scaleX(3410),440);menuText(this,320,482,'Cellar passage open',11,'#b3c39d');}
+      if(run.oldRoadOpen) {road.lineBetween(scaleX(REFUGE.oldRoad),515,scaleX(13880),515);menuText(this,780,537,'OLD ROAD · refuge ↔ tower',12,'#b3c39d');}
+
     } else {
       const entries = [
         ['home-first-memory', 'The lantern wakes old fires. Their memories restore daylight and safe paths.'],
@@ -116,16 +137,35 @@ export class Pause extends Phaser.Scene {
         ['home-together', 'I came this time. No more later.'],
       ].filter(([id]) => run.completedStory[id]);
       if (!entries.length) entries.push(['start', 'Find Grandfather’s lantern in the cellar. E interacts; W/S climbs.']);
-      entries.slice(-6).forEach(([, line], i) => menuText(this, 640, 224 + i * 53, line, 17).setWordWrapWidth(920));
-      text(553, 'E remembers · F sweeps · Q refills · R rests · I inspects inventory', 14).setColor('#a5adbb');
+      const pages=Math.ceil(entries.length/5);this.journalPage=pages-1;
+      const lines=Array.from({length:5},(_,i)=>menuText(this,640,258+i*54,'',20).setWordWrapWidth(830).setOrigin(0,.5).setAlign('left'));
+      const count=menuText(this,640,516,'',13,UI.gold);
+      const show=()=>{lines.forEach((line,i)=>line.setText(entries[this.journalPage*5+i]?.[1]??''));count.setText(`${this.journalPage+1} / ${pages}`);};
+      const turn=dir=>{this.journalPage=(this.journalPage+dir+pages)%pages;show();};
+      menuText(this,420,516,'← Earlier',15,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>turn(-1));
+      menuText(this,860,516,'Later →',15,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>turn(1));
+      this.input.keyboard.on('keydown-LEFT',()=>turn(-1));this.input.keyboard.on('keydown-RIGHT',()=>turn(1));show();
+
     }
-    this.button(604, 'Esc / M / J  —  Return', () => this.resume());
+    this.button(604, 'Esc · Return', () => this.resume());
   }
   button(y, label, action) {
     const t = menuText(this, 640, y, label, 21, UI.gold).setInteractive({ useHandCursor: true });
     t.on('pointerover', () => t.setColor('#fff0c6')).on('pointerout', () => t.setColor(UI.gold)).on('pointerdown', action); return t;
   }
-  updateMute() { this.muteText.setText(`[ M ]  Sound: ${this.registry.get('muted') ? 'off' : 'on'}`); }
+  showControls() {
+    if(this.controlPanel?.active)return;
+    const box=this.add.container(0,0).setDepth(20);
+    box.add(this.add.rectangle(640,360,1280,720,0x080b12,.85).setInteractive());
+    box.add(panel(this,640,350,760,460,{depth:0,fixed:false}));
+    box.add(menuText(this,640,170,'Controls',32,UI.gold).setFontFamily(UI.title));
+    const rows=[['A / D','Move'],['Space','Jump'],['W / S','Climb'],['E','Interact / remember'],['F','Lantern sweep'],['Q','Use oil'],['Hold R','Rest at a fire'],['I / M / J','Satchel / map / journal']];
+    rows.forEach(([key,label],i)=>{const x=i<4?340:680,y=240+(i%4)*58;box.add(menuText(this,x,y,key,18,UI.gold).setOrigin(0,.5));box.add(menuText(this,x+100,y,label,18).setOrigin(0,.5));});
+    box.add(menuText(this,640,526,'Close',20,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>box.destroy(true)));
+    this.controlPanel=box;
+  }
+  updateVolumes(source) { for(const channel of ['music','effects']) this.volumeLabels[channel].setText(`${Math.round(source.audio.settings[channel]*100)}%`); }
+  updateMute() { this.muteText.setText(`M · Sound ${this.scene.get(this.owner).audio.muted ? 'off' : 'on'}`); }
   mute() { this.scene.get(this.owner).audio.toggleMute(); this.updateMute(); }
   resume() {
     const source = this.scene.get(this.owner);

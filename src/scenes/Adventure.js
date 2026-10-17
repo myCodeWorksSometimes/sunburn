@@ -10,6 +10,8 @@ import { BALANCE } from '../world/balance.js';
 import { CombatSystem } from '../systems/CombatSystem.js';
 import { surfaceArt } from '../presentation/Scenery.js';
 import { panel } from '../presentation/ui.js';
+import { RestorationField } from '../systems/RestorationField.js';
+import { BossIntroduction } from '../systems/BossIntroduction.js';
 
 // Shared run mechanics for the continuous outdoors and the house interior.
 export class Adventure extends Phaser.Scene {
@@ -30,38 +32,54 @@ export class Adventure extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, width, 1200);
     this.solids = this.physics.add.staticGroup();
     this.player = new Player(this, spawn.x, spawn.y).setCollideWorldBounds(true);
+    this.contactShadow=this.add.ellipse(spawn.x,spawn.y+2,44,9,0x08090c,.5).setDepth(19);
     if (this.run.hasLantern) this.player.giveLantern();
     this.physics.add.collider(this.player, this.solids, null, (_p, surface) => surface.body.enable);
     this.lighting = new Lighting(this, { darkness: 0.44, depth: 50 });
+    this.restoration = new RestorationField(this);
+    this.cinematic = new BossIntroduction(this);
     this.lantern = this.lighting.add({ follow: this.player, offsetY: -48, radius: 200, intensity: 0.95, flicker: 0.03, on: this.run.hasLantern });
     this.captions = new Captions(this, 110);
-    panel(this, 640, 38, 1232, 52, { depth: 105, alpha: .79 });
-    panel(this, 143, 118, 238, 94, { depth: 105, alpha: .83 });
-    const style = { fontFamily: FONT, fontSize: '19px', color: '#f5d28a', stroke: '#11101b', strokeThickness: 2 };
-    this.objectiveText = this.add.text(28, 23, '', style).setScrollFactor(0).setDepth(110);
-    this.goalHint = this.add.text(28, 46, '', { ...style, fontSize: '12px', color: '#b6b7c1' }).setScrollFactor(0).setDepth(110);
-    this.regionText = this.add.text(1252, 24, '', { ...style, fontSize: '17px', color: '#d0c8c0' }).setOrigin(1, 0).setScrollFactor(0).setDepth(110);
-    this.inventoryText = this.add.text(1252, 78, '', { ...style, fontSize: '13px', color: '#d0c8c0' }).setOrigin(1, 0).setScrollFactor(0).setDepth(110);
-    this.healthText = this.add.text(146, 88, '', { ...style, fontSize: '13px', color: '#cdbca9' }).setScrollFactor(0).setDepth(110);
-    this.healthSegments = Array.from({ length: BALANCE.health }, (_, i) => this.add.image(48 + i * 33, 98, 'health').setDisplaySize(28, 31).setScrollFactor(0).setDepth(110));
-    this.flameText = this.add.text(40, 120, '', { ...style, fontSize: '13px' }).setScrollFactor(0).setDepth(110);
-    this.add.rectangle(40, 148, 198, 5, 0x34303e).setOrigin(0, 0.5).setScrollFactor(0).setDepth(110);
-    this.flameFill = this.add.rectangle(40, 148, 198, 5, 0xf5b05b).setOrigin(0, 0.5).setScrollFactor(0).setDepth(111);
-    this.noticeText = this.add.text(640, 148, '', { ...style, fontSize: '16px' }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(115);
+    panel(this, 450, 42, 850, 64, { depth: 105, alpha: .9 });
+    panel(this, 1080, 42, 330, 64, { depth: 105, alpha: .85 });
+    panel(this, 143, 128, 238, 86, { depth: 105, alpha: .83 });
+    const style = { fontFamily: FONT, fontSize: '20px', color: '#f0d4a3', resolution: 2 };
+    this.objectiveText = this.add.text(48, 23, '', {...style,fontSize:'20px',wordWrap:{width:785}}).setScrollFactor(0).setDepth(110);
+    this.goalHint = this.add.text(48,52,'',style).setVisible(false);
+    this.regionText = this.add.text(1226, 30, '', { ...style, fontSize: '16px', color: '#c7bba7',wordWrap:{width:295},align:'right' }).setOrigin(1, 0).setScrollFactor(0).setDepth(110);
+    this.inventoryText = this.add.text(1252, 78, '', { ...style, fontSize: '13px', color: '#d0c8c0' }).setOrigin(1, 0).setScrollFactor(0).setDepth(110).setVisible(false);
+    this.healthText=this.add.text(0,0,'',style).setVisible(false);
+    this.healthSegments = Array.from({ length: BALANCE.health }, (_, i) => this.add.image(54 + i * 33, 112, 'kit-heart').setDisplaySize(24, 27).setScrollFactor(0).setDepth(110));
+    this.add.image(45,147,'kit-flame').setDisplaySize(18,23).setScrollFactor(0).setDepth(110);
+    this.add.image(190,112,'kit-oil').setDisplaySize(17,25).setScrollFactor(0).setDepth(110);
+    this.oilText=this.add.text(207,103,'',{...style,fontSize:'16px'}).setScrollFactor(0).setDepth(110);
+    this.flameText = this.add.text(65, 137, '', { ...style, fontSize: '17px' }).setScrollFactor(0).setDepth(110);
+    this.add.rectangle(40, 163, 198, 5, 0x34303e).setOrigin(0, 0.5).setScrollFactor(0).setDepth(110);
+    this.flameFill = this.add.rectangle(40, 163, 198, 5, 0xf5b05b).setOrigin(0, 0.5).setScrollFactor(0).setDepth(111);
+    this.noticeText = this.add.text(640, 230, '', { ...style, fontSize: '18px',align:'center',wordWrap:{width:850} }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(115);
     this.timerText = this.add.text(640, 93, '', { ...style, fontSize: '19px' }).setOrigin(0.5).setScrollFactor(0).setDepth(110);
     this.timerTrack = this.add.rectangle(640, 117, 300, 5, 0x34303e).setScrollFactor(0).setDepth(110).setVisible(false);
     this.timerFill = this.add.rectangle(490, 117, 300, 5, 0xf5d28a).setOrigin(0, 0.5).setScrollFactor(0).setDepth(111).setVisible(false);
-    this.promptText = this.add.text(640, 590, '', { ...style, fontSize: '19px', align: 'center', wordWrap: { width: 1100 } }).setOrigin(0.5).setScrollFactor(0).setDepth(115);
+    this.promptText = this.add.text(640, 590, '', { ...style, fontSize: '19px', align: 'center', wordWrap: { width: 520 } }).setOrigin(0.5).setScrollFactor(0).setDepth(115);
     this.promptPanel = panel(this, 640, 590, 600, 68, { depth: 114, alpha: .9 }).setVisible(false);
     this.holdTrack = this.add.rectangle(640, 566, 180, 4, 0x34303e).setScrollFactor(0).setDepth(115).setVisible(false);
     this.holdFill = this.add.rectangle(550, 566, 0, 4, 0xffd890).setOrigin(0, 0.5).setScrollFactor(0).setDepth(116).setVisible(false);
-    this.add.text(640, 704, 'A/D move · Space jump · W/S climb · E use · F sweep · Q oil · I satchel · M map · J journal · R rest · Esc pause', { ...style, fontSize: '13px', color: '#b8b0bd' }).setOrigin(0.5, 1).setScrollFactor(0).setDepth(110);
+
     this.keys = this.input.keyboard.addKeys({ use: 'E', pause: 'ESC', next: 'ENTER', attack: 'F', oil: 'Q', inventory: 'I', rest: 'R', map: 'M', journal: 'J' });
     this.saveClock = 0;
     this.input.keyboard.on('keydown', () => this.audio.unlock());
     this.look = 0;
     this.cameras.main.scrollX = Phaser.Math.Clamp(spawn.x - 640, 0, width - 1280);
+    this.screenCamera=this.cameras.add(0,0,1280,720).setName('screen-ui');
+    this.syncScreenCameras();
     this.events.once('shutdown', () => { this.memory.cancel('shutdown'); this.clearEchoes(); this.lighting.destroy(); });
+  }
+
+  syncScreenCameras() {
+    if(!this.screenCamera)return;
+    const screen=this.children.list.filter(o=>o.depth>=100||o===this.lighting?.image);
+    this.cameras.main.ignore(screen);
+    this.screenCamera.ignore(this.children.list.filter(o=>!screen.includes(o)));
   }
 
   addSurface(x1, x2, y, { regionId, restoredOnly = false, permanent, requires, material = 'stone' } = {}) {
@@ -76,7 +94,8 @@ export class Adventure extends Phaser.Scene {
   }
 
   refreshSurface(s) {
-    const enabled = !s.restoredOnly || !!s.permanent?.() || (this.memory.isRestored(s.regionId) && (!s.requires || s.requires()));
+    if(!s?.zone?.body)return;
+    const enabled = !s.restoredOnly || !!s.permanent?.() || (this.memory.isRestoredAt(s.regionId,s.zone.x-s.zone.width/2,s.zone.y-16) && this.memory.isRestoredAt(s.regionId,s.zone.x+s.zone.width/2,s.zone.y-16) && (!s.requires || s.requires()));
     s.zone.body.enable = enabled;
     s.block.setVisible(enabled); s.edge.setVisible(enabled);
   }
@@ -133,16 +152,12 @@ export class Adventure extends Phaser.Scene {
   }
 
   setMemoryVisual(regionId, alpha) {
-    const view = this.regionVisuals.get(regionId);
-    if (view) for (const object of view) object.setAlpha(alpha);
-    for (const tile of this.terrainLife) if (tile.regionId === regionId) tile.growth.setAlpha(alpha);
-    const bounds = this.regionBounds.get(regionId);
-    if (this.lighting) this.lighting.restoredAreas = bounds && alpha > 0 ? [{ ...bounds, alpha }] : [];
-    for (const s of this.surfaces) if (s.regionId === regionId) this.refreshSurface(s);
+    this.restoration.update(this.memory.fire,alpha);
+    for (const s of this.surfaces) this.refreshSurface(s);
   }
 
   onMemoryReady(fire) {
-    for (const enemy of this.enemies) if (enemy.active && !enemy.restorationImmune && enemy.regionId === fire.regionId && Math.abs(enemy.x - fire.x) < 700) enemy.disperse();
+    for (const enemy of this.enemies) if (enemy.active && !enemy.restorationImmune && this.memory.isRestoredAt(enemy.regionId,enemy.x,(enemy.floor??560)-35)) enemy.disperse();
   }
 
   onMemoryEnded() { this.clearEchoes(); }
@@ -215,12 +230,12 @@ export class Adventure extends Phaser.Scene {
   updateInteraction(delta) {
     const pressed = Phaser.Input.Keyboard.JustDown(this.keys.use);
     if (this.resting) {
-      this.promptText.setText('Resting… release R to cancel');
+      this.promptText.setText('Resting…');
       this.holdTrack.setVisible(true); this.holdFill.setVisible(true);
       this.holdFill.width = 180 * this.restMs / BALANCE.restDuration; return;
     }
     if (this.transferRemaining != null) {
-      this.promptText.setText('Passing the warmth on…  Enter: skip');
+      this.promptText.setText('Passing the warmth on…');
       this.holdTrack.setVisible(false); this.holdFill.setVisible(false); return;
     }
     if (!this.keys.use.isDown) { this.requireRelease = false; this.holdTarget = null; this.holdMs = 0; }
@@ -228,9 +243,10 @@ export class Adventure extends Phaser.Scene {
     this.promptText.setText(it ? (typeof it.label === 'function' ? it.label() : it.label) : '');
     const fire = this.nearFire();
     if (fire && this.run.hasLantern && !this.run.rescuedEli && !this.player.acting) {
-      const status = this.memory.fire?.id === fire.id ? 'Memory active — it cannot be restarted.' : fire.spent?.() ? 'This memory is spent.' : '';
-      this.promptText.setText([this.promptText.text || status, 'Hold R (2s): rest / refill supplies'].filter(Boolean).join('\n'));
+      const status = this.memory.fire?.id === fire.id ? 'Memory active' : fire.spent?.() ? 'Memory spent' : '';
+      this.promptText.setText([this.promptText.text || status, 'Hold R · Rest (2s)'].filter(Boolean).join('\n'));
     }
+    this.promptText.setText(this.promptText.text.replace(/\bE: /g,'E · '));
     this.holdTrack.setVisible(!!it?.hold); this.holdFill.setVisible(!!it?.hold);
     if (!it || this.requireRelease || this.holdTarget && this.holdTarget !== it) { this.holdTarget = null; this.holdMs = 0; }
     if (it && !this.requireRelease) {
@@ -267,6 +283,7 @@ export class Adventure extends Phaser.Scene {
 
   goTo(key, spawnId) {
     if (this.leaving || this.dead) return;
+    this.audio.cue('door');
     this.leaving = true; this.memory.cancel('transition'); this.player.cancelAction();
     if (key === 'Hearth' || key === 'World') this.run.setCheckpoint(key, spawnId);
     saveSession(this);
@@ -288,6 +305,8 @@ export class Adventure extends Phaser.Scene {
       this.audio.pause(); this.events.emit('game:paused', {});
       this.scene.launch('Pause', { owner: this.scene.key, inventory, map, journal }); this.scene.pause(); return;
     }
+    this.audio.update(delta);
+    if(this.cinematic.active){this.cinematic.update(delta);this.lighting.update(delta);this.syncScreenCameras();return;}
     if (Phaser.Input.Keyboard.JustDown(this.keys.next)) {
       if (this.transferRemaining != null) this.transferRemaining = 0;
       else this.captions.advance();
@@ -301,10 +320,12 @@ export class Adventure extends Phaser.Scene {
       else this.notice(this.run.oil ? 'Flame is full — oil kept.' : 'No oil. Hold R at a fire to refill.');
     }
     this.player.update(this.ladders);
+    this.contactShadow.setPosition(this.player.x,this.player.feet+2).setAlpha(this.player.body.blocked.down ? .5 : 0);
     this.combat.update(delta);
     this.memory.update(delta);
     this.tick?.(delta);
     if (this.leaving) return;
+    if(this.cinematic.active){this.lighting.update(delta);this.syncScreenCameras();return;}
     const desiredLook = this.player.body.velocity.x === 0 ? 0 : Math.sign(this.player.body.velocity.x) * 110;
     this.look = Phaser.Math.Linear(this.look, desiredLook, 1 - Math.exp(-delta / 180));
     const camera = this.cameras.main;
@@ -316,14 +337,17 @@ export class Adventure extends Phaser.Scene {
     this.lighting.update(delta);
     for (const enemy of this.enemies) if (enemy.active) {
       enemy.tick(delta);
+      if(this.cinematic.active)break;
       if (enemy.touches(this.player)) this.combat.damage(enemy.x);
     }
+    if(this.cinematic.active){this.syncScreenCameras();return;}
     if (this.player.feet > 900) this.die('fall');
     this.updateInteraction(delta);
     const goal = this.getGoal();
-    this.objectiveText.setText(goal.text);
+    const objective=goal.text.replace(/^Act \d: /,'');
+    this.objectiveText.setText(objective.charAt(0).toUpperCase()+objective.slice(1));
     const direction = goal.scene !== this.scene.key ? 'Passage' : Math.abs(goal.x - this.player.x) < 75 ? goal.y < this.player.feet - 40 ? '↑ Above you' : goal.y > this.player.feet + 40 ? '↓ Below you' : 'Here' : goal.x > this.player.x ? '→ Ahead' : '← Back';
-    this.goalHint.setText(`${direction} · ${goal.scene === 'Hearth' ? 'Family home' : regionAt(goal.x).name} · M map · J journal · progress autosaves at checkpoints`);
+    this.goalHint.setText(`${direction} · ${goal.scene === 'Hearth' ? 'Family home' : regionAt(goal.x).name} · M map · J journal · Autosaved`);
     if (this.lastObjective !== goal.text) {
       this.lastObjective = goal.text;
       document.getElementById('game-status')?.replaceChildren(goal.text);
@@ -334,7 +358,8 @@ export class Adventure extends Phaser.Scene {
     this.inventoryText.setText([this.run.hasLantern ? 'Lantern' : '', this.run.hasEmberCup ? 'Ember cup' : '', this.run.hasHearthEmber ? 'Hearth ember — safe in your lantern' : ''].filter(Boolean).join('   ·   '));
     this.healthText.setText(`Health ${this.run.health} / ${BALANCE.health}`);
     this.healthSegments.forEach((segment, i) => segment.setTint(i < this.run.health ? 0xffffff : 0x484556).setAlpha(i < this.run.health ? 1 : .65));
-    this.flameText.setText(`Flame ${this.run.flame}/${BALANCE.flame} · Oil ${this.run.oil}/${BALANCE.oil}`);
+    this.flameText.setText(`${this.run.flame} / ${BALANCE.flame}`);
+    this.oilText.setText(`${this.run.oil} / ${BALANCE.oil}`);
     this.flameFill.width = 198 * this.run.flame / BALANCE.flame;
     this.flameFill.setFillStyle(this.run.flame < BALANCE.rememberCost ? 0xca805e : 0xf5b05b);
     this.promptPanel.setVisible(!!this.promptText.text);
@@ -344,6 +369,7 @@ export class Adventure extends Phaser.Scene {
     this.timerTrack.setVisible(!!memory.fire); this.timerFill.setVisible(!!memory.fire);
     this.timerFill.width = memory.fire ? 300 * Math.max(0, memory.remaining / memory.fire.duration) : 0;
     this.timerFill.setFillStyle(memory.phase === 'warning' ? 0xff9763 : 0xf5d28a);
-    this.timerText.setText(memory.fire ? (memory.phase === 'warming' ? 'The world remembers…' : memory.phase === 'fading' ? 'Corruption returns…' : `Restored daylight  ·  ${Math.ceil(memory.remaining / 1000)}s${memory.phase === 'warning' ? ' — fading soon' : ''}`) : '');
+    this.timerText.setText(memory.fire ? (memory.phase === 'warming' ? 'Remembering…' : memory.phase === 'fading' ? 'Fading…' : `${Math.ceil(memory.remaining / 1000)}s${memory.phase === 'warning' ? ' · fading' : ''}`) : '');
+    this.syncScreenCameras();
   }
 }

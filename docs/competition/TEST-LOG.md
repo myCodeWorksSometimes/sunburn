@@ -476,3 +476,61 @@ bridge fire → flame 100; relight → deck enabled; walked to 6723 (feet 560),
   World/Backdrop changes and retained both changelog/test histories. Rebuilt
   merged publication: index-BiOgdhbJ.js, identical to the frozen demo;19/19 tests
   pass after the merge. No additional gameplay changes during resolution.
+
+
+## 18 Oct 2026 — Act 1 production / latest Gemini / typography
+
+Baseline: isolated codex/act1-production based on91bea18; shared H: source had
+that published Act1 patch and active Claude Act3 ownership. No Act3 geometry or
+story rewrite. Builds/tests run in the isolated game repository.
+
+- npm test: **23/23 pass** (19 progression/resource/save tests plus4 spatial and
+  shutdown tests). npm run build passes; existing large Phaser bundle warning.
+- Home: actual W input atx410 climbed650→434.7 with dark ladder behind Rowan;
+  dark/past screenshots confirm same ladder position. E at530 costs100→75;
+  warmup sample alpha.361/radius169.7, then full470px circle, night outside.
+  Inventory pause froze remaining memory time.
+- Five-Hand: actual shuffle yielded[2,3,0,1,4]; E under4140 revealed lantern;
+  actual D movement reached4715; F increased hits0→1 and round0→1, health intact.
+  First-round exposure window remained reachable with the widened court.
+- Braced intro:1.7 zoom, frontal pose, physics/clock paused and tweenScale0;
+  2.5s hold plus approach/return. Esc menu froze cinematic elapsed. Natural finish
+  and Enter skip restored zoom1, physics/clock false, tweenScale1, once-only flag.
+- Braced combat fixture: idle at5740, player6020 on ground; actual Space on charge
+  landed on485 supply ledge, health3. Boss hit6068 barrier and stunned facingright;
+  actual F from behind reduced3→2, hitUsedtrue, flame100→80. Three full cycles
+  without repositioning remain human difficulty testing.
+- Bridge: prerequisite encounter-clear fixture, then actual E6350; halo800,
+  flame100→75, deck initially disabled. Actual A/D/E inputs at6170/6230 turned
+  leverA twice/B once; hold E6300 set brake and enabled deck with10.64s left.
+  Actual D crossed to6940/feet560; return flag true. Cancel memory then actual A
+  back to6369/feet560; permanent deck still solid.
+- Latest Gemini response f3d85695067ca21d exported via signed-in browser. Selected
+  source SHA E96550AAAA1A83068DF2E4AF631F5FC899A0ED73D4C43F15ED58AC7361DD1601.
+  Visual check: three distinct survivors at5060/5205/5500; no duplicate Rowan.
+- Music/fire decode and play. Score buffer56.5725s. Pause stopped both loops;
+  mouse volume increment persisted. M mute worked. Two direct scene transitions
+  with active memory left exactly audio-score/audio-fire loops and2 cameras.
+- Fresh production Title→Enter→Intro skip→Hearth; I, arrow selection, mouse tabs,
+  map, pause and on-demand C controls checked at1280x720 and960x540. No final page
+  errors or console warnings. Typography screenshots inspected; five items fit.
+- Earlier failed attempts: old650ms tests failed3 assertions until updated to the
+  intended1200ms warmup constant. Immediate restart fixture moved an obsolete
+  player and timed out; rerun after scene creation passed. Out-of-range Five-Hand
+  intro could start before Braced in a fixture; bounded triggers and stopped the
+  enemy update loop once an intro begins. One active-memory scene shutdown threw
+  undefined body.enable; fixed logical-only shutdown and added regression test.
+  A Vite reload raced a manual reload once; final checks used frozen production.
+
+Evidence screenshots outside Git in C:/Users/owner/AppData/Local/Temp/:
+production-home-dark-ladder.png, production-home-past-ladder.png,
+production-braced-intro.png, production-refuge-latest.png,
+production-satchel-final.png, production-type-960-final.png,
+production-controls-960-final.png, gemini-survivors-latest-proof.png.
+
+Limitations: independent short fixtures/input sequences, not a fresh uninterrupted
+Act1 or full adventure. Full Braced difficulty, wrong-pick/second-round replay in
+this art build, every seam under all camera positions, headphone mix and human
+asset/typography approval remain human-owned. No recorded human QA was invented.
+
+- Final canonical :4176 refresh: index-CFJLCN30.js, Title/Intro/Hearth and new survivor/satchel smoke check; zero page errors/warnings. Snapshot embers-playtest-Gl4NTI, process23900.

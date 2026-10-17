@@ -1,5 +1,5 @@
 // Parallax backdrop for the continuous World: a fixed sky, a slow looping
-// skyline, then registered Act 1 paintings at world speed. Other
+// skyline, then registered Act 1/whole Act 3 paintings at world speed. Other
 // paintings retain their existing parallax. Playable architecture and props
 // share one coordinate system; only the distant layers drift behind them.
 import { GROUND } from '../world/layout.js';
@@ -75,8 +75,8 @@ export function buildBackdrop(scene, regions) {
   const paintings = new Map();
   regions.forEach((r, i) => {
     if (isRegisteredRegion(r)) {
-      const dark = scene.add.image(r.x, 0, registeredPainting(scene, r, 'dark')).setOrigin(0).setDepth(-5).setName(`scenery-${r.id}`);
-      const past = scene.add.image(r.x, 0, registeredPainting(scene, r, 'restored')).setOrigin(0).setDepth(-4).setAlpha(0);
+      const dark = scene.add.image(r.x-110, 0, registeredPainting(scene, r, 'dark')).setOrigin(0).setDepth(-5).setName(`scenery-${r.id}`);
+      const past = scene.add.image(r.x-110, 0, registeredPainting(scene, r, 'restored')).setOrigin(0).setDepth(-4).setAlpha(0);
       const scale = r.width / scene.textures.get(`bg_${r.art}_dark`).getSourceImage().width;
       paintings.set(r.id, { x: r.x, y: GROUND - r.paintGround * scale, scale,
         art: r.art, width: r.width, dark, past, speed: 1, registered: true });
@@ -136,6 +136,7 @@ export function tickBackdrop(scene, backdrop, restored) {
   backdrop.sky.tilePositionX = cam.scrollX * .05;
   const tileScale = 720 / backdrop.skyline.texture.getSourceImage().height;
   for (const s of [backdrop.skyline, backdrop.skylinePast]) { s.setTileScale(tileScale); s.tilePositionX = cam.scrollX * SKYLINE_SPEED / tileScale; }
+  if(scene.restoration)return; // restoration masks the past sky locally too
   let alpha = 0;
   if (restored?.alpha > 0) {
     const b = scene.regionBounds.get(restored.regionId);

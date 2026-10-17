@@ -3,6 +3,38 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 1 presentation, local restoration and typography
+
+- Replaced whole-region restoration with a 1.2s expanding, feathered circle.
+  Artwork, greenery, sky/daylight and temporary collision share its world-space
+  bounds. Platforms require both ends inside; persistent return paths remain.
+- Added protected 0.7s zoom / 2.5s frontal boss gaze / 0.7s return sequences,
+  letterbox, name and recorded roar, with skip/pause/revisit handling. Separate
+  painted Five-Hand/Braced poses and health/status displays; Braced takes three
+  openings, one hit per stagger, in an arena beyond the spaced-out refuge.
+- Added pixel-art UI, paired painted stall, natural cobbled walking plane,
+  feathered scene joins, painted supply ledges and registered home ladder.
+- Imported the LATEST user-selected Gemini Mara/Tomas/Nia revision, not the first
+  sheet. Removed green, aligned feet and added walking frames. Prompts, selected
+  source SHA and reproducible extraction live in art/production/.
+- Simplified typography and UI: short labels, higher-resolution text, clear serif
+  headings, left-aligned item details/dialogue, fixed caption width, no permanent
+  control strip or redundant resource prose. Map labels are horizontal; journal
+  has pages; controls are available on demand. Five satchel slots remain.
+- Added local CC0 ambient score, fire/footsteps/door/knock/impact/pickup/sweep and
+  creature recordings. Separate persistent volume/mute controls; scene changes
+  destroy old loops. Credits/source/license details in public/audio/LICENSES.md.
+- Updated moved Act1 objectives/echoes and compatibility radii for later crossings;
+  preserved teammate Act3 geometry, paintings, story and integration.
+- Verification: 23 Node tests and production build; short Chrome input/fixture
+  checks for ladder, radial warmup/pause, boss intros/skip, Five-Hand pick+sweep,
+  Braced charge/dodge/back hit, real gear puzzle/bridge/return, audio lifecycle,
+  fresh title flow and menus at 1280x720 / 960x540. TEST-LOG records corrections.
+- Stable demo remains http://127.0.0.1:4176/ after refresh. Full fresh Act1/adventure,
+  all three Braced cycles without fixtures, human art/difficulty and audio mix
+  approval remain user testing. This is a tested production pass, not a claimed
+  competition win or completed human QA.
+
 ## 18 October 2026 — Act 1 cohesion and separate Five-Hand court
 
 - Registered nearby Act1 paintings, kept distant parallax, exposed painted

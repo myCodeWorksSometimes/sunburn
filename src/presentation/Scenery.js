@@ -1,6 +1,9 @@
+import { naturalGround, supplyLedge } from './NaturalGround.js';
 // Presentation follows collision; decorative art never adds physics bodies.
 export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = {}) {
   const width = x2 - x1, indoor = scene.scene.key === 'Hearth';
+  if(!indoor&&y===560&&['yard','lane','square','bridge','camp'].includes(regionId)&&material==='stone')return naturalGround(scene,x1,x2,y,regionId);
+  if(!indoor&&material==='crate'&&x1<8800)return supplyLedge(scene,x1,x2,y);
   const block = scene.add.container(x1, y).setDepth(10);
   const edge = scene.add.container(x1, y).setDepth(11);
   // Registered paintings already supply the complete indoor floor and Act 1

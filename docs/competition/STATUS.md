@@ -1,5 +1,31 @@
 # Live implementation status
 
+## Latest handoff — 18 Oct, Act 1 production pass
+
+This section supersedes earlier no-generation/audio-placeholder/whole-region-day
+notes retained below as historical evidence. Implementation is complete; short
+checks pass. Human production acceptance is still pending, not certified.
+
+- Current systems/art: circular restoration (1.2s expansion); home ladder/floors;
+  natural walking plane and overlapping joins; painted stall; latest approved
+  Gemini survivors; painted boss poses, protected intros and separate Braced arena.
+- Minimal themed HUD/title/satchel/map/journal/pause UI, aligned typography,
+  contextual controls; no permanent controls strip or repeated resource labels.
+- Real local CC0 score, fire, foley and creature clips, persistent music/effects
+  volume/mute, scene-loop cleanup. Attribution: public/audio/LICENSES.md.
+- Run: npm ci (first setup), npm run dev -- --host 127.0.0.1. Production:
+  npm run build then npm run demo. Canonical frozen demo: http://127.0.0.1:4176/.
+- Frozen demo: bundle index-CFJLCN30.js, snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-Gl4NTI, Node process23900. Source edits cannot reload it.
+- Verification: 23 Node tests, build, short Chrome fixtures/input checks. See the
+  newest TEST-LOG entry and ACT1-PRODUCTION.md for evidence and human test steps.
+- Remaining: human fresh Act1 run, complete three-opening Braced fight, art/spacing
+  judgment, audio listening/mix, longer whole-adventure/second-machine QA. No claim
+  that later acts or an uninterrupted route were accepted in this iteration.
+- Ownership: this Act1 integrator claim is released after publication. Preserve
+  Claude's Act3 claim/geometry and any new teammate edits. Cumulative history is
+  in WHAT_IS_CHANGED.md; asset descriptions/source selection in art/production/.
+
+
 ## Latest iteration — 18 October 2026: Act 1 cohesion
 
 - Home/garden and Act 1 updated using supplied art; no image generation.
@@ -83,3 +109,7 @@ Owns Act 3 whole-area paintings: `tools/import_act3.py`, `bg_a3_*` assets, Act 3
 widths/coordinates (`A3`, RELAYS, tower fires/spawns, window, Old Road east) in layout,
 Act 3 blocks of Chapters/TowerStory/WorldState goals, whole-painting placement in
 Backdrop/World. Act 3 areas are now 1290px each (world ends at 17470).
+
+
+## Completed scope — 18 Oct, Act 1 cohesion and production (Codex)
+Claims released after publication. See latest handoff, ACT1-PRODUCTION and TEST-LOG.

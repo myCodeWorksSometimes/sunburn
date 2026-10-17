@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WorldState, decodeSave } from '../src/world/WorldState.js';
-import { MemorySystem } from '../src/systems/MemorySystem.js';
+import { MemorySystem, WARMUP_MS } from '../src/systems/MemorySystem.js';
 import { REGIONS, SPAWNS, WORLD_WIDTH, GAPS, RELAYS, A3 } from '../src/world/layout.js';
 import { BALANCE } from '../src/world/balance.js';
 
@@ -52,7 +52,7 @@ test('useful time begins after warmup and restoration remains local', () => {
   memory.update(500);
   assert.equal(memory.remaining, 9000);
   assert.equal(memory.usable, false);
-  memory.update(150);
+  memory.update(WARMUP_MS - 500);
   assert.equal(memory.usable, true);
   assert.equal(memory.remaining, 9000);
   memory.update(1000);
@@ -63,12 +63,12 @@ test('useful time begins after warmup and restoration remains local', () => {
 test('death/replacement immediately disable the previous region before collider refresh', () => {
   const { memory, records } = fixture();
   memory.activate({ id: 'square-fire', regionId: 'square', duration: 9000 });
-  memory.update(650);
+  memory.update(WARMUP_MS);
   assert.equal(memory.isRestored('square'), true);
   memory.activate({ id: 'bridge-fire', regionId: 'bridge', duration: 9000 });
   const squareOff = records.find(r => r.region === 'square' && r.alpha === 0);
   assert.equal(squareOff.usable, false, 'invisible square stairs cannot remain solid');
-  memory.update(650); memory.cancel('death');
+  memory.update(WARMUP_MS); memory.cancel('death');
   assert.equal(memory.isRestored('bridge'), false);
   assert.equal(records.filter(r => r.region === 'bridge').at(-1).usable, false);
 });
@@ -76,7 +76,7 @@ test('death/replacement immediately disable the previous region before collider 
 test('expiry fades and permits a safe relight after simulation cooldown', () => {
   const { memory } = fixture();
   const fire = { id: 'bridge-fire', regionId: 'bridge', duration: 9000 };
-  memory.activate(fire); memory.update(650); memory.update(9000);
+  memory.activate(fire); memory.update(WARMUP_MS); memory.update(9000);
   assert.equal(memory.phase, 'fading');
   memory.update(400); assert.equal(memory.usable, false);
   memory.update(250); assert.equal(memory.phase, 'idle');

@@ -26,7 +26,8 @@ function pair(s, regionId, name, dark, past) {
   const p = place(s, `prop_a2_${name}_restored`, past ?? dark);
   if (!d || !p) return null;
   p.setAlpha(0);
-  s.regionVisuals.get(regionId).push({ setAlpha: (a) => { p.setAlpha(a); d.setAlpha(1 - a * .85); } });
+  s.regionVisuals.get(regionId).push(p); // radial restoration masks the actual image
+  // The present remains underneath the past, outside its circular boundary.
   return { dark: d, past: p };
 }
 

@@ -12,7 +12,7 @@ export class CombatSystem {
     if (!s.run.spendFlame(BALANCE.sweepCost)) { s.notice('Not enough flame. Q: oil · Hold R at a fire: rest'); return false; }
     this.cooldown = BALANCE.sweepCooldown;
     this.attack = { elapsed: 0, direction: s.player.flipX ? -1 : 1, struck: false };
-    s.player.act('hero-sweep'); s.audio.cue('ignite');
+    s.player.act('hero-sweep'); s.audio.cue('sweep');
     return true;
   }
 

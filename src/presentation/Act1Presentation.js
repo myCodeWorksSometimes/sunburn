@@ -16,7 +16,12 @@ export function homePainting(scene, state) {
   // just the top-left corner; the iron cellar door belongs on the right.
   const upper = state === 'dark' ? 430 : 478, lower = state === 'dark' ? 680 : 716;
   ctx.drawImage(src, 0, 0, src.width, upper, 0, 0, 1280, HOME.front.floor);
-  ctx.drawImage(src, 0, upper, src.width, lower - upper, 0, 430, 1280, 220);
+  if(state==='dark') {
+    // The dark drawing places its ladder at x475, the healthy drawing at410.
+    // Register the cellar in strips, preserving the gate/right wall anchors.
+    const from=[0,425,525,890,src.width],to=[0,365,455,883,1280];
+    for(let i=0;i<from.length-1;i++)ctx.drawImage(src,from[i],upper,from[i+1]-from[i],lower-upper,to[i],430,to[i+1]-to[i],220);
+  } else ctx.drawImage(src, 0, upper, src.width, lower - upper, 0, 430, 1280, 220);
   ctx.fillStyle = '#11101b'; ctx.fillRect(0, 650, 1280, 70);
   ctx.drawImage(src, 0, lower, src.width, src.height - lower, 0, 650, 1280, src.height - lower);
   const floorShade = ctx.createLinearGradient(0, 650, 0, 706);
@@ -35,8 +40,10 @@ export function registeredPainting(scene, r, state) {
   const key = `registered-${r.id}-${state}`;
   if (scene.textures.exists(key)) return key;
   const src = scene.textures.get(`bg_${r.art}_${state}`).getSourceImage();
-  const canvas = document.createElement('canvas'); canvas.width = r.width; canvas.height = 720;
+  const bleed=110;
+  const canvas = document.createElement('canvas'); canvas.width = r.width+bleed*2; canvas.height = 720;
   const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  ctx.translate(bleed,0);
   if (r.id === 'bridge') {
     // Bank art and the gameplay crossing must agree. The old whole-image scale
     // put painted cliffs inside the real gap and a painted pit under solid land.
@@ -51,17 +58,20 @@ export function registeredPainting(scene, r, state) {
       ctx.clearRect(YARD_GAP.x1 - r.x, GROUND + 4, YARD_GAP.x2 - YARD_GAP.x1, 160);
     }
   }
+  // Actual overlapping edge pixels, not two alpha fades ending at the same x.
+  ctx.drawImage(canvas,bleed,0,bleed,720,-bleed,0,bleed,720);
+  ctx.drawImage(canvas,r.width,0,bleed,720,r.width,0,bleed,720);
   // A light feather hides region seams; painted cliff bottoms stay intact.
   ctx.globalCompositeOperation = 'destination-out';
-  for (const [start, end] of [[0, 90], [r.width, r.width - 90]]) {
-    if (r.x === 0 && start === 0) continue;
+  for (const [start, end] of [[-bleed,bleed],[r.width+bleed,r.width-bleed]]) {
+    if (r.x === 0 && start < 0) continue;
     const fade = ctx.createLinearGradient(start, 0, end, 0);
     fade.addColorStop(0, 'rgba(0,0,0,1)'); fade.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = fade; ctx.fillRect(Math.min(start, end), 0, 90, GROUND - 40);
+    ctx.fillStyle = fade; ctx.fillRect(Math.min(start, end), 0, bleed*2, GROUND - 40);
     // Fade the architecture, never punch a visual hole through solid terrain.
     for (let y = 0; y < 40; y++) {
       ctx.globalAlpha = 1 - y / 40;
-      ctx.fillRect(Math.min(start, end), GROUND - 40 + y, 90, 1);
+      ctx.fillRect(Math.min(start, end), GROUND - 40 + y, bleed*2, 1);
     }
     ctx.globalAlpha = 1;
   }
