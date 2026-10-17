@@ -16,15 +16,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "assets", "backgrounds")
 DST = os.path.join(ROOT, "public", "bg")
 HEIGHT = 720
+PROP_MAX = 900
 
 # Paintings generated from a make_continuation.py canvas: their left OVERLAP
 # is replaced by the previous painting's right edge, so the joint is exact.
 OVERLAP = 0.35
-CONTINUES = {
-    f"bg_a2_{b}_{state}": f"bg_a2_{a}_{state}"
-    for a, b in (("swings", "treehouse"), ("treehouse", "canal"))
-    for state in ("dark", "restored")
-}
+CONTINUES = {}
+# Act 2 uses green-edged layers instead (art/background_prompts_act2.md).
 CONTINUES.update({
     f"bg_a3_{b}_{state}": f"bg_a3_{a}_{state}"
     for a, b in (("courtyard", "mechanisms"), ("mechanisms", "landing"))
@@ -79,13 +77,20 @@ def main():
             img = chroma_key(img)
         else:
             img = img.convert("RGB")
-        w = round(img.width * HEIGHT / img.height)
-        img = img.resize((w, HEIGHT), Image.LANCZOS)
+        if base.startswith("prop_"):
+            # Props are placed by the game: crop to the object, cap the size.
+            img = img.crop(img.getchannel("A").point(lambda v: 255 if v > 40 else 0).getbbox())
+            scale = min(1.0, PROP_MAX / max(img.size))
+            w = round(img.width * scale)
+            img = img.resize((w, round(img.height * scale)), Image.LANCZOS)
+        else:
+            w = round(img.width * HEIGHT / img.height)
+            img = img.resize((w, HEIGHT), Image.LANCZOS)
         prev = os.path.join(DST, CONTINUES.get(base, "") + ".png")
         if base in CONTINUES and os.path.exists(prev):
             img = stitch(img, Image.open(prev))
         img.save(os.path.join(DST, base + ".png"), optimize=True)
-        print(f"{base}: {w}x{HEIGHT}{' (keyed)' if img.mode == 'RGBA' else ''}{' (stitched)' if base in CONTINUES and os.path.exists(prev) else ''}")
+        print(f"{base}: {img.width}x{img.height}{' (keyed)' if img.mode == 'RGBA' else ''}{' (stitched)' if base in CONTINUES and os.path.exists(prev) else ''}")
     # The game loads every background listed here, so new art needs no code change.
     names = sorted(os.path.splitext(n)[0] for n in os.listdir(DST) if n.endswith(".png"))
     with open(os.path.join(DST, "manifest.json"), "w") as f:

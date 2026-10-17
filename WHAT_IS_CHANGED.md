@@ -3,6 +3,30 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 2 built with the delivered art
+
+- `tools/import_act2.py` names the 25 delivered images in `newart/` and stages
+  them in `assets/backgrounds/`; unusable dark versions (legacy broken sun,
+  creature, blurred green) are replaced by night-graded copies of their restored
+  image until regenerated. `process_backgrounds.py` keys the green, crops props
+  to their outline (max 900px) and no longer stitches Act 2.
+- `src/world/Act2Art.js` places the props on their gameplay spots with anchors
+  measured in each image: crater under the swing gap, a 400px swing set whose
+  legs stand on the crater lips (ropes now hang from its top bar), the plank
+  seat on the moving swing board, the treehouse whose painted platform is the
+  walkable deck (380, 10880–11250; drawing and cup moved onto it), rubble at the
+  buried exit that becomes the old service arch once the drawing is found, the
+  mill whose two stone blocks are the climbable ledges (487 and 439) up to the
+  sluice wheel, and the canal channel. Dark and restored cross-fade when the
+  region is remembered.
+- Backgrounds use their own art with ground lines 0.68 / 0.73 / 0.72.
+- Canal gap narrowed to 300px (12550–12850) to fit the canal art; still beyond
+  Rowan's ~240px jump.
+- Verified in the browser (teleport + memory activation): swings, treehouse,
+  canal in dark and restored; Rowan stands on the treehouse deck (feet 380) and
+  the mill's upper block (439); gate rubble/arch follow `hasDrawing`.
+  `npm test` 19 passing, build passed. Not a full keyboard playthrough.
+
 ## 18 October 2026 — Act 2 art brief: green-layer approach
 
 - `art/background_prompts_act2.md` rewritten at the user's request: every Act 2

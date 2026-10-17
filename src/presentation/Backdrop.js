@@ -24,7 +24,11 @@ export function paintingSlot(regions, index, speed = PAINTING_SPEED) {
 // New art (bg_a2_*, bg_a3_*) is used as soon as it is in public/bg; until then
 // the region borrows `fallback`, whose painted walk line is `paintGround`.
 export function regionArt(scene, r) {
-  if (scene.textures.exists(`bg_${r.art}_dark`)) return { art: r.art, groundY: r.fallback ? null : r.paintGround };
+  if (scene.textures.exists(`bg_${r.art}_dark`)) {
+    if (!r.fallback) return { art: r.art, groundY: r.paintGround };
+    const h = scene.textures.get(`bg_${r.art}_dark`).getSourceImage().height;
+    return { art: r.art, groundY: Math.round(h * (r.artGround ?? .62)) };
+  }
   return { art: r.fallback ?? r.art, groundY: r.paintGround };
 }
 

@@ -125,3 +125,22 @@ Restored: *"Same shapes on green as leafy bushes, flowers and tall green grass, 
 
 Save everything in `assets/backgrounds/` with these names and tell me when a batch
 is in. I'll key out the green, scale and place them, and check them in the game.
+
+---
+
+## Delivery status (18 Oct)
+
+In the game: all three backgrounds, swing set, swing seat, crater, treehouse,
+rubble/gate, mill, canal. The front silhouettes aren't used yet.
+
+**Please regenerate these dark versions.** The delivered ones had the old red
+broken sun, a creature, or blurred green, so the game uses a darkened copy of
+the restored image for now:
+
+- `bg_a2_swings_dark`
+- `prop_a2_crater_dark`
+- `prop_a2_swing_seat_dark` (never seen in play; low priority)
+- `fg_a2_front_dark`
+
+Drop new files into `newart/` or `assets/backgrounds/` with these names, then run
+`python tools/process_backgrounds.py` (or tell me).

@@ -7,6 +7,7 @@ import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
 import { buildFiveHand } from './FiveHand.js';
 import { buildBridgeWorks, tickBridgeWorks } from './BridgeWorks.js';
 import { MARA_STALL } from './layout.js';
+import { ACT2, buildAct2Art, tickAct2Art, dressSwingSeat, hasAct2Art } from './Act2Art.js';
 
 const point = (x, y = GROUND) => ({ x, y });
 function steps(s, regionId, start, permanent) {
@@ -42,11 +43,21 @@ export function buildChapters(s) {
   s.swingPlatform = s.addSurface(9840, 9980, 500, { regionId: 'swings', restoredOnly: true, material: 'timber' });
   s.swingReturn = s.addSurface(SWING_GAP.x1, SWING_GAP.x2, GROUND, { regionId: 'swing-return', restoredOnly: true, material: 'bridge', permanent: () => run.swingReturnOpen });
   s.swingRopes = s.add.graphics().setDepth(14);
-  s.addLabel(9900, 297, 'THE SWINGS', '#b3a38d', 15);
-  steps(s, 'treehouse', 10650);
-  const drawing = s.add.image(10995, 360, 'item_drawing').setDisplaySize(38, 32).setDepth(23).setVisible(!run.hasDrawing);
-  const cup = placeProp(s, 'item-cup', 11035, 380, 32, 28, 23).setVisible(!run.hasDrawing);
-  s.addInteract({ id: 'eli-drawing', x: 11000, floor: 380, label: 'E: take Eli’s drawing and the ember cup',
+  const act2Art = hasAct2Art(s);
+  if (act2Art) {
+    buildAct2Art(s); dressSwingSeat(s, s.swingPlatform);
+    // Two stone steps, then the painted treehouse platform itself.
+    for (const [x1, x2, y] of [[10650, 10760, 500], [10770, 10880, 440]]) s.addSurface(x1, x2, y, { regionId: 'treehouse', restoredOnly: true });
+    const deck = s.addSurface(ACT2.treehouse.x1, ACT2.treehouse.x2, ACT2.treehouse.platform, { regionId: 'treehouse', restoredOnly: true });
+    deck.block.setAlpha(0); deck.edge.setAlpha(0);
+  } else {
+    s.addLabel(9900, 297, 'THE SWINGS', '#b3a38d', 15);
+    steps(s, 'treehouse', 10650);
+  }
+  const itemX = act2Art ? 11140 : 10995;
+  const drawing = s.add.image(itemX, 360, 'item_drawing').setDisplaySize(38, 32).setDepth(23).setVisible(!run.hasDrawing);
+  const cup = placeProp(s, 'item-cup', itemX + 40, 380, 32, 28, 23).setVisible(!run.hasDrawing);
+  s.addInteract({ id: 'eli-drawing', x: itemX + 5, floor: 380, label: 'E: take Eli’s drawing and the ember cup',
     when: () => !run.hasDrawing && s.memory.isRestored('treehouse'),
     use: () => {
       if (!run.findDrawing()) return;
@@ -60,11 +71,21 @@ export function buildChapters(s) {
   enemy(s, { id: 'playground-pouncer', x: 11460, floor: GROUND, minX: 11270, maxX: 11600, regionId: 'treehouse', kind: 'pouncer' });
   // The playground's way out is buried; the treehouse service hatch leads on.
   gate(s, 12050, () => run.hasDrawing, 'Rubble buries the playground exit. Eli always used the treehouse — search up there.');
-  s.addSurface(12280, 12390, 500, { regionId: 'canal', restoredOnly: true });
-  s.addSurface(12400, 12490, 440, { regionId: 'canal', restoredOnly: true });
+  if (act2Art) {
+    s.chapterGates.at(-1).image.setAlpha(0);
+    // The mill's own stone ledges carry Rowan up to the sluice wheel.
+    for (const [x1, x2, y] of [ACT2.mill.lower, ACT2.mill.upper]) {
+      const ledge = s.addSurface(x1, x2, y, { regionId: 'canal', restoredOnly: true });
+      ledge.block.setAlpha(0); ledge.edge.setAlpha(0);
+    }
+  } else {
+    s.addSurface(12280, 12390, 500, { regionId: 'canal', restoredOnly: true });
+    s.addSurface(12400, 12490, 440, { regionId: 'canal', restoredOnly: true });
+  }
   s.canalSurface = s.addSurface(CANAL_GAP.x1, CANAL_GAP.x2, GROUND, { regionId: 'canal', restoredOnly: true, material: 'bridge', permanent: () => run.canalGateOpen || run.canalReturnOpen });
-  s.add.circle(12420, 415, 19, 0x252832).setStrokeStyle(4, 0xb69868).setDepth(23);
-  s.addInteract({ id: 'canal-wheel', x: 12420, floor: 440, hold: 800, label: 'Hold E: turn the sluice wheel — secure the tower road',
+  const wheel = act2Art ? ACT2.mill.wheel : { x: 12420, y: 415 };
+  s.add.circle(wheel.x, wheel.y, 19, 0x252832).setStrokeStyle(4, 0xb69868).setDepth(23);
+  s.addInteract({ id: 'canal-wheel', x: wheel.x - (act2Art ? 20 : 0), floor: act2Art ? ACT2.mill.upper[2] : 440, hold: 800, label: 'Hold E: turn the sluice wheel — secure the tower road',
     when: () => !run.canalGateOpen && s.memory.isRestored('canal'),
     use: () => { run.canalGateOpen = true; s.refreshSurface(s.canalSurface); s.audio.cue('take'); s.story('sluice-open', { speaker: 'Rowan', text: 'The crossing will hold now. The tower is close.' }); } });
 
@@ -143,7 +164,9 @@ export function tickChapters(s, delta) {
     if (carry) { const dx = next - old; s.player.x += dx; s.player.body.x += dx; }
   }
   s.swingRopes.clear();
-  if (s.swingPlatform.block.visible) s.swingRopes.lineStyle(3, 0x9c835e).lineBetween(9880, 300, s.swingPlatform.zone.x - 45, 500).lineBetween(9940, 300, s.swingPlatform.zone.x + 45, 500);
+  const anchorY = s.act2Gate ? ACT2.swing.anchorY : 300;
+  if (s.swingPlatform.block.visible) s.swingRopes.lineStyle(3, 0x9c835e).lineBetween(9880, anchorY, s.swingPlatform.zone.x - 45, 500).lineBetween(9940, anchorY, s.swingPlatform.zone.x + 45, 500);
+  tickAct2Art(s);
   if (s.warden?.active && s.warden.alive) s.bossText.setPosition(s.warden.x, GROUND - 165).setText(run.relayCount < 3 ? `BELL WARDEN · ${3 - run.relayCount} WARDS` : `BELL WARDEN · ${s.warden.health} / 4`);
   else s.bossText.setVisible(false);
   if (run.relayCount === 3 && run.clearedEncounters['bell-warden']) for (const stair of s.eliStairs) s.refreshSurface(stair);
