@@ -8,7 +8,8 @@
   title-case text; latest Gemini sprites remain unchanged.
 - All five outdoor fire E interactions were checked in short fixtures. Each spent
   exactly25 flame, its visual/daylight radius matched, and an outside point stayed
-  corrupted. New build index-CZ5iGwVk.js; canonical :4176 refresh follows publication.
+  corrupted. Canonical :4176 now serves index-CZ5iGwVk.js from frozen snapshot
+ C:/Users/owner/AppData/Local/Temp/embers-playtest-6I8iwN (process12944).
 - No Act3 source edits. This focused audit claim covers only AudioCues, Npc and its
   tests/docs and is released at handoff. Earlier audits remain below for history.
 - Remaining required input: the user's fresh Act1 route/difficulty, visual

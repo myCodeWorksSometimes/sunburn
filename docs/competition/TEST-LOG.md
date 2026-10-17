@@ -574,3 +574,10 @@ preview :4177. Page title/URL and canvas render matched game; no framework overl
 
 Human-owned extended checks are still pending; no full route, difficulty judgment,
 headphone mix or production approval was fabricated. See acceptance audit below.
+
+- Publication97ad067 synchronized to H: without overwriting unrelated files.
+  Canonical :4176 refreshed to CZ5iGwVk / embers-playtest-6I8iwN / PID12944.
+  Actual Esc menu paused an active creature recording; M then Esc resumed it
+  with actual mute gain0. Zero page errors/warnings. Temporary :4177 stopped.
+  The user has been asked for the required Act1 playthrough/listening feedback;
+  the completion audit explicitly remains unproven until that input arrives.

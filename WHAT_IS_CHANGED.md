@@ -11,6 +11,8 @@ implemented work, validation and remaining limits. Preserve prior entries.
 - Aligned survivor names to each character's visible height instead of the shared
   padded sprite frame; Nia no longer has a label floating far above her head.
   Names use the same title-case, higher-resolution typography as the other UI.
+- Canonical demo refreshed to index-CZ5iGwVk.js; actual Esc/M menu controls
+  verified against an active creature recording. H: synchronized to publication.
 - Verification:26/26 tests, production build, short Chrome audio/gain lifecycle
   checks, survivor-label screenshot and actual E at all five outdoor fires.
   Each fire cost25 and matched restoration/light radius; points outside stayed
