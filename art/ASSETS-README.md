@@ -11,7 +11,7 @@ that, in priority order, with copy-paste prompts.
 | File | What it covers | Images |
 |---|---|---|
 | [background_prompts_act2.md](background_prompts_act2.md) | Act 2 — The Playground, **new green-layer approach**: backgrounds, foreground props, front silhouettes, all on #00FF00 (supersedes the rules below for Act 2) | 6 backgrounds + 14 props (+2 optional) |
-| [background_prompts_act3.md](background_prompts_act3.md) | Act 3 — The Clock Tower: courtyard, bell mechanisms, upper landing | 6 (3 dark + 3 restored) |
+| [background_prompts_act3.md](background_prompts_act3.md) | Act 3 — The Clock Tower, **whole-background approach**: one complete painting per area including the ledges, stairs and bells, moving with Rowan; green #00FF00 only where the far sky/skyline shows through (supersedes the rules below for Act 3) | 6 (3 dark + 3 restored) |
 | [character_sprites.md](character_sprites.md) | Mara, Tomas, Nia; Bell Warden boss; optional Five-Hand | 8 required strips + optional |
 
 ## Priority order (if time runs out, stop from the bottom)
@@ -37,7 +37,7 @@ slide at different speeds as Rowan walks:
 | Ground strip | 100% | the stone ground Rowan walks on (game-drawn tile) | done (art optional) |
 | Props | 100% | stall, steps, swing, gears, doors, bells — anything Rowan touches | game-drawn (art optional) |
 
-What this means for paintings:
+What this means for paintings (Acts 1 and 2; Act 3 paints whole areas at full speed, see its file):
 
 - The painting moves **slower than Rowan**, so nothing in it lines up with
   gameplay. **Never paint holes, steps, ledges or platforms the player must use**:

@@ -3,6 +3,22 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 3 art brief: whole-background approach
+
+- `art/background_prompts_act3.md` rewritten: each Act 3 area (courtyard,
+  mechanisms, landing) is one complete 1920×1080 painting, dark + restored,
+  including the ledges, steps, bell frames, gallery and arches Rowan uses.
+  Flat #00FF00 only where the far sky/skyline shows through (sky over the outer
+  wall, windows, the landing's arches above the village horizon).
+- Paintings are meant to move with Rowan (100%), so walkable parts are placed by
+  pixel tables derived from the current gameplay surfaces (ground y 670; image →
+  world mapping included). Dark versions show "remembered only" ledges crumbled.
+- Joints between areas fall on matching stone piers; spots for fires, the Old
+  Road door, enemy patrols and the post-boss stair are kept plain.
+- `art/ASSETS-README.md` points to the new approach. Docs only: no code, build
+  or test change. Game wiring (full-speed placement, hiding placeholder ledges)
+  follows when the art lands.
+
 ## 18 October 2026 — Act 2 playtested; swing ride fixed
 
 - Played Act 2 end to end in the browser from a playground save: swing
