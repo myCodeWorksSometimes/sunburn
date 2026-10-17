@@ -3,6 +3,17 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — Act 2 playtested; swing ride fixed
+
+- Played Act 2 end to end in the browser from a playground save: swing
+  crossing, treehouse climb and drawing, Pouncer, canal ledges, sluice wheel,
+  canal crossing, and backtracking over both permanent crossings.
+- Fixed: Rowan slid off the moving swing because the carry moved him twice per
+  frame (sprite and body both shifted; Arcade then copies the body's movement to
+  the sprite). The carry now moves only the body (`src/world/Chapters.js`).
+- `npm test` 19 passing, build passed. Details in TEST-LOG. Not covered:
+  arriving from Act 1 by keys, death mid-act, human difficulty.
+
 ## 18 October 2026 — Delivered Act 2 source art committed
 
 - `newart/` (25 delivered Gemini images, ~57 MB) is now tracked so

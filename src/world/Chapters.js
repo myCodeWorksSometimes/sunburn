@@ -161,7 +161,8 @@ export function tickChapters(s, delta) {
     const platform = s.swingPlatform, old = platform.zone.x, next = 9910 + Math.sin(s.swingTime / 1050) * 100;
     const carry = Math.abs(s.player.feet - 500) < 6 && Math.abs(s.player.x - old) < 90 && s.player.body.velocity.y >= 0;
     platform.zone.x = next; platform.zone.body.updateFromGameObject(); platform.block.x = platform.edge.x = next - 70;
-    if (carry) { const dx = next - old; s.player.x += dx; s.player.body.x += dx; }
+    // Move only the body: Arcade's postUpdate copies its displacement onto the sprite.
+    if (carry) s.player.body.x += next - old;
   }
   s.swingRopes.clear();
   const anchorY = s.act2Gate ? ACT2.swing.anchorY : 300;

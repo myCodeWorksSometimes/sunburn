@@ -391,3 +391,24 @@ bridge fire → flame 100; relight → deck enabled; walked to 6723 (feet 560),
 - Browser (`?scene=World&test`, teleport by script): x 2600 lane, x 3150 lane→square seam (soft, skyline visible
   through keyed sky), x 4000 square (clock face in tower opening), x 6000 bridge dark and with `setMemoryVisual('bridge', 1)`
   (restored sky, skyline and painting). Not replayed: full route.
+
+## 18 October 2026 — Act 2 playthrough and swing-carry fix
+
+- `npm test`: 19/19 pass. `npm run build`: pass.
+- Browser (dev server, `?test`): save with Act 1 complete, checkpoint `playground`;
+  Title → Continue. All movement by dispatched key events, no teleports.
+- **Bug found:** riding the swing, Rowan moved ~1.8× the board's distance
+  (board 9810→9864, Rowan 9852→9949) and slid off its right edge into the crater.
+  Cause: the carry moved both sprite and body; Arcade's postUpdate copies the
+  body's displacement onto the sprite again. Fixed in `Chapters.js` (body only).
+- After fix: E at swing fire (flame 100→75) → jumped onto board (feet 500) →
+  offset to board centre constant at 49px for the whole ride → jumped to far bank;
+  `swingReturnOpen`, checkpoint `swingBank`, objective → treehouse.
+- Treehouse: E at fire → steps 500 → 440 → deck 380 → E took drawing + cup;
+  objective → canal. Playground Pouncer killed with sweeps, no damage taken.
+- Canal: exit rubble passed with drawing; rested at canal fire (R, flame 10→100);
+  E → lower ledge 487 → upper ledge 439 → hold E on wheel → `canalGateOpen` →
+  crossed to x12957; `canalReturnOpen`, checkpoint `canalBank`, objective → Act 3.
+- Backtrack after all memories faded: crossed canal westward and stood at x9967
+  (inside swing gap) on feet 560 — permanent crossings hold. No console errors.
+- Not covered: arriving from Act 1 by keys, death mid-Act 2, human difficulty.
