@@ -43,8 +43,9 @@ What this means for paintings:
   gameplay. **Never paint holes, steps, ledges or platforms the player must use**:
   the crater, the canal gap, the steps up to the bells are drawn by the game in
   front. The painting is pure scenery.
-- Neighbouring paintings **fade into each other** over ~220 px, so matching ends
-  are a nice bonus, not a requirement.
+- Within an act, each painting is **generated as a continuation of the previous
+  one** (`tools/make_continuation.py`, steps in the Act 2 file), so the joints
+  are exact. Between acts the game fades one painting into the next.
 - The **sky above the rooftops is flat pure green #00FF00**, like the Act 1
   paintings: the game's own sky and skyline (with the clock tower) show through
   and give the depth. Interiors have no sky, so no green there.

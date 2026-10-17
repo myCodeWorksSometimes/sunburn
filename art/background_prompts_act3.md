@@ -19,6 +19,12 @@ Rowan opens the Old Road gate, goes home for the hearth's last ember, then climb
 the tower: three bell mechanisms, then the Bell Warden on the upper landing. After
 the rescue the brothers look out over the village: "You can see our house."
 
+## Making the paintings join
+
+Same method as Act 2 ([background_prompts_act2.md](background_prompts_act2.md#making-the-three-paintings-join-do-this-its-what-fixes-the-seams)):
+courtyard first, then mechanisms and landing each generated from a
+`make_continuation.py` seed of the previous one.
+
 ## Shared blocks
 
 Use the **Dark block** and **Restored block** from

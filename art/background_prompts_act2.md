@@ -26,6 +26,29 @@ follows the canal road toward the clock tower.
 **Restored block** (start of every restored prompt; attach this region's dark image):
 > Same exact composition, camera, walk line and object positions as the attached dark image, shown on a warm golden late afternoon before the meteor: warm sunlight from the right, green grass and leafy trees, wildflowers, freshly painted wood and iron, everything intact and cared for, peaceful and nostalgic. No corruption roots. The sky stays a flat solid pure green #00FF00. Same pixel-art style. No characters, no text.
 
+## Making the three paintings join (do this, it's what fixes the seams)
+
+The three Act 2 paintings are **one continuous street cut into three**. Each
+next painting is generated **as a continuation** of the one before, so the
+joint is the same pixels, not two different pictures blended.
+
+1. **Swings dark** → normal generation (prompt below). Save as
+   `assets/backgrounds/bg_a2_swings_dark.png`.
+2. **Swings restored** → attach the swings dark image + the restored prompt.
+3. Run `python tools/make_continuation.py bg_a2_swings_dark`. It writes
+   `assets/backgrounds/seeds/seed_after_bg_a2_swings_dark.png`: the right 35%
+   of the swings painting on the left of a blank white canvas.
+4. **Treehouse dark** → attach that seed canvas and say:
+   > Extend this image to the right to fill the white area. Keep the left part exactly as it is, pixel for pixel, and continue the same scene seamlessly: same ground line, same lighting, same style. [then the treehouse dark prompt]
+5. **Treehouse restored** → run `make_continuation.py bg_a2_swings_restored`,
+   attach that seed **and** the treehouse dark image (for layout), same wording
+   with the restored prompt.
+6. **Canal** → same again, continuing from the treehouse images.
+
+If the generator changes the kept part a little, that's fine: the processor
+pastes the original pixels back over it and fades into the new part. If it
+refuses to keep the canvas, tell me and I'll cut the joint by hand.
+
 ---
 
 ## A2-1 · `bg_a2_swings_dark` / `bg_a2_swings_restored` — The playground

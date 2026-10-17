@@ -7,7 +7,8 @@ import { GROUND } from '../world/layout.js';
 
 export const PAINTING_SPEED = 0.7;
 export const SKYLINE_SPEED = 0.25;
-const FEATHER = 220; // screen pixels of crossfade between neighbouring paintings
+const FEATHER = 220;
+const OVERLAP = .35; // continued paintings share this much with the previous one (tools/make_continuation.py) // screen pixels of crossfade between neighbouring paintings
 const VIEW = 1280;
 
 // Where a region's painting sits in the painting layer (screen = x - scrollX * speed).
@@ -75,17 +76,23 @@ export function buildBackdrop(scene, regions) {
     // New art puts the walk line 62% down the image.
     const groundY = legacyGround ?? Math.round(tex.height * .62);
     const { left, right } = paintingSlot(regions, i);
-    const scale = Math.max(GROUND / groundY, (right - left + FEATHER) / tex.width);
-    const x = (left + right) / 2 - tex.width * scale / 2, y = GROUND - groundY * scale;
+    let scale = Math.max(GROUND / groundY, (right - left + FEATHER) / tex.width);
+    let x = (left + right) / 2 - tex.width * scale / 2;
+    // A painting generated as a continuation of the previous one is laid exactly
+    // over that painting's right edge (the processor made those pixels identical).
+    const prev = paintings.get(regions[i - 1]?.id);
+    const chained = r.continues && art !== r.fallback && prev && prev.art !== regions[i - 1].fallback;
+    if (chained) { scale = prev.scale; x = prev.x + prev.width * (1 - OVERLAP); }
+    const y = GROUND - groundY * scale;
     const feather = FEATHER / scale;
     // The painted ground is cropped: the real walkable ground is drawn in front.
     const crop = groundY + 3;
-    const darkImage = scene.add.image(x, y, softened(scene, dark, feather, i > 0, false)).setOrigin(0).setScale(scale)
+    const darkImage = scene.add.image(x, y, chained ? dark : softened(scene, dark, feather, i > 0, false)).setOrigin(0).setScale(scale)
       .setScrollFactor(PAINTING_SPEED, 1).setDepth(-5).setCrop(0, 0, tex.width, crop);
     const pastImage = scene.add.image(x, y, softened(scene, past, feather, true, true)).setOrigin(0).setScale(scale)
       .setScrollFactor(PAINTING_SPEED, 1).setDepth(-4).setCrop(0, 0, tex.width, crop).setAlpha(0);
     darkImage.setName(`scenery-${r.id}`);
-    paintings.set(r.id, { x, y, scale, art, dark: darkImage, past: pastImage });
+    paintings.set(r.id, { x, y, scale, art, width: tex.width * scale, dark: darkImage, past: pastImage });
   });
   return { sky, skyPast, skyline, skylinePast, paintings };
 }
