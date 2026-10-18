@@ -1,5 +1,11 @@
 # Complete original chapters — gameplay execution
 
+Latest18 October route corrections, test codes and focused checklist:
+[POST-BRIDGE.md](POST-BRIDGE.md). The current order is canal → tower window →
+Old Road → home ember → tower bells → Warden → Eli → view → refuge → home.
+Read STATUS/TEST-LOG for connected movement evidence and remaining human checks.
+The older table below is retained as planning history, not current route authority.
+
 Latest user request (17 October): use original acts, implement Acts 2 and 3,
 finish story and gameplay, give live implementation updates, do not focus on art.
 No image generation. No active teammate claims; current integrator owns this pass.

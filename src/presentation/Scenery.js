@@ -1,8 +1,10 @@
 import { naturalGround, supplyLedge } from './NaturalGround.js';
+import { paintedBridge } from './PaintedBridge.js';
 // Presentation follows collision; decorative art never adds physics bodies.
 export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = {}) {
   const width = x2 - x1, indoor = scene.scene.key === 'Hearth';
-  if(!indoor&&y===560&&['yard','lane','square','bridge','camp'].includes(regionId)&&material==='stone')return naturalGround(scene,x1,x2,y,regionId);
+  if(!indoor&&material==='bridge')return paintedBridge(scene,x1,x2,y,regionId);
+  if(!indoor&&y===560&&regionId&&!regionId.startsWith('tower-')&&material==='stone')return naturalGround(scene,x1,x2,y,regionId);
   if(!indoor&&material==='crate'&&x1<8800)return supplyLedge(scene,x1,x2,y);
   const block = scene.add.container(x1, y).setDepth(10);
   const edge = scene.add.container(x1, y).setDepth(11);

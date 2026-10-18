@@ -78,6 +78,12 @@ origin/profile. Continue resumes a safe checkpoint; temporary memories and parti
 enemy damage reset. New game/restart clears the save. Different ports/machines
 have independent saves. Gameplay still works if browser storage is unavailable.
 
+### Post-bridge test runs
+
+Type `afaqisasleep` in the focused game to start at the main bridge's far bank.
+Type `afaqback` to return to the normal adventure; test runs preserve its save.
+H requests a navigation hint. See [all codes and route](docs/competition/POST-BRIDGE.md).
+
 ### Dev shortcuts
 - `?scene=Hearth` starts the current house; `?scene=World` starts the outdoors with a lantern.
 - `?test` keeps the simulation active in background tabs for automated verification.

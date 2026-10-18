@@ -83,7 +83,7 @@ export const FIRES = [
   { id: 'square-fire', regionId: 'square', x: 3250, floor: GROUND, duration: 18000, spawnId: 'square' },
   { id: 'bridge-fire', regionId: 'bridge', x: 7440, floor: GROUND, radius: 800, duration: 16000, spawnId: 'bridge' },
   { id: 'camp-fire', regionId: 'camp', x: 8120, floor: GROUND, radius: 720, duration: 20000, spawnId: 'camp' },
-  { id: 'swing-fire', regionId: 'swings', x: 9110, floor: GROUND, radius: 1060, duration: 16000, spawnId: 'playground' },
+  { id: 'swing-fire', regionId: 'swings', x: 9110, floor: GROUND, radius: 1060, duration: 26000, spawnId: 'playground' },
   { id: 'treehouse-fire', regionId: 'treehouse', x: 10520, floor: GROUND, radius: 900, duration: 20000, spawnId: 'treehouse' },
   { id: 'canal-fire', regionId: 'canal', x: 12200, floor: GROUND, duration: 16000, spawnId: 'canal' },
   { id: 'court-fire', regionId: 'tower-court', x: 14000, floor: GROUND, duration: 18000, spawnId: 'courtyard' },

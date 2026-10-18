@@ -59,7 +59,10 @@ export function registeredPainting(scene, r, state) {
     ctx.drawImage(src,900,0,src.width-900,src.height,gapRight,GROUND-410,src.width-900,src.height);
   } else {
     const scale = r.id==='camp'?1:r.width / src.width;
-    ctx.drawImage(src, 0, GROUND - r.paintGround * scale, src.width*scale, src.height * scale);
+    // The camp painting's fire pit is at590 and its broken crossing at900.
+    // Match those landmarks to8120 and8400, rather than putting the gap inside a house.
+    ctx.drawImage(src, r.id==='camp'?-570:0, GROUND - r.paintGround * scale, src.width*scale, src.height * scale);
+    if(r.id==='camp')ctx.clearRect(300,0,320,720);
     if (r.id === 'yard') {
       // Keep the real pit clear; only the restored bridge supplies its collider.
       ctx.clearRect(YARD_GAP.x1 - r.x, GROUND + 4, YARD_GAP.x2 - YARD_GAP.x1, 160);

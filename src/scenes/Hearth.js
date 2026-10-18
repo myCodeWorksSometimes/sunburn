@@ -11,6 +11,9 @@ export class Hearth extends Adventure {
   getSpawn(id) { return SPAWNS[id] || SPAWNS.cellar; }
 
   create() {
+    // Phaser reuses this Scene instance after credits, cheats and New Adventure.
+    // References and ending flags from the previous visit must not survive it.
+    this.eli=null;this.eliMoving=false;this.sitting=false;this.awaitingAnswer=false;
     const spawnId = this.entry.spawnId || 'cellar';
     this.setup(1280, this.getSpawn(spawnId));
     this.run.setCheckpoint('Hearth', spawnId);

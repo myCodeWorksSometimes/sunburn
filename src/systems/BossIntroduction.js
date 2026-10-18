@@ -44,6 +44,13 @@ export class BossIntroduction {
   finish(commit=true) {
     if(!this.active)return;
     const s=this.scene,sp=this.spec;this.active=false;
+    if(!commit){
+      // Scene plugins shut down in registration order: cameras and display
+      // objects may already be gone. They own their destruction. Only restore
+      // the persistent clock settings needed when this scene starts again.
+      s.time.paused=this.before.clockPaused;s.tweens.timeScale=this.before.tweenScale;
+      this.hidden=[];this.spec=null;return;
+    }
     s.cameras.main.setZoom(this.before.zoom);s.cameras.main.scrollY=this.before.scrollY;
     s.cameras.main.scrollX=this.before.scrollX;
     for(const[o,visible]of this.hidden??[])if(o.active)o.setVisible(visible);

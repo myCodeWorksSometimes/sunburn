@@ -1,5 +1,30 @@
 # Live implementation status
 
+## Latest integration — 18 Oct, post-bridge completion
+
+- Implemented: registered camp pit/crossing, painted bridge/deck/banks, cold night
+  and radial past layers, irregular Act2 ground, true moving-seat swing forward
+  route with26s memory and permanent return after crossing. No generated images.
+- Map-after-voice crash fixed and reproduced before/after. Cheats interrupting a
+  boss intro and New Adventure after rescued Eli also have lifecycle fixes.
+- Type afaqisasleep for the far bank / Act2 approach; section presets through
+  afaqending and afaqback preserve the normal save. H and automatic8s navigation
+  help target the next physical action. Journal overflow fixed. POST-BRIDGE.md
+  gives every code, route order and the human checklist.
+-43 Node tests/build pass. Connected real movement/interactions verified after
+  bridge through all three bells, including the actual return-home ember trip.
+  A checkpoint of that run resumed to sword victory, lantern retrieval, Eli,
+  view, refuge, home response and Credits. No endpoint-only substitute; no claim
+  of an uninterrupted fresh-game/Act1 acceptance. TEST-LOG has exact scope.
+- Canonical demo http://127.0.0.1:4176/ now serves index-CBTY2-o_.js from frozen
+  snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-cWb8SG, Node PID9984.
+  Final painted-layer/physical main+camp crossing/map check passes. Production
+  code/map/save/960px checks pass. Source changes cannot mutate the snapshot.
+  Owned4177/4178/4179/5173 servers stopped; only4176 remains. Publishing follows.
+- Codex implementation claim released at publication; previous Claude claim
+  released by user. Preserve unrelated draft and H: .stfolder/backgrounds.zip. Full campaign,
+  escort timing, subjective visuals/difficulty/audio remain human acceptance.
+
 ## Latest handoff — 18 Oct, cinematic/boss/voice/tap feedback revision
 
 - Implemented: clear-ground compact captions/context prompts, adaptive gallery

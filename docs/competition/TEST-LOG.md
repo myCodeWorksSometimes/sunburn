@@ -1,5 +1,67 @@
 # Test evidence
 
+## Latest — 18 Oct, connected post-bridge route and test tools
+
+Environment: Windows / installed Chrome, bundled Playwright because Browser plugin
+not available. Source5173 during route diagnosis; isolated production4179 for final
+menus/cheats/bridge checks.43/43 Node tests pass, build passes with existing Phaser
+chunk warning. Final bundle index-CBTY2-o_.js. No new dependency or image generation.
+
+- Reproduced the old4176 map crash after explicitly unlocking audio and allowing
+  Rowan's recorded “Eli?” to finish: VoiceDirector retained a sound with manager
+  null; pressing M threw `Cannot read properties of null (reading 'context')`.
+  Fixed ownership/destroy cleanup. Same sequence passed on the new build.
+- Connected run started with typed afaqisasleep (earlier Act1 prerequisites only).
+  Real E + walking crossed camp to9111/560. Waited for the swing board to approach,
+  jumped onto its500px top, rode right and jumped to the far bank. Walked to10526;
+  E restored treehouse, three real jumps to500/440/380; E collected drawing/cup.
+  Walked to12200, E restored canal; two jumps to487/439; held E at wheel12462.
+  Walked to14230; three-knock response found Eli. Held release13760, used door13848
+  to4935. Walked left through the actual village, rested at1710, entered front225,
+  remembered hearth530 and held E for its ember. Descended ladder410 with S,
+  used cellar980 to3410, walked to4910, took Old Road to13880.
+- Real ground-up bell climbs: first14566/300, second15470/430, third16551/452.
+  All rung by hold-E, earlier flags/items retained. End health2, deaths0. No
+  enemy-health injection, invulnerability override or bell-endpoint teleport.
+- Serialized that actual run at the third bell, then resumed it in a second
+  browser check (transient memory expires on resume). Skipped replayed intro,
+  walked to crown fire/rested, drew sword, approached and struck four actual hits
+  after one missed/hurt attempt. Warden cleared with health2/flame100/deaths0.
+  Walked back to dropped lantern, X retrieved; real stair jumps485/415/345.
+  Held E at Eli; after transfer he remained with no memory. Walked to view17169,
+  down to16370 / Old Road, refuge4935, actual village walk home, held E to sit,
+  answered final knocks with E and reached Credits. Both route checks had no
+  page errors. A fresh uninterrupted Prologue/Act1-to-Credits run is NOT claimed.
+- Runtime QA found/fixed: early return boardwalk bypassing swing; stale camera
+  access when cheats interrupt boss cinematics; destroyed Eli sprite reused on
+  Hearth New Adventure; bridge canvas destination-in erasing the upper deck;
+  duplicate painted skyline above ropes; journal origin640 overflowing its box.
+  A blind swing jump and a combat harness facing away caused test failures;
+  successful runs wait for the approaching board and face their attack target.
+- Production index-CqIdirMz checks passed all10 section entries, normal save/back,
+  prefix Escape and2.5s timeout without fuel loss, automatic8s help and H, maps
+  after finished voices for every outdoor section, ending/home map, dropped
+  lantern map,960×540 map/journal/satchel and New Adventure after ending. No page
+  errors or HTTP failures. Later index-CBTY2-o_ changes only bridge night/past
+  layers; final physical crossing/radial/map recheck recorded below.
+- Scripts/screenshots (OS temp, outside Git): embers-connected-route.cjs,
+  embers-connected-ending.cjs, embers-postbridge-final-smoke.cjs,
+  embers-final-bridge-check.cjs; embers-connected-three-bells.png,
+  embers-connected-rescue.png, embers-connected-credits.png,
+  embers-final-bridge-day/night.png, embers-final-wayfinder.png,
+  embers-final-map/journal/inventory-960.png. Harness graph serialization/REPL
+  timeout were tooling errors, not product outcomes; repeated proof uses scalars.
+- Final index-CBTY2-o_ painted-layer recheck passed: deck560, body enabled,
+  dark/past images present and past masked by one restoration filter. Real main
+  crossing, expiry with cold permanent return, camp E/crossing and map passed.
+  The first attempt pressed E during enemy hurt; the successful check waited
+  for recovery as required by existing combat rules. Day/night screenshots inspected.
+- Canonical4176 refreshed to index-CBTY2-o_, frozen snapshot
+  C:/Users/owner/AppData/Local/Temp/embers-playtest-cWb8SG, PID9984. Owned stale
+  demo/dev servers4177/4178/4179/5173 stopped; no recursive snapshot deletion.
+- Human checks: POST-BRIDGE.md. Extended fresh campaign/escort retries, boss
+  difficulty, artwork judgment and listening remain unperformed by the agent.
+
 ## Latest — 18 Oct, cinematic/moving-boss/voice feedback revision
 
 Environment: Windows, installed Chrome, production snapshots on127.0.0.1:4177;

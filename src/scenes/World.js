@@ -5,6 +5,7 @@ import { addOutdoorAtmosphere, placeProp } from '../presentation/Scenery.js';
 import { buildBackdrop, tickBackdrop, onPainting, isWhole } from '../presentation/Backdrop.js';
 import { cellarHatch, buildMarketCourt } from '../presentation/Act1Presentation.js';
 import { DistantPresence } from '../presentation/DistantPresence.js';
+import { Wayfinder } from '../systems/Wayfinder.js';
 
 export class World extends Adventure {
   constructor() { super('World'); }
@@ -24,7 +25,8 @@ export class World extends Adventure {
     this.distantPresence=new DistantPresence(this);
     for (const r of REGIONS) {
       const waterPast = this.add.graphics().setDepth(-8).setAlpha(0);
-      if (r.id === 'bridge') waterPast.fillGradientStyle(0x38575e, 0x38575e, 0x111c2b, 0x111c2b).fillRect(BRIDGE_GAP.x1, GROUND, BRIDGE_GAP.x2 - BRIDGE_GAP.x1, 160);
+      // The painted crossing supplies its river and bank silhouette. A flat
+      // gradient rectangle here used to obscure the natural water/cliff join.
       this.regionVisuals.set(r.id, [this.backdrop.paintings.get(r.id).past, waterPast]);
       // Connectors contain actual scenery and clear travel markings (whole paintings have their own doorways).
       if (!isWhole(this, r)) placeProp(this, 'marker', r.x + r.width - 140, GROUND, 52, 65);
@@ -63,6 +65,7 @@ export class World extends Adventure {
     for (let n = 0; n < 12; n++) { const a = n * Math.PI / 6; ticks.lineBetween(face.x + Math.sin(a) * 19 * k, face.y + Math.cos(a) * 19 * k, face.x + Math.sin(a) * 23 * k, face.y + Math.cos(a) * 23 * k); }
     this.clockHand = this.add.rectangle(face.x, face.y, 2, 19 * k, 0xe2c594).setOrigin(0.5, 1).setDepth(-3);
     buildChapters(this);
+    this.wayfinder=new Wayfinder(this);
   }
 
   tick(delta) {
@@ -89,6 +92,7 @@ export class World extends Adventure {
       this.notice('You release the maintenance walkway — the way back stays open.');
     }
     tickChapters(this, delta);
+    this.wayfinder.update(delta);
     if(this.player.x>1950&&this.player.x<2200&&!this.run.completedStory['supply-ledge']){
       this.run.completeStory('supply-ledge');this.notice('Raised supply ledge · jump up to evade the Crawler’s ground lunge.');
     }

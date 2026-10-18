@@ -3,7 +3,9 @@ import {audioSettings} from './AudioCues.js';
 export class VoiceDirector {
   constructor(scene){
     this.scene=scene;this.lines=scene.cache.json.get('voice-manifest')??{};
-    const pause=()=>this.sound?.pause(),resume=()=>this.sound?.resume();
+    // Adventure's AudioCues owns pause/resume for its clips. Standalone Intro
+    // owns its own read. Never call WebAudioSound.pause on a destroyed manager.
+    const pause=()=>{if(!scene.audio&&this.sound?.isPlaying)this.sound.pause();},resume=()=>{if(!scene.audio&&this.sound?.isPaused)this.sound.resume();};
     scene.events.once('shutdown',()=>{this.stop();scene.events.off('pause',pause);scene.events.off('resume',resume);});
     scene.events.on('pause',pause);scene.events.on('resume',resume);
   }
@@ -19,6 +21,7 @@ export class VoiceDirector {
     const settings=s.audio?.settings??audioSettings();
     if(settings.muted)return 0;
     this.sound=s.audio?s.audio.playEffect(id,.8,true):s.sound.add(id,{volume:settings.effects*.8});
+    if(this.sound){const owned=this.sound;owned.once('destroy',()=>{if(this.sound===owned)this.sound=null;});}
     if(!s.audio){this.sound.play();this.sound.once('complete',()=>this.stop());}
     return (this.sound?.duration??0)*1000;
   }

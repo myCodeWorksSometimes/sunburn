@@ -41,7 +41,7 @@ export function buildChapters(s) {
 
   // ACT 2: a moving restored swing, treehouse evidence, home return, canal wheel.
   s.swingPlatform = s.addSurface(9840, 9980, 500, { regionId: 'swings', restoredOnly: true, material: 'timber' });
-  s.swingReturn = s.addSurface(SWING_GAP.x1, SWING_GAP.x2, GROUND, { regionId: 'swing-return', restoredOnly: true, material: 'bridge', permanent: () => run.swingReturnOpen });
+  s.swingReturn = s.addSurface(SWING_GAP.x1, SWING_GAP.x2, GROUND, { regionId: 'swing-return', restoredOnly: true, material: 'bridge', permanent: () => run.swingReturnOpen, requires: () => false });
   s.swingRopes = s.add.graphics().setDepth(14);
   const act2Art = hasAct2Art(s);
   if (act2Art) {

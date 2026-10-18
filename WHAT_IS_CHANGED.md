@@ -3,7 +3,37 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
-## 18 October 2026 — published feedback build verification
+## 18 October 2026 — post-bridge route, painted crossings and safe test codes
+
+- Repaired the camp painting registration: fire8120 and gap8400–8720 now match
+  its pit/walkway rather than cutting through the houses. Reused the supplied
+  rope/timber/bank/river painting for crossings, aligned the deck to collision,
+  removed duplicate source skyline/flat water panels, added a cold night layer
+  and locally masked healthy layer. Act2 floors use irregular painted cobbles.
+- Swing forward traversal now genuinely uses the moving seat. Its return deck
+  unlocks only after crossing, and its fire lasts26s to allow a missed swing cycle.
+- Fixed map crash after a completed voice: destroyed WebAudioSound was retained
+  and paused through a null manager. Fixed switching sections during a boss intro
+  accessing destroyed cameras; fixed New Adventure retaining destroyed Eli.
+- Added typed `afaqisasleep` and nine section presets plus `afaqback`. Normal
+  state/save is preserved, including prefix cancellation/timeout and New Adventure
+  from a test run. H and automatic stalled-player guidance show the next physical
+  fire/ledge/wheel/door with a destination marker. Journal text stays in its frame.
+-43 Node tests and production build pass. Actual connected inputs prove far bank
+  → camp → moving swing → treehouse → canal → Eli's window → Old Road → home
+  ember → cellar/Old Road → all three bell climbs. A recorded run checkpoint at
+  the third bell continued with a real sword fight, lantern retrieval, stairs,
+  ember transfer, view, refuge, walk home and playable response through Credits.
+  This is two connected route checks with a checkpoint resume, not a claim of
+  uninterrupted fresh-game acceptance. No enemy health or invulnerability was
+  forced in the successful route. Full human difficulty/listening remain open.
+- Production checks cover completed-voice maps at each preset, home/drop maps,
+  prefix cancel/timeout, normal save/back, automatic help,960px map/journal/satchel,
+  and isolated restart. POST-BRIDGE.md lists codes, route and focused human checks.
+  Final bundle: index-CBTY2-o_.js. Canonical4176 refreshed to this frozen build;
+  stale demo/dev listeners stopped. Publication/shared-checkout details: STATUS.
+
+## 18 October 2026 — published feedback build verification (previous iteration)
 
 - Implementation0e15a1b is published on GitHub main. Shared H:/projects/gameDev
   fast-forwarded cleanly; its37/37 tests pass and production bundle matches

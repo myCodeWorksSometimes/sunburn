@@ -106,7 +106,7 @@ export class Pause extends Phaser.Scene {
       for(const [a,b,label] of [[0,8800,'PROLOGUE / ACT 1'],[8800,13600,'ACT 2'],[13600,WORLD_WIDTH,'ACT 3']]) menuText(this,scaleX((a+b)/2),238,label,15,UI.gold);
       const px=current==='home'?185:scaleX(source.player.x),py=current==='home'?440:382;
       this.add.image(px,py,'kit-lantern').setDisplaySize(20,26);menuText(this,px,py+26,'You',14,'#9bd3db');
-        if(source.combat.weapon.drop&&current!=='home'){
+        if(source.combat?.weapon?.drop&&current!=='home'){
           const lx=scaleX(source.combat.weapon.drop.x);this.add.image(lx,416,'kit-lantern').setDisplaySize(18,23);menuText(this,lx,440,'Lantern',13,UI.gold);
         }
       road.lineBetween(225,332,185,440);menuText(this,185,483,'Home',16,UI.gold);
@@ -143,7 +143,7 @@ export class Pause extends Phaser.Scene {
       ].filter(([id]) => run.completedStory[id]);
       if (!entries.length) entries.push(['start', 'Find Grandfather’s lantern in the cellar. E interacts; W/S climbs.']);
       const pages=Math.ceil(entries.length/5);this.journalPage=pages-1;
-      const lines=Array.from({length:5},(_,i)=>menuText(this,640,258+i*54,'',20).setWordWrapWidth(830).setOrigin(0,.5).setAlign('left'));
+      const lines=Array.from({length:5},(_,i)=>menuText(this,225,258+i*54,'',18).setWordWrapWidth(830).setOrigin(0,.5).setAlign('left'));
       const count=menuText(this,640,516,'',13,UI.gold);
       const show=()=>{lines.forEach((line,i)=>line.setText(entries[this.journalPage*5+i]?.[1]??''));count.setText(`${this.journalPage+1} / ${pages}`);};
       const turn=dir=>{this.journalPage=(this.journalPage+dir+pages)%pages;show();};
@@ -166,6 +166,7 @@ export class Pause extends Phaser.Scene {
     box.add(menuText(this,640,170,'Controls',32,UI.gold).setFontFamily(UI.title));
     const rows=[['A / D','Move'],['Space','Jump'],['W / S','Climb'],['E','Interact / remember'],['F / X','Attack / draw sword'],['Q','Use oil'],['Hold R','Rest at a fire'],['I / M / J','Satchel / map / journal']];
     rows.forEach(([key,label],i)=>{const x=i<4?340:680,y=240+(i%4)*58;box.add(menuText(this,x,y,key,18,UI.gold).setOrigin(0,.5));box.add(menuText(this,x+100,y,label,18).setOrigin(0,.5));});
+    box.add(menuText(this,640,479,'H · Show the next step and destination marker',16,UI.gold));
     box.add(menuText(this,640,526,'Close',20,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>box.destroy(true)));
     this.controlPanel=box;
   }

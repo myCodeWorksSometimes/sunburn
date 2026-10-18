@@ -1,5 +1,37 @@
 # Integration contracts
 
+## Post-bridge completion — 18 Oct (latest)
+
+- `TestRoutes.js`: `TEST_ROUTES`, `testRunFor(code)` create isolated prerequisite
+  fixtures; `CheatBuffer.feed(key,now)` recognizes typed codes, 2.5s gap/Esc cancel.
+  `TestCheats` installs once in Boot; prefix `afaq` pauses active scenes and captures
+  UI controls. All active/paused scenes stop on a completed jump. `afaqback` restores
+  the normal run/checkpoint. Normal state/save captured before A/F/Q is restored on
+  completion/cancellation. Test `saveSession` is a no-op; New Adventure inside a
+  test also remains isolated. Do not delete the normal SAVE_KEY for test starts.
+- `WorldState.testMode` defaults false. Presets fill earlier prerequisites only;
+  do not treat them as evidence that the connected route was played. All codes
+  and expected unfinished objectives are in POST-BRIDGE.md.
+- `navigationHint` is pure. `Wayfinder` owns the H key, eight-second stalled
+  progress check, compact upper hint and world/edge marker. Progress means55px
+  closer to the next physical action. Swing markers track the moving board;
+  timers do not reset merely because the board moved. Use `drop.floor`, not y.
+- Camp painting translates570px left so its pit/crossing match8120/8400–8720.
+  `PaintedBridge` reuses the existing painted ropes/timber/banks/river, flattens
+  its walk line to the collider, cuts foreground ropes/posts away from source
+  skyline, feathers edges and registers its healthy layer to radial restoration.
+  Its night layer stays cold on permanent return paths. No generated assets.
+- Act2 ground uses painted irregular cobbles rather than180px rectangular slabs.
+  Swing memory26s; moving seat is the forward route. `swing-return` requires false
+  until `swingReturnOpen` permanently enables it after the far bank.
+- AudioCues alone pauses Adventure voices. VoiceDirector releases its reference
+  on sound destruction. Standalone Intro still owns its own voice pause/resume.
+  BossIntroduction shutdown restores persistent clock settings without touching
+  already-destroyed cameras/children. Hearth.create resets Eli/follower/ending
+  fields because Phaser reuses Scene instances after credits and test jumps.
+- Journal rows originate at225, not640 with a left origin. Safe width830 and
+  font18 keep text inside the frame at1280/960 viewports. H is listed in Controls.
+
 ## Playtest feedback revision — 18 Oct (supersedes older rules below)
 
 - Captions.layout keeps captions at248, or155/right lane for feet<410.

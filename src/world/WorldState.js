@@ -7,6 +7,7 @@ export const SAVE_KEY = 'embers-before-three-acts-v1';
 export class WorldState {
   constructor() {
     this.version = 3;
+    this.testMode = false;
     this.hasLantern = false;
     this.hasEmberCup = false;
     this.hasHearthEmber = false;
@@ -209,6 +210,7 @@ export function readSave() {
 }
 
 export function saveSession(scene) {
+  if(getSession(scene).testMode)return;
   try { globalThis.localStorage?.setItem(SAVE_KEY, JSON.stringify(getSession(scene))); } catch { /* Storage can be disabled; the current run still works. */ }
 }
 
@@ -224,7 +226,9 @@ export function getSession(scene) {
 
 export function newSession(scene) {
   const state = new WorldState();
+  // Restarting inside a test fixture remains isolated from the real adventure.
+  state.testMode=!!scene.registry.get('worldState')?.testMode;
   scene.registry.set('worldState', state);
-  try { globalThis.localStorage?.removeItem(SAVE_KEY); } catch { /* Optional persistence. */ }
+  if(!state.testMode)try { globalThis.localStorage?.removeItem(SAVE_KEY); } catch { /* Optional persistence. */ }
   return state;
 }

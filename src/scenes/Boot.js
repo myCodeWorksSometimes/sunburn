@@ -5,6 +5,7 @@ import { getSession } from '../world/WorldState.js';
 import { createPresentationTextures } from '../presentation/textures.js';
 import { prepareProductionAssets } from '../presentation/productionAssets.js';
 import { BOSS_AUDIO_FILES } from '../systems/BossAudio.js';
+import {installTestCheats} from '../systems/TestCheats.js';
 
 const BACKGROUNDS = [
   'bg_title_screen', 'cut_01_before', 'cut_02_sun_breaks', 'cut_03_meteors',
@@ -70,6 +71,7 @@ export class Boot extends Phaser.Scene {
     createPresentationTextures(this);
     createTextures(this);
     prepareProductionAssets(this);
+    installTestCheats(this.game);
     // ?scene=Yard jumps straight to a scene while developing.
     const start = new URLSearchParams(location.search).get('scene') || 'Title';
     if (start === 'World') getSession(this).hasLantern = true;

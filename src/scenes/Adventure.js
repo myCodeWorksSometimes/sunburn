@@ -68,7 +68,7 @@ export class Adventure extends Phaser.Scene {
     this.holdTrack = this.add.rectangle(790, 198, 180, 4, 0x34303e).setScrollFactor(0).setDepth(115).setVisible(false);
     this.holdFill = this.add.rectangle(700, 198, 0, 4, 0xffd890).setOrigin(0, 0.5).setScrollFactor(0).setDepth(116).setVisible(false);
 
-    this.keys = this.input.keyboard.addKeys({ use: 'E', pause: 'ESC', next: 'ENTER', attack: 'F', weapon:'X', oil: 'Q', inventory: 'I', rest: 'R', map: 'M', journal: 'J' });
+    this.keys = this.input.keyboard.addKeys({ use: 'E', pause: 'ESC', next: 'ENTER', attack: 'F', weapon:'X', oil: 'Q', inventory: 'I', rest: 'R', map: 'M', journal: 'J', help:'H' });
     this.saveClock = 0;
     this.input.keyboard.on('keydown', () => this.audio.unlock());
     this.look = 0;
