@@ -33,6 +33,10 @@
 - Integrator editing claim released at publication. Respect new teammate edits/
   claims on resumption. Unrelated campaign draft and H: .stfolder/backgrounds.zip
   stay untouched. Publication/shared-tree confirmation is in Git and TEST-LOG.
+- Implementation0e15a1b is on origin/main. Shared H:/projects/gameDev cleanly
+  fast-forwarded,37/37 tests and identical index-Dq6Q7rvH build verified. Canonical
+  Title/Enter plus physical boss/corrected story smoke passed; only4176 listens
+  among4176/4177/5173. Current handoff changes are documentation only.
 - Run: npm ci (first setup), npm run dev -- --host 127.0.0.1. Release: npm test,
   npm run build, npm run demo. WHAT_IS_CHANGED.md retains all previous iterations.
 

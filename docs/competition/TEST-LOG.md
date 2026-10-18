@@ -63,8 +63,13 @@ strikes defeat physical-phase Five-Hand. Corrected three-knock dialogue queue
 contains the new Mara-memory sentence and no old resurrection claim; its exact
 voice file b17537d9daae3b.ogg is cached and plays. Release build index-Dq6Q7rvH.js,
 37/37 tests, clean diff check (only existing CRLF notices). Canonical snapshot
-C:/Users/owner/AppData/Local/Temp/embers-playtest-rCZWB4 at4176, Node3960. Publication
-confirmation follows once Git push/shared fast-forward and entry smoke complete.
+C:/Users/owner/AppData/Local/Temp/embers-playtest-rCZWB4 at4176, Node3960.
+Implementation0e15a1b pushed to origin/main and independently confirmed with
+ls-remote. H:/projects/gameDev fast-forwarded cleanly;37/37 tests and identical
+index-Dq6Q7rvH build pass (normal bundle warning; H: also reports build timings).
+Canonical Title/Enter smoke passed with local font loaded; physical damage/
+sword defeat and corrected tower line/voice also passed on4176. Only4176 remains
+listening among4176/4177/5173. Unrelated untracked files were preserved.
 
 ## Latest — 18 October 2026, Act 1 horror revision
 

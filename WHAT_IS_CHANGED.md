@@ -3,6 +3,18 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — published feedback build verification
+
+- Implementation0e15a1b is published on GitHub main. Shared H:/projects/gameDev
+  fast-forwarded cleanly; its37/37 tests pass and production bundle matches
+  index-Dq6Q7rvH.js. Existing Syncthing/zip files and unrelated draft are untouched.
+- Canonical http://127.0.0.1:4176/ serves that frozen build. Title/Enter smoke,
+  physical boss damage/two-sword-hit defeat and corrected tower dialogue/read
+  passed on the canonical port. Temporary4177/5173 servers are stopped.
+- PLAYTEST-FEEDBACK.md gives the six-stage human checklist. Extended fresh route,
+  complete escort timing, subjective difficulty/voice delivery/music mix remain
+  human playtests; this handoff does not claim those judgments passed.
+
 ## 18 October 2026 — cinematic echoes, moving bosses, voiced campaign and tap gait
 
 - Replaced ground-covering dialogue/prompt boxes with measured compact upper
