@@ -1,5 +1,17 @@
 # What is changed — cumulative iteration history
 
+## 18 October 2026 — Trailer
+
+- `trailer/embers-of-before-trailer.mp4`: 2:54, 1280×720 — 32s story opening
+  (ordinary village, meteor, endless night, Eli at the swings, "fire remembers"),
+  2:05 of recorded gameplay across Acts I–III (restoration, Five-Hand, bridge,
+  swing, treehouse, canal, knock, bells, Warden, rescue and the view), end card.
+  Game CC0 soundscape as music. Script, synopsis and Gemini still prompts in
+  `trailer/TRAILER.md`; recorder/editor in `trailer/tools/`.
+- Gameplay was recorded from a production build by scripted input; story cards use
+  existing paintings, cropped to hide the legacy broken sun. Not human-reviewed
+  for audio mix or pacing.
+
 ## 18 October 2026 — published route/menu verification receipt
 
 - Gameplay/source iteration 6a5f034 reached GitHub main before 08:59 Asia/Karachi (push confirmed at 08:58:27). No force push; unrelated draft retained.
