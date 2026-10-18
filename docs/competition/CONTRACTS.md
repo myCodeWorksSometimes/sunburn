@@ -1,5 +1,27 @@
 # Integration contracts
 
+## Full-map scenery registration — 18 Oct (latest)
+
+- OutdoorPainting owns SCENERY_ISLANDS source crops/placements, sceneryProjection,
+  outdoorPainting and courtyardPainting. Crop boundaries lie in open alleys or
+  vegetation, leaving intact buildings inside their region; do not stretch whole
+  houses across regions or mirror clipped architecture to hide a seam. All current
+  outdoor paintings use world speed1; distant sky/skyline retain parallax.
+- NaturalGround.GROUND_SAMPLES selects opaque lane paving and bank source pixels.
+  Continuous ground repeats a mirrored1024px canvas at y558, contact560. The
+  top ten contact rows must stay fully opaque throughout the repeat. Its bottom
+  silhouette fades into underground darkness, while authored river gaps stay open.
+- COURTYARD_REGISTRATION maps source600 to collision560, preserving the upper
+  ledges' original y−20 registration through source535. Only the lower wall is
+  compressed. courtyardThreshold blends paving across13520–13720, never buildings.
+- Scenery timberStep supplies treehouse tread/posts/braces. masonry-stair supplies
+  full risers for Eli's existing ledge coordinates, including cold permanent
+  return state and radial restored layer. These presentation functions add no
+  collision. Old Road doors use existing stonePassage with unchanged interactions.
+- World terminal walls at90 and17405 stop the narrow body before the full155px
+  painted player frame leaves the map; resulting centres115..17380 retain the
+  final view objective. All other collision, quest and save contracts are unchanged.
+
 ## Post-bridge completion — 18 Oct (latest)
 
 - `TestRoutes.js`: `TEST_ROUTES`, `testRunFor(code)` create isolated prerequisite

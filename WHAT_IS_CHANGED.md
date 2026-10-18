@@ -1,5 +1,27 @@
 # What is changed — cumulative iteration history
 
+## 18 October 2026 — full-map scenery joins and grounded movement
+
+- Rebuilt outdoor scenery from complete architectural sections separated by open
+  alleys/vegetation. Removed clipped/mirrored house halves at region edges and
+  stopped Act2 playable architecture drifting independently of the ground.
+- Fixed repeating transparent ground/cliff samples and a one-pixel texture seam.
+  Continuous irregular cobbles, coherent banks and underground shadow replace
+  abrupt cliff chunks. Matched tower courtyard floor to collision without moving
+  its upper ledges; blended the approach's paving rather than overlapping houses.
+- Added wooden supports to treehouse treads, full masonry beneath final Eli stairs,
+  supplied stone passages for Old Road doors, and map-end collision matching full
+  Rowan frame bounds. Removed decorative court slabs/banners covering the fountain.
+  Reused supplied pixel assets; story, save, boss tuning and route rules preserved.
+-46 tests/build pass.50 overlapping day/night-state views inspected across17470px;
+  40 real ground crossing checks plus actual treehouse/courtyard/final stair jumps
+  pass. Invulnerable/unlocked fixtures isolate geometry, not natural campaign
+  acceptance. Terminal walls and map verified with real input. Detailed evidence
+  and limitations are in TEST-LOG. Human full campaign/artwork judgment remain.
+- Canonical http://127.0.0.1:4176/ frozen build index-m7zl5Hdr.js. Earlier post-bridge
+  implementation33a5401 is already pushed and in shared H:/projects/gameDev;
+  this iteration's publication/shared verification follows in STATUS.
+
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 

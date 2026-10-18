@@ -1,5 +1,44 @@
 # Test evidence
 
+## Latest — 18 Oct, full-map seams and ground contact
+
+Windows / installed Chrome / bundled Playwright (Browser plugin not available).
+Production4177 inspection, then canonical4176 index-m7zl5Hdr.js.46/46 Node tests
+and npm run build pass; existing Phaser bundle-size warning remains. No dependency
+change or generated images. Presentation sources reuse supplied pixel paintings.
+
+- Baseline and repaired map captured at25 overlapping positions, night and past
+  (50 views per pass) across all17470px. Inspected contact sheets and larger join
+  details, home, treehouse and final stairs. Static inspection fixtures froze
+  updates/physics and used an expanded restoration field to expose both variants;
+  they are not proof of normal memory timing or uninterrupted campaign traversal.
+- Actual D inputs crossed20 boundaries in each state (40 checks), including
+  both main/camp crossings, swing/canal return paths and region transitions.
+  Samples stayed559..561 with final feet560. Prerequisite fixtures and infinite
+  invulnerability intentionally isolate footing from story/combat. No claim of
+  natural-route completion from these fixtures. Prior connected route evidence
+  remains in the previous entry.
+- Real E fire + Space/D jumps reached treehouse500/440/380 and courtyard495/410/
+  300. Eli's permanent night steps reached485/415/345. No ledge endpoint teleport
+  substituted for these jump checks. Home variants visually inspected.
+- All1024 pixels across ten contact rows of each runtime path texture have
+  alpha255. First check found a one-pixel polygon closure gap; repaired and all
+  40 boundary walks/real ledge checks reran successfully. Two terminal A/D checks
+  stop at115/17380, feet560; full sprite bounds37.5..17457.5, view17315 reachable.
+- Terminal map check initially used the wrong scene name, then a zero-duration M
+  press missed the frame; corrected harness uses Pause and an80ms key press.
+  Map opens and no page errors. Tests do not add artificial gameplay input delay.
+- Temporary evidence: embers-map-audit-after.cjs (50 captures),
+  embers-map-audit-details.cjs (14 final details), embers-map-footing-check.cjs
+  (40 walks + jumps), embers-map-edge-check.cjs, map-final-sheet-*.jpg,
+  map-final-detail-*.png and map-final-treehouse-steps/court-ledge/eli-stairs-night.png.
+- Latest body-boundary test runs index-m7zl5Hdr.40-walk/climb proof predates only
+  projection metadata, court decorative cleanup, foliage silhouette, underground
+  shadow and terminal walls; those do not alter the tested route colliders.
+- Human remaining: fresh uninterrupted campaign, escort timing/retries, subjective
+  artwork continuity while moving, combat difficulty and listening. No perfection
+  or competition-readiness claim. Publication/shared verification recorded in STATUS.
+
 ## Latest — 18 Oct, connected post-bridge route and test tools
 
 Environment: Windows / installed Chrome, bundled Playwright because Browser plugin

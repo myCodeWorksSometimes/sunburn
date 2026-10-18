@@ -7,6 +7,7 @@ import { buildTowerStory, tickTowerStory, towerMemory } from './TowerStory.js';
 import { buildFiveHand } from './FiveHand.js';
 import { buildBridgeWorks, tickBridgeWorks } from './BridgeWorks.js';
 import { MARA_STALL } from './layout.js';
+import {stonePassage} from '../presentation/Act1Presentation.js';
 import { ACT2, buildAct2Art, tickAct2Art, dressSwingSeat, hasAct2Art } from './Act2Art.js';
 
 const point = (x, y = GROUND) => ({ x, y });
@@ -100,7 +101,7 @@ export function buildChapters(s) {
   painted(s.addSurface(...A3.crownLedge, { regionId: 'tower-crown', restoredOnly: true }));
   // Only the restored landing paints the stair to Eli, so its treads stay visible once raised.
   const eliReachable = () => run.relayCount === 3 && !!run.clearedEncounters['bell-warden'];
-  s.eliStairs = A3.eliSteps.map(([x1, x2, y]) => s.addSurface(x1, x2, y, { regionId: 'tower-crown', restoredOnly: true, permanent: eliReachable }));
+  s.eliStairs = A3.eliSteps.map(([x1, x2, y]) => s.addSurface(x1, x2, y, { regionId: 'tower-crown', restoredOnly: true, material:'masonry-stair', permanent: eliReachable }));
   // The gallery leads from Eli out to the open arches (CAMPAIGN Scene 14).
   s.eliStairs.push(painted(s.addSurface(...A3.gallery, { regionId: 'tower-crown', restoredOnly: true, permanent: () => eliReachable() || run.rescuedEli })));
   s.relaySprites = [];
@@ -137,7 +138,7 @@ export function buildChapters(s) {
       s.transferRemaining = 2000; s.player.frozen = true; s.player.setVelocity(0); s.player.cancelAction();
       s.memory.activate({ id: 'rescue-memory', regionId: 'tower-crown', duration: 10000 }); s.audio.cue('rescue');
     } });
-  placeProp(s, 'door', A3.oldRoadHome, GROUND, 75, 120);
+  stonePassage(s,A3.oldRoadHome,GROUND,75,120);
   s.homeRoadLabel = s.addLabel(A3.oldRoadHome, 395, 'OLD ROAD', '#d3bc91', 14).setVisible(run.rescuedEli);
   // The Old Road leads back to the Bridge Refuge, where Nia is waiting.
   s.addInteract({ id: 'old-road-home', x: A3.oldRoadHome, floor: GROUND, priority: 20, when: () => run.rescuedEli,

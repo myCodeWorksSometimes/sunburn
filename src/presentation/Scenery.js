@@ -3,6 +3,8 @@ import { paintedBridge } from './PaintedBridge.js';
 // Presentation follows collision; decorative art never adds physics bodies.
 export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = {}) {
   const width = x2 - x1, indoor = scene.scene.key === 'Hearth';
+  if(material==='masonry-stair')return masonryStair(scene,x1,x2,y,regionId);
+  if(!indoor&&regionId==='treehouse'&&y<550&&material==='stone')return timberStep(scene,x1,x2,y);
   if(!indoor&&material==='bridge')return paintedBridge(scene,x1,x2,y,regionId);
   if(!indoor&&y===560&&regionId&&!regionId.startsWith('tower-')&&material==='stone')return naturalGround(scene,x1,x2,y,regionId);
   if(!indoor&&material==='crate'&&x1<8800)return supplyLedge(scene,x1,x2,y);
@@ -44,6 +46,37 @@ export function surfaceArt(scene, x1, x2, y, { material = 'stone', regionId } = 
     }
   }
   return { block, edge };
+}
+
+function timberStep(s,x1,x2,y){
+  const key='treehouse-tread';
+  if(!s.textures.exists(key)){
+    const src=s.textures.get('prop_a2_treehouse_restored').getSourceImage();
+    const c=document.createElement('canvas');c.width=180;c.height=18;
+    c.getContext('2d').drawImage(src,src.width*.12,src.height*.675,src.width*.72,src.height*.035,0,0,180,18);
+    s.textures.addCanvas(key,c);
+  }
+  const block=s.add.container(x1,y).setDepth(10),edge=s.add.container(0,0).setDepth(11),w=x2-x1;
+  const supports=s.add.graphics();
+  supports.lineStyle(9,0x342a27).lineBetween(12,10,12,560-y).lineBetween(w-12,10,w-12,560-y);
+  supports.lineStyle(3,0x8d6740).lineBetween(10,10,10,560-y).lineBetween(w-14,10,w-14,560-y);
+  supports.lineStyle(5,0x57432d).lineBetween(12,20,w-12,560-y-3);
+  block.add([supports,s.add.tileSprite(0,0,w,18,key).setOrigin(0)]);
+  return {block,edge};
+}
+function masonryStair(s,x1,x2,y,regionId){
+  const block=s.add.container(x1,y).setDepth(10),edge=s.add.container(0,0).setDepth(11),w=x2-x1,h=560-y;
+  for(const state of ['dark','restored']){
+    const key=`tower-stair-${state}`;
+    if(!s.textures.exists(key)){
+      const src=s.textures.get(`bg_a3_landing_${state}`).getSourceImage();
+      const c=document.createElement('canvas');c.width=220;c.height=90;
+      c.getContext('2d').drawImage(src,245,470,220,90,0,0,220,90);s.textures.addCanvas(key,c);
+    }
+    const stone=s.add.tileSprite(0,0,w,h,key).setOrigin(0).setAlpha(state==='dark'?1:0);
+    block.add(stone);if(state==='restored')s.regionVisuals.get(regionId).push(stone);
+  }
+  return {block,edge};
 }
 
 export function addOutdoorAtmosphere(scene, width, { sky = true } = {}) {

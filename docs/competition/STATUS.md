@@ -1,5 +1,28 @@
 # Live implementation status
 
+## Latest integration — 18 Oct, full-map scenery and footing
+
+- Complete-building scenery islands replace cropped/overlapped house edges.
+  All playable architecture moves at world speed; only distant skyline/sky
+  parallax. Bridge/camp reuse complete arch/house/banks without joined halves.
+- Repaired continuous ground: opaque paving/bank samples, mirrored repeat with
+  no one-pixel transparent seam, irregular bottom and underground fade. Courtyard
+  painted floor now matches560 while every existing elevated ledge stays aligned.
+  Its approach blends paving only. Treehouse treads have wooden supports; Eli's
+  final stairs have full masonry risers. Native stone Old Road passages replace
+  flat mismatched doors. Removed court pillars that covered the fountain.
+- Ground movement remains unchanged except invisible terminal walls at90/17405:
+  Rowan stops with his complete painted frame on-screen, and the final view is
+  reachable. No story, save schema, quest prerequisites or combat tuning changed.
+-46/46 tests and production build pass.50 overlapping night/past screenshots
+  cover17470px;40 real-input ground boundary walks pass; real treehouse/courtyard/
+  Eli stair jumps pass. Fixtures unlock prerequisites/remove combat interference:
+  these are visual/footing checks, not fresh-campaign or difficulty acceptance.
+- Canonical http://127.0.0.1:4176/ serves frozen index-m7zl5Hdr.js,
+  snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-BCvGSl, Node PID14732.
+  Publication and shared-checkout verification are the remaining handoff step.
+  No active implementation claims; preserve unrelated draft/.stfolder/zip files.
+
 ## Latest integration — 18 Oct, post-bridge completion
 
 - Implemented: registered camp pit/crossing, painted bridge/deck/banks, cold night
@@ -20,7 +43,8 @@
   snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-cWb8SG, Node PID9984.
   Final painted-layer/physical main+camp crossing/map check passes. Production
   code/map/save/960px checks pass. Source changes cannot mutate the snapshot.
-  Owned4177/4178/4179/5173 servers stopped; only4176 remains. Publishing follows.
+  Owned4177/4178/4179/5173 servers stopped at that handoff. Published as33a5401;
+  shared H:/projects/gameDev fast-forwarded before the full-map revision above.
 - Codex implementation claim released at publication; previous Claude claim
   released by user. Preserve unrelated draft and H: .stfolder/backgrounds.zip. Full campaign,
   escort timing, subjective visuals/difficulty/audio remain human acceptance.

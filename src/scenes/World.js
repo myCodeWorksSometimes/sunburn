@@ -6,6 +6,7 @@ import { buildBackdrop, tickBackdrop, onPainting, isWhole } from '../presentatio
 import { cellarHatch, buildMarketCourt } from '../presentation/Act1Presentation.js';
 import { DistantPresence } from '../presentation/DistantPresence.js';
 import { Wayfinder } from '../systems/Wayfinder.js';
+import {courtyardThreshold} from '../presentation/NaturalGround.js';
 
 export class World extends Adventure {
   constructor() { super('World'); }
@@ -35,6 +36,10 @@ export class World extends Adventure {
     let cursor = 0;
     for (const gap of GAPS) { solidIntervals.push([cursor, gap.x1]); cursor = gap.x2; }
     solidIntervals.push([cursor, WORLD_WIDTH]);
+    // Fade real land into underground darkness, not the distant sky. Leave the
+    // authored river gaps clear so their water and banks remain readable.
+    const earth=this.add.graphics().setDepth(-7);
+    for(const [a,b]of solidIntervals)earth.fillGradientStyle(0x11101b,0x11101b,0x11101b,0x11101b,0,0,1,1).fillRect(a,620,b-a,100);
     for (const region of REGIONS) for (const [a, b] of solidIntervals) {
       const x1 = Math.max(a, region.x), x2 = Math.min(b, region.x + region.width);
       if (x2 <= x1) continue;
@@ -42,7 +47,11 @@ export class World extends Adventure {
       // A whole painting includes its own floor.
       if (isWhole(this, region)) { floor.block.setAlpha(0); floor.edge.setAlpha(0); }
     }
-    this.yardSurface = this.addSurface(YARD_GAP.x1, YARD_GAP.x2, GROUND, { restoredOnly: true, regionId: 'yard', material: 'timber', permanent: () => this.run.yardReturnOpen });
+    this.yardSurface = this.addSurface(YARD_GAP.x1, YARD_GAP.x2, GROUND, { restoredOnly: true, regionId: 'yard', material: 'bridge', permanent: () => this.run.yardReturnOpen });
+    // Match the house/last tower column rather than letting half of Rowan's
+    // painted frame leave the camera or walk through the terminal stonework.
+    this.addWall(90,GROUND,900).image.setVisible(false);
+    this.addWall(WORLD_WIDTH-65,GROUND,900).image.setVisible(false);
     // The deck only returns once the bridge works' brake is set (CAMPAIGN Scene 7).
     this.bridgeSurface = this.addSurface(BRIDGE_GAP.x1, BRIDGE_GAP.x2, GROUND, { restoredOnly: true, regionId: 'bridge', material: 'bridge', permanent: () => this.run.bridgeReturnOpen, requires: () => this.run.bridgeBrakeSet });
     this.addSurface(2060, 2240, 485, { material: 'crate' });
@@ -65,6 +74,7 @@ export class World extends Adventure {
     for (let n = 0; n < 12; n++) { const a = n * Math.PI / 6; ticks.lineBetween(face.x + Math.sin(a) * 19 * k, face.y + Math.cos(a) * 19 * k, face.x + Math.sin(a) * 23 * k, face.y + Math.cos(a) * 23 * k); }
     this.clockHand = this.add.rectangle(face.x, face.y, 2, 19 * k, 0xe2c594).setOrigin(0.5, 1).setDepth(-3);
     buildChapters(this);
+    courtyardThreshold(this);
     this.wayfinder=new Wayfinder(this);
   }
 

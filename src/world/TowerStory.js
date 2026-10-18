@@ -1,6 +1,6 @@
-import { placeProp } from '../presentation/Scenery.js';
 import { GROUND, TOWER_WINDOW as WIN, OLD_ROAD_EAST as EAST } from './layout.js';
 import { saveSession } from './WorldState.js';
+import {stonePassage} from '../presentation/Act1Presentation.js';
 
 // Campaign Scene 10 ("Three knocks"): Eli behind a lattice window high on the
 // tower, seen from the courtyard. Answering three knocks proves he is alive, not
@@ -45,7 +45,7 @@ export function buildTowerStory(s) {
       : { speaker: 'Eli', text: 'You’ll come back? Promise?' }) });
 
   // The Old Road's east door, released from the tower side.
-  const door = placeProp(s, 'door', EAST.door, GROUND, 80, 128).setTint(run.oldRoadOpen ? 0xffffff : 0x6d6878);
+  const door = stonePassage(s,EAST.door,GROUND,80,128).setTint(run.oldRoadOpen ? 0xffffff : 0x6d6878);
   s.addLabel(EAST.door, GROUND - 150, 'OLD ROAD', '#a59f9a', 13);
   const lever = s.add.graphics().setDepth(22);
   const drawLever = (pulled) => {

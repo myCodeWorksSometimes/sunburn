@@ -1,9 +1,9 @@
-// Parallax backdrop for the continuous World: a fixed sky, a slow looping
-// skyline, then registered Act 1/whole Act 3 paintings at world speed. Other
-// paintings retain their existing parallax. Playable architecture and props
-// share one coordinate system; only the distant layers drift behind them.
+// Only sky and distant skyline parallax. Every current region's architecture,
+// prop and walking plane shares world speed; historical fallback slots remain
+// below for archived/non-campaign paintings.
 import { GROUND } from '../world/layout.js';
 import { registeredPainting, isRegisteredRegion } from './Act1Presentation.js';
+import {sceneryProjection,courtyardPainting} from './OutdoorPainting.js';
 
 export const PAINTING_SPEED = 0.7;
 export const SKYLINE_SPEED = 0.25;
@@ -77,8 +77,7 @@ export function buildBackdrop(scene, regions) {
     if (isRegisteredRegion(r)) {
       const dark = scene.add.image(r.x-110, 0, registeredPainting(scene, r, 'dark')).setOrigin(0).setDepth(-5).setName(`scenery-${r.id}`);
       const past = scene.add.image(r.x-110, 0, registeredPainting(scene, r, 'restored')).setOrigin(0).setDepth(-4).setAlpha(0);
-      const scale = r.width / scene.textures.get(`bg_${r.art}_dark`).getSourceImage().width;
-      paintings.set(r.id, { x: r.x, y: GROUND - r.paintGround * scale, scale,
+      paintings.set(r.id, { ...sceneryProjection(r),
         art: r.art, width: r.width, dark, past, speed: 1, registered: true });
       return;
     }
@@ -118,8 +117,9 @@ function wholePainting(scene, r) {
   const dark = `bg_${r.art}_dark`, past = `bg_${r.art}_restored`;
   const tex = scene.textures.get(dark).getSourceImage();
   const scale = r.width / tex.width, x = r.x, y = GROUND - r.feet * scale;
-  const darkImage = scene.add.image(x, y, dark).setOrigin(0).setScale(scale).setDepth(-5).setName(`scenery-${r.id}`);
-  const pastImage = scene.add.image(x, y, past).setOrigin(0).setScale(scale).setDepth(-4).setAlpha(0);
+  const court=r.id==='tower-court';
+  const darkImage = scene.add.image(x, court?0:y, court?courtyardPainting(scene,'dark'):dark).setOrigin(0).setScale(scale).setDepth(-5).setName(`scenery-${r.id}`);
+  const pastImage = scene.add.image(x, court?0:y, court?courtyardPainting(scene,'restored'):past).setOrigin(0).setScale(scale).setDepth(-4).setAlpha(0);
   return { x, y, scale, art: r.art, width: r.width, dark: darkImage, past: pastImage, whole: true };
 }
 
