@@ -23,6 +23,7 @@ export class MemorySystem {
     if (!this.canActivate(fire)) return false;
     this.cancel('replaced');
     this.fire = { ...fire, x: fire.x ?? this.scene.player?.x ?? 0, floor: fire.floor ?? this.scene.player?.feet ?? 560 };
+    this.lastEndReason=null;
     this.phase = 'warming';
     this.elapsed = 0;
     this.remaining = fire.duration;
@@ -47,6 +48,7 @@ export class MemorySystem {
     this.remaining = 0;
     this.elapsed = 0;
     if (fire) {
+      this.lastEndReason=reason;
       // Phaser may already have released bodies/mask textures during shutdown.
       // A departing scene needs logical cleanup, not another presentation pass.
       if(reason!=='shutdown')this.scene.setMemoryVisual(fire.regionId, 0, false);

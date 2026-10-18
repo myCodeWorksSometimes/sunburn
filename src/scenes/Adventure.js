@@ -12,6 +12,7 @@ import { surfaceArt } from '../presentation/Scenery.js';
 import { panel } from '../presentation/ui.js';
 import { RestorationField } from '../systems/RestorationField.js';
 import { BossIntroduction } from '../systems/BossIntroduction.js';
+import { VoiceDirector } from '../systems/VoiceDirector.js';
 
 // Shared run mechanics for the continuous outdoors and the house interior.
 export class Adventure extends Phaser.Scene {
@@ -20,6 +21,7 @@ export class Adventure extends Phaser.Scene {
   setup(width, spawn) {
     this.run = getSession(this);
     this.dead = false; this.leaving = false; this.holdMs = 0; this.holdTarget = null;
+    this.activeBossHud=null;
     this.requireRelease = true; this.invulnerable = 600; this.regionId = '';
     this.resting = null; this.restMs = 0; this.requireRestRelease = true; this.noticeRemaining = 0;
     this.interactions = []; this.fires = []; this.enemies = []; this.surfaces = []; this.echoes = [];
@@ -27,6 +29,7 @@ export class Adventure extends Phaser.Scene {
     this.terrainLife = [];
     this.memory = new MemorySystem(this);
     this.audio = new AudioCues(this);
+    this.voices=new VoiceDirector(this);
     this.combat = new CombatSystem(this);
     this.cameras.main.setBackgroundColor('#11101b').setBounds(0, 0, width, 720);
     this.physics.world.setBounds(0, 0, width, 1200);
@@ -60,10 +63,10 @@ export class Adventure extends Phaser.Scene {
     this.timerText = this.add.text(640, 93, '', { ...style, fontSize: '19px' }).setOrigin(0.5).setScrollFactor(0).setDepth(110);
     this.timerTrack = this.add.rectangle(640, 117, 300, 5, 0x34303e).setScrollFactor(0).setDepth(110).setVisible(false);
     this.timerFill = this.add.rectangle(490, 117, 300, 5, 0xf5d28a).setOrigin(0, 0.5).setScrollFactor(0).setDepth(111).setVisible(false);
-    this.promptText = this.add.text(640, 570, '', { ...style, fontSize: '18px',lineSpacing:3,align: 'center', wordWrap: { width: 520 } }).setOrigin(0.5).setScrollFactor(0).setDepth(115);
-    this.promptPanel = panel(this, 640, 570, 600, 72, { depth: 114, alpha: .9 }).setVisible(false);
-    this.holdTrack = this.add.rectangle(640, 535, 180, 4, 0x34303e).setScrollFactor(0).setDepth(115).setVisible(false);
-    this.holdFill = this.add.rectangle(550, 535, 0, 4, 0xffd890).setOrigin(0, 0.5).setScrollFactor(0).setDepth(116).setVisible(false);
+    this.promptText = this.add.text(790, 160, '', { ...style, fontSize: '17px',lineSpacing:3,align: 'center', wordWrap: { width: 760 } }).setOrigin(0.5).setScrollFactor(0).setDepth(115);
+    this.promptPanel = panel(this, 790, 160, 500, 54, { depth: 114, alpha: .9 }).setVisible(false);
+    this.holdTrack = this.add.rectangle(790, 198, 180, 4, 0x34303e).setScrollFactor(0).setDepth(115).setVisible(false);
+    this.holdFill = this.add.rectangle(700, 198, 0, 4, 0xffd890).setOrigin(0, 0.5).setScrollFactor(0).setDepth(116).setVisible(false);
 
     this.keys = this.input.keyboard.addKeys({ use: 'E', pause: 'ESC', next: 'ENTER', attack: 'F', weapon:'X', oil: 'Q', inventory: 'I', rest: 'R', map: 'M', journal: 'J' });
     this.saveClock = 0;
@@ -167,6 +170,7 @@ export class Adventure extends Phaser.Scene {
     this.clearEchoes();
     const kid = this.add.sprite(points[0].x, points[0].y, 'brother').setOrigin(0.5, 1).setDepth(27).setTint(0xffe2a0).setAlpha(0.8).play('brother-run');
     this.echoes.push(kid);
+    this.voices.memoryLaugh();
     let previous = points[0];
     const tweens = points.slice(1).map((point, i) => {
       const duration = Math.hypot(point.x - previous.x, point.y - previous.y) / 220 * 1000;
@@ -275,7 +279,7 @@ export class Adventure extends Phaser.Scene {
       const spawn = this.getSpawn(this.run.checkpoint.spawnId);
       this.player.body.reset(spawn.x, spawn.y); this.player.setVelocity(0); this.player.frozen = false;
       this.player.play('hero-idle'); this.dead = false; this.invulnerable = 1400;
-      this.run.recover(); this.combat.hurtRemaining = 0; this.player.setAlpha(1);
+      this.run.recover(); this.combat.hurtRemaining = 0; this.player.setAlpha(1).clearTint();
       this.requireRelease = true; this.holdMs = 0; this.holdTarget = null;
       this.player.resetJump();
       this.enemies.forEach(e => e.active && e.resetEncounter());
@@ -368,7 +372,11 @@ export class Adventure extends Phaser.Scene {
     this.oilText.setText(`${this.run.oil} / ${BALANCE.oil}`);
     this.flameFill.width = 214 * this.run.flame / BALANCE.flame;
     this.flameFill.setFillStyle(this.run.flame < BALANCE.rememberCost ? 0xca805e : 0xf5b05b);
-    this.promptPanel.setVisible(!!this.promptText.text);
+    this.captions.layout();
+    const showPrompt=!this.captions.busy&&!this.activeBossHud?.visible;
+    this.promptText.setVisible(showPrompt);
+    this.promptPanel.setVisible(!!this.promptText.text&&showPrompt);
+    this.promptPanel.resizePanel(Math.min(820,Math.max(260,this.promptText.width+48)),Math.max(50,this.promptText.height+26));
     this.noticeRemaining = Math.max(0, this.noticeRemaining - delta);
     this.noticeText.setVisible(!this.captions.busy);
     if (!this.noticeRemaining) this.noticeText.setText('');

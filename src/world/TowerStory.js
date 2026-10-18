@@ -12,7 +12,7 @@ const FOUND_LINES = [
   { speaker: 'Rowan', text: 'Eli! You heard me. You’re really here.' },
   { speaker: 'Eli', text: 'I rang the bell so the shadows would follow me instead of them.' },
   { speaker: 'Eli', text: 'I thought I could get down after they left. I keep ending up back here.' },
-  { speaker: 'Rowan', text: 'Tomas was stuck like this. Mara brought him back with an ember from home.' },
+  { speaker: 'Rowan', text: 'Mara is only a memory. But you answered me. Our hearth still remembers you.' },
   { speaker: 'Rowan', text: 'I know what to bring. Wait for me.' },
 ];
 

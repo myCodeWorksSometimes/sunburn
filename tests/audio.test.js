@@ -43,3 +43,15 @@ test('completed clips and scene shutdown release all owned sound instances',()=>
   assert.equal(audio.effects.size,0);assert.equal(sweep.destroyed,true);
   assert.equal(audio.music.destroyed,true);assert.equal(audio.fire.destroyed,true);
 });
+
+test('boss event channels are distinct, distance-gated by caller and rate limited',()=>{
+  const {audio,sounds,scene}=setup();
+  audio.bossCue('fivehand','idle');assert.equal(sounds.at(-1).key,'audio-fivehand-idle');
+  const count=sounds.length;audio.bossCue('fivehand','idle');assert.equal(sounds.length,count);
+  audio.bossCue('fivehand','attack');assert.equal(sounds.at(-1).key,'audio-fivehand-attack');
+  audio.bossCue('braced','attack');assert.equal(sounds.at(-1).key,'audio-braced-attack');
+  audio.bossCue('warden','magic');assert.equal(sounds.at(-1).key,'audio-warden-magic');
+  audio.unlock();audio.pause();assert.ok([...audio.bossScores.values()].every(s=>s.isPaused));
+  audio.toggleMute();assert.ok([...audio.bossScores.values()].every(s=>s.mute));
+  audio.resume();scene.events.emit('shutdown');assert.ok([...audio.bossScores.values()].every(s=>s.destroyed));
+});

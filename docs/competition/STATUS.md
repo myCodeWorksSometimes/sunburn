@@ -1,5 +1,41 @@
 # Live implementation status
 
+## Latest handoff — 18 Oct, cinematic/boss/voice/tap feedback revision
+
+- Implemented: clear-ground compact captions/context prompts, adaptive gallery
+  layout, eight-second protected Mara bones→ash→wind farewell, retained slow echo
+  replays, distance-driven walk/climb frames across quick taps, Rowan recoil/audio.
+- Five-Hand has36 generated/reference-matched frames: idle/shuffle/leap/cast/
+  hurt-rage/projectile. First8s inactivity triggers leap/evade/return; second
+  abandons cards and combines physical/magic attacks. Both card and sword paths
+  defeat it; saved exit persists. Braced accepts damage in every phase/from both
+  sides without changing its AI; early kill still opens the barrier.
+-27 dedicated boss event clips,3 original dramatic32s scores,82 bundled synthetic
+  dialogue reads + Eli memory laugh. Six loops and temporary clips obey settings,
+  pause/mute/shutdown. Synthetic delivery needs human listening, not claimed final
+  performed acting. Credits/provenance and reproducible import/build tools updated.
+- Gear reach38, readable seized/aligned/locked feedback. Actual AAB/brake/cross
+  passed. Act2/3 short interaction checks reach Credits: treehouse jumps, drawing/
+  cup, canal wheel, three knocks, Old Road, hearth ember, three bells, Warden,
+  Eli remaining after expiry and the playable home answer. Human full route,
+  escort timing, difficulty and listening remain unperformed by the agent.
+-37 Node tests + production build pass. Chrome1280×720/960×540 checks passed
+  without page/asset errors. TEST-LOG.md records scope/evidence and harness fixes.
+  Longer human checklist: PLAYTEST-FEEDBACK.md. No full uninterrupted new-route
+  acceptance or award/readiness guarantee is claimed.
+- Canonical demo http://127.0.0.1:4176/ ; index-Dq6Q7rvH.js;
+  snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-rCZWB4, Node PID3960.
+  Source edits cannot mutate this copy. Temporary :4177 is stopped at publication.
+- User explicitly released the earlier Claude claim for this integration while
+  that developer is inactive. Corrected TowerStory's old Mara/Tomas ember line:
+  Mara is only a memory; Eli answers, and their hearth still remembers him. Its
+  actual voiced line plays. Act3 paintings/coordinates are preserved.
+- Integrator editing claim released at publication. Respect new teammate edits/
+  claims on resumption. Unrelated campaign draft and H: .stfolder/backgrounds.zip
+  stay untouched. Publication/shared-tree confirmation is in Git and TEST-LOG.
+- Run: npm ci (first setup), npm run dev -- --host 127.0.0.1. Release: npm test,
+  npm run build, npm run demo. WHAT_IS_CHANGED.md retains all previous iterations.
+
 ## Latest handoff — 18 Oct, Act 1 horror/combat and pixel UI
 
 - Implemented: physical dropped lantern/X sword/F slashes, faster animated
@@ -164,7 +200,7 @@ User explicitly requires a commit/push after each completed prompt. Root WHAT_IS
 
 Earlier baseline/core/polish evidence is retained chronologically in TEST-LOG.md; it does not certify the expanded build's full uninterrupted route.
 
-## Active scope — 18 Oct, Act 3 art wiring (Claude)
+## Historical claim — 18 Oct, Act 3 art wiring (Claude; released by user above)
 Owns Act 3 whole-area paintings: `tools/import_act3.py`, `bg_a3_*` assets, Act 3 region
 widths/coordinates (`A3`, RELAYS, tower fires/spawns, window, Old Road east) in layout,
 Act 3 blocks of Chapters/TowerStory/WorldState goals, whole-painting placement in

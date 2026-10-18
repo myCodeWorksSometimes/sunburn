@@ -39,6 +39,9 @@ export class Crawler extends Phaser.GameObjects.Sprite {
     if (!this.feral && this.kind === 'crawler' && p.x > this.maxX + 100) { this.disperse(); return; }
     const camera = scene.cameras.main;
     if (this.x < camera.scrollX + 35 || this.x > camera.scrollX + 1245) return;
+    if(this.kind==='warden'&&!scene.run.completedStory['intro-bell-warden']){
+      if(scene.cinematic.play({id:'bell-warden',name:'THE BELL WARDEN',subtitle:'The last thing between the brothers.',sprite:this,x:this.x,y:this.floor-70}))return;
+    }
     this.tell.setPosition(this.x, this.floor - 110);
     const sameLevel = Math.abs(p.feet - this.floor) < 60;
     const dx = p.x - this.x;
@@ -63,10 +66,12 @@ export class Crawler extends Phaser.GameObjects.Sprite {
     } else if (this.state === 'idle' && sameLevel && Math.abs(dx) < 350 && !scene.isSafe(p.x, p.feet)) {
       this.state = 'windup'; this.elapsed = 0; this.tell.setVisible(true);
       this.attackDirection = Math.sign(dx) || 1;
-      this.setTint(0xceb0e7); this.setFlipX(dx < 0); scene.audio.cue('notice');
+      this.setTint(0xceb0e7); this.setFlipX(dx < 0);
+      if(this.kind==='warden')scene.audio.bossCue('warden','windup');else scene.audio.cue('notice');
     } else if (this.state === 'windup' && this.elapsed > windup) {
       this.state = 'attack'; this.elapsed = 0; this.tell.setVisible(false); this.clearTint(); this.play('shadow-move');
       if(this.feral)scene.audio.cue('lunge');
+      if(this.kind==='warden')scene.audio.bossCue('warden','attack');
     } else if (this.state === 'attack') {
       const direction = this.feral ? this.attackDirection : this.kind === 'crawler' ? Math.sign(dx) : this.attackDirection;
       const speed = this.feral ? 440 : this.kind === 'pouncer' ? 330 : this.kind === 'warden' ? fast ? 280 : 210 : 135;
@@ -91,7 +96,7 @@ export class Crawler extends Phaser.GameObjects.Sprite {
     if (!this.alive) return;
     this.alive = false; this.state = 'dispersing'; this.tell.setVisible(false);
     this.scene.run.clearEncounter(this.id);
-    this.scene.audio.cue('monster-death');
+    if(this.kind==='warden')this.scene.audio.bossCue('warden','death');else this.scene.audio.cue('monster-death');
     if(!this.feral)this.play('shadow-dissolve');
     else {this.anims.stop();const dying={f:0};this.scene.tweens.add({targets:dying,f:5,duration:500,onUpdate:()=>this.active&&this.setTexture('boss-motion',30+Math.floor(dying.f))});}
     const dissolve = this.scene.add.sprite(this.x, this.floor - 25, 'fx_dissolve').setScale(.65).setDepth(28).play('fx-dissolve');
@@ -102,8 +107,9 @@ export class Crawler extends Phaser.GameObjects.Sprite {
   hit(direction) {
     if (this.kind === 'warden' && this.scene.run.relayCount < 3) { this.scene.notice('Ring all three bells to break the Warden’s wards.'); return false; }
     if (!this.alive || this.dormant) return false;
-    this.scene.audio.cue('monster-hit');
+    if(this.kind==='warden')this.scene.audio.bossCue('warden','hurt');else this.scene.audio.cue('monster-hit');
     this.health--;
+    if(this.kind==='warden'&&this.health===2)this.scene.audio.bossCue('warden','enrage');
     if (this.health <= 0) this.disperse();
     else {
       this.state = 'staggered'; this.elapsed = 0; this.tell.setVisible(false);

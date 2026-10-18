@@ -9,6 +9,11 @@ export function panel(scene, x, y, w, h, { depth = 100, fixed = true, alpha = .9
   container.add(plate);
   // Keep the painted frame, but quiet its central texture behind small text.
   container.add(scene.add.rectangle(0, 0, Math.max(1,w-32), Math.max(1,h-24), UI.ink, .88));
+  container.resizePanel = (width,height) => {
+    plate.setSize(width,height);
+    container.list[1].setSize(Math.max(1,width-32),Math.max(1,height-24));
+    return container;
+  };
   if(scene.textures.exists('ui-frame'))return container;
   const trim = scene.add.graphics().lineStyle(1, 0xd8b37b, .7);
   for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {

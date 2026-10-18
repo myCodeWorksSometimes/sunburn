@@ -1,5 +1,71 @@
 # Test evidence
 
+## Latest — 18 Oct, cinematic/moving-boss/voice feedback revision
+
+Environment: Windows, installed Chrome, production snapshots on127.0.0.1:4177;
+1280×720 and960×540. Browser plugin not available; regular bundled Playwright.
+User requests only short agent tests; extended runs/difficulty/listening remain
+human-owned. Runtime scripts and screenshots are outside Git in the OS temp dir.
+
+- `npm test`:37/37 pass, including new echo pacing, distinct boss clip hashes/
+  presence, voice manifest file resolution, boss cooldowns/loop lifecycle. Build
+  passes (standard Phaser chunk-size warning). Release bundle recorded below.
+- UI fixture at garden fire490: caption text bounds y237.5–258.5; measured frame
+  height52, prompt y140.5–179.5. Ground/Rowan unobstructed; prompt hidden during
+  dialogue. Visible supplied-font screenshot inspected. High platform feet345:
+  caption x513..1067, bottom165.5, clear of actor/resources;960 screenshot inspected.
+  Active Five-Hand HUD hides duplicate card prompt; scene restart clears ownership.
+- Mara: restored stall appears, natural-expiry fixture starts eight-second mode.
+  At~4s both layers hold skeleton frame2; cooldown remains~3983ms, physics paused.
+  I pause freezes manual cinematic elapsed and all6 loops. Resume reaches drifting
+  ash, then cleanup: Mara hidden, zero echo layers, zoom1, player/physics unfrozen.
+  Skeleton and wind screenshots inspected. Rowan is hidden during closeup so his
+  sprite cannot obscure her bones. Offscreen/combat guards inspected in source.
+- Actual W65ms taps: climb frames0,1,1,2,3,3 while feet647→576; actual D60ms taps
+  advance distinct walk frames instead of restarting zero. Releases stop velocity.
+- Five-Hand: actual first8s inactivity enters marked leap at clock~12.9s after
+  observation/shuffle; first evade/retreat resumes selection, second timeout
+  switches to physical phase and reaches magic. Final sheet test sees actual
+  shuffle frames11/6/8, rage>=27, cast22/projectile31. Normal card E + approach D
+  + F completes BOTH rounds and opens the exit. Physical phase uses the same
+  health target; a400ms guard prevents duplicate hit accounting while permitting
+  every valid520ms sword recovery. First-timeout HUD correctly asks for retreat.
+- Braced: actual front-facing F during windup takes3→2. Direct charge/summon
+  phase fixtures accept remaining hits; defeat clears barrier even without its
+  first impact. Actual E ignition, A,A,B inputs give gears0/0 and rotation0;
+  held E brake succeeds. Actual right movement crosses and secures return.
+- Rowan damage fixture: health3→2, hero-hurt animation active,360ms recoil timer,
+  audio-rowan-hurt owned/playing. Eli memory laugh is an actual cached voice clip
+  and plays underneath Rowan's current line. Synthetic spoken caption verified
+  playing, not just present in a manifest. Subjective delivery not certified.
+- Act2: three actual treehouse jumps land at500 then380; E finds drawing/cup.
+  Mill jump reaches upper439, held E opens canal; cancellation retains crossing.
+- Act3 fixtures: actual E three-knock exchange finds Eli; held E releases Old
+  Road; home E restoration + held E takes protected ember. Per-bell location
+  fixtures + restoration/held E record1,2,3. Warden intro runs, Enter returns
+  control; four actual F attacks defeat it. Final held E rescue leaves Eli
+  visible/alpha1 with memory idle and consumes only the quest ember. Home held E
+  sitting + answering E reaches Credits. This uses checkpoint/position fixtures,
+  not an uninterrupted route, full escort or human difficulty run.
+- Page identity/nonblank game, no framework overlay, screenshot evidence, actual
+  interaction proof, no page errors and no HTTP>=400 passed in these scripts.
+  Earlier harness retries fixed wrong-facing test input, unskipped intro, exact
+  ignition timing and fixture placement before restored ledges became solid;
+  those were test setup errors, not claimed gameplay fixes.
+
+The user then explicitly released the old Claude claim. TowerStory's Mara/Tomas
+resurrection sentence is corrected and its read regenerated. Stage geometry and
+paintings stay intact. PLAYTEST-FEEDBACK.md gives the user's six-stage longer
+checklist; do not mark human acceptance from these checks.
+
+Final additions: physical leap actually takes Rowan3→2; two actual X/F sword
+strikes defeat physical-phase Five-Hand. Corrected three-knock dialogue queue
+contains the new Mara-memory sentence and no old resurrection claim; its exact
+voice file b17537d9daae3b.ogg is cached and plays. Release build index-Dq6Q7rvH.js,
+37/37 tests, clean diff check (only existing CRLF notices). Canonical snapshot
+C:/Users/owner/AppData/Local/Temp/embers-playtest-rCZWB4 at4176, Node3960. Publication
+confirmation follows once Git push/shared fast-forward and entry smoke complete.
+
 ## Latest — 18 October 2026, Act 1 horror revision
 
 Tester: Codex integrator, Windows / installed Chrome, production snapshots on

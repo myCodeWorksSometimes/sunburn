@@ -55,9 +55,11 @@ export class CombatSystem {
     this.cancel(); s.cancelRest(true);
     s.run.takeDamage(); s.invulnerable = BALANCE.damageImmunity;
     if (!s.run.health) { s.die('health'); return true; }
-    this.hurtRemaining = 170; this.knockback = s.player.x >= sourceX ? 170 : -170;
+    this.hurtRemaining = 360; this.knockback = s.player.x >= sourceX ? 170 : -170;
     s.player.frozen = true; s.player.setVelocityX(this.knockback);
-    s.audio.cue('notice'); s.notice('Hit — find an opening, or retreat to a fire.');
+    s.player.play(s.player.swordDrawn?'sword-hurt':'hero-hurt');
+    s.player.setTint(0xe5a4a0);s.cameras.main.shake(140,.003);
+    s.audio.cue('rowan-hurt');
     return true;
   }
 
@@ -71,7 +73,7 @@ export class CombatSystem {
     if (this.hurtRemaining > 0) {
       this.hurtRemaining = Math.max(0, this.hurtRemaining - delta);
       s.player.setVelocityX(this.knockback);
-      if (!this.hurtRemaining && !s.dead && s.transferRemaining == null && !s.resting) s.player.frozen = false;
+      if (!this.hurtRemaining && !s.dead && s.transferRemaining == null && !s.resting){s.player.frozen = false;s.player.clearTint();}
     }
     if (!this.attack) return;
     this.attack.elapsed += delta;

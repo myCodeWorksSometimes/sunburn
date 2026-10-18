@@ -15,7 +15,7 @@ export class Credits extends Phaser.Scene {
     this.add.sprite(690, 360, 'brother').setOrigin(0.5, 1).play('brother-idle');
     this.add.image(636, 320, 'glow').setScale(0.7).setAlpha(0.6).setBlendMode('ADD');
     text(415, 'The night remains. Eli is here.', 24, '#f5d28a');
-    text(485, 'Created by the Sunburn team · Phaser and Vite\nSupplied world / hero art · AI-assisted pixel UI, stall and boss poses\nCC0 audio: qubodup / yd · Ogrebane · rubberduck · AntumDeluge\nFull source and license details: audio/LICENSES.md', 15);
+    text(485, 'Created by the Sunburn team · Phaser and Vite\nSupplied world / hero art · AI-assisted pixel UI and creature animation\nCC0 effects: Ogrebane · rubberduck · AntumDeluge\nOriginal boss scores · Bundled synthetic character dialogue\nSources and processing: audio/LICENSES.md · voices/README.md', 15);
     text(590, '[ Enter ]  Return to title', 22).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.scene.start('Title'));
     this.input.keyboard.once('keydown-ENTER', () => this.scene.start('Title'));
     document.getElementById('game-status')?.replaceChildren('Adventure complete. Eli is rescued. Enter returns to title.');

@@ -4,6 +4,7 @@ import { FONT } from '../systems/Captions.js';
 import { getSession } from '../world/WorldState.js';
 import { createPresentationTextures } from '../presentation/textures.js';
 import { prepareProductionAssets } from '../presentation/productionAssets.js';
+import { BOSS_AUDIO_FILES } from '../systems/BossAudio.js';
 
 const BACKGROUNDS = [
   'bg_title_screen', 'cut_01_before', 'cut_02_sun_breaks', 'cut_03_meteors',
@@ -24,10 +25,16 @@ export class Boot extends Phaser.Scene {
     this.load.on('progress', (p) => (bar.width = 400 * p));
     for (const name of ['score','fire','step-stone','step-wood','knock','door','impact','take','sweep','monster-roar','monster-hit','monster-death']) this.load.audio(`audio-${name}`, `audio/${name}.ogg`);
     for(const name of ['stalk','snarl','lunge','summon','blade','machinery','memory-surge','memory-break','bossbed','step-wet'])this.load.audio(`audio-${name}`,`audio/${name}.ogg`);
+    for(const name of BOSS_AUDIO_FILES)this.load.audio(`audio-${name}`,`audio/${name}.ogg`);
+    this.load.json('voice-manifest','voices/manifest.json');
+    this.load.once('filecomplete-json-voice-manifest',(_key,_type,lines)=>{
+      for(const path of new Set(Object.values(lines)))this.load.audio(`voice-${path.split('/').at(-1).replace('.ogg','')}`,path);
+    });
     this.load.image('production-ui','art/production/ui-atlas.png');
     this.load.image('production-stall','art/production/mara-stall.png');
     this.load.image('production-bosses','art/production/boss-atlas.png');
     this.load.spritesheet('boss-motion','art/production/boss-motion.png',{frameWidth:256,frameHeight:256});
+    this.load.spritesheet('fivehand-motion','art/production/fivehand-motion.png',{frameWidth:384,frameHeight:256});
     this.load.spritesheet('sword-motion','art/production/sword-motion.png',{frameWidth:155,frameHeight:110});
     this.load.spritesheet('echo-motion','art/production/echo-motion.png',{frameWidth:96,frameHeight:112});
     this.load.image('foundry','art/production/foundry.png');

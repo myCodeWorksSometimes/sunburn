@@ -23,6 +23,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.landedAt = 0;
     this.lastGrounded = -1000;
     this.jumpQueuedAt = -1000;
+    this.stride=0;this.climbStride=0;
 
     const kb = scene.input.keyboard;
     this.keys = kb.addKeys({
@@ -98,6 +99,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(0);
       return;
     }
+    if(this.frozen){this.setVelocityX(0);return;}
     const i = this.frozen ? {} : this.readInput();
     const onGround = this.body.blocked.down || this.body.touching.down || this.rampGround;
     const now = this.scene.time.now;
@@ -116,8 +118,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       } else if ((i.left || i.right) && !i.up && !i.down && (this.feet <= l.top + 4 || this.feet >= l.bottom - 4)) {
         this.stopClimb();
       }
-      if (vy) this.play('hero-climb', true);
-      else { this.anims.stop(); this.setTexture('hero_climb', 0); }
+      // Distance-based gait survives rapid key releases; restarting the animation
+      // at frame zero on each tap made Rowan slide up the wall.
+      this.anims.stop();
+      if(vy)this.climbStride+=Math.abs(vy)*Math.min(50,this.scene.game.loop.delta)/1000;
+      this.setTexture('hero_climb',Math.floor(this.climbStride/20)%this.scene.anims.get('hero-climb').frames.length);
       return;
     }
 
@@ -162,7 +167,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.swordDrawn)this.setTexture('sword-motion',8);
         else this.setTexture('hero_jump', 4);
       } else if (vx) {
-        this.play(this.swordDrawn&&this.scene.anims.exists('sword-walk')?'sword-walk':'hero-walk', true);
+        this.stride+=Math.abs(vx)*Math.min(50,this.scene.game.loop.delta)/1000;
+        this.anims.stop();
+        this.setTexture(this.swordDrawn?'sword-motion':'hero_walk',(this.swordDrawn?8:0)+(1+Math.floor(this.stride/22))%(this.swordDrawn?8:6));
       } else {
         this.play(this.swordDrawn&&this.scene.anims.exists('sword-idle')?'sword-idle':'hero-idle', true);
       }

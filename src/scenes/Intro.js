@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { Captions, FONT } from '../systems/Captions.js';
+import {VoiceDirector} from '../systems/VoiceDirector.js';
 
 // Meteor corruption, followed by the last ordinary afternoon's remembered world.
 const SHOTS = [
@@ -21,6 +22,7 @@ export class Intro extends Phaser.Scene {
 
   create() {
     this.done = false;
+    this.voices=new VoiceDirector(this);
     const { width, height } = this.scale;
     this.captions = new Captions(this);
     this.add.text(width - 20, 20, '[Enter] skip', { fontFamily: FONT, fontSize: '16px', color: '#8a7a6a' }).setOrigin(1, 0).setDepth(200);

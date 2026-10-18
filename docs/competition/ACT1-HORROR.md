@@ -64,6 +64,11 @@ route, every boss cycle, subjective scariness or complete escort timing.
 
 ## Teammate-owned narrative follow-up
 
+Resolved in the later feedback revision: the user explicitly released the Claude
+claim. TowerStory now says “Mara is only a memory. But you answered me. Our hearth
+still remembers you.” Its spoken read is regenerated. The older handoff below is
+retained as history, not pending work.
+
 Do not revert the other developer's Act3 work. `src/world/TowerStory.js` still has
 the earlier Rowan sentence: “Tomas was stuck like this. Mara brought him back
 with an ember from home.” Its owner should replace it with an Eli-specific line

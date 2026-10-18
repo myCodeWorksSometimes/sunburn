@@ -1,19 +1,17 @@
 import { panel } from '../presentation/ui.js';
-// Bottom-of-screen story captions with a typewriter effect.
+// Compact upper-band captions keep the playable floor and actors unobstructed.
 
 export const FONT = '"Pixelify Sans", sans-serif';
 
 export class Captions {
   constructor(scene, depth = 100) {
     this.scene = scene;
-    const { width, height } = scene.scale;
-    // The cellar's walk line is y650: bottom captions would hide its pickups,
-    // hands and feet. Give the interior a clear upper caption band instead.
-    const captionY = scene.scene.key === 'Hearth' ? 260 : height - 70;
-    this.box = panel(scene,width/2,captionY,width-240,86,{depth,alpha:.95}).setAlpha(0);
+    const { width } = scene.scale;
+    const captionY = 248;
+    this.box = panel(scene,width/2,captionY,800,54,{depth,alpha:.92}).setAlpha(0);
     this.text = scene.add
-      .text(190, captionY, '', { fontFamily: FONT, fontSize: '21px', color: '#f3e6d0', align: 'left', resolution:2, fixedWidth:900, lineSpacing:6, wordWrap: { width: 900 } })
-      .setOrigin(0,0.5)
+      .text(width/2, captionY, '', { fontFamily: FONT, fontSize: '20px', color: '#f3e6d0', align: 'center', resolution:2, lineSpacing:3, wordWrap: { width: 850 } })
+      .setOrigin(.5,0.5)
       .setScrollFactor(0)
       .setDepth(depth + 1);
     this.queue = [];
@@ -21,12 +19,21 @@ export class Captions {
   }
 
   // lines: string | { text, speaker?, hold? }
+  layout() {
+    // High galleries and scaffold actors must also stay clear of subtitles.
+    // The right-hand upper lane leaves the resources panel unobstructed.
+    const high=this.scene.player?.feet<410;
+    this.box.setPosition(high?790:640,high?155:248);
+    this.text.setPosition(this.box.x,this.box.y);
+  }
+
   say(...lines) {
     for (const l of lines) this.queue.push(typeof l === 'string' ? { text: l } : l);
     if (!this.busy) this.next();
   }
 
   clear() {
+    this.scene.voices?.stop();
     this.queue = [];
     this.timer?.remove();
     this.typer?.remove();
@@ -46,8 +53,13 @@ export class Captions {
     this.scene.tweens.killTweensOf([this.box, this.text]);
     const full = line.speaker ? `${line.speaker}: ${line.text}` : line.text;
     this.full = full;
+    this.layout();
+    // Measure the complete line once; typewriter never makes the frame jitter.
+    this.text.setText(full);
+    this.box.resizePanel(Math.min(910,Math.max(270,this.text.width+48)),Math.max(52,this.text.height+28));
     this.text.setText('').setAlpha(1).setColor(line.color || '#f3e6d0');
     this.box.setAlpha(.95);
+    const voiceMs=this.scene.voices?.speak(line)??0;
     let i = 0;
     this.typer = this.scene.time.addEvent({
       delay: 28,
@@ -55,7 +67,7 @@ export class Captions {
       callback: () => this.text.setText(full.slice(0, ++i)),
     });
     const hold = line.hold ?? 1400 + full.length * 45;
-    this.timer = this.scene.time.delayedCall(full.length * 28 + hold, () => this.next());
+    this.timer = this.scene.time.delayedCall(Math.max(full.length * 28 + hold,voiceMs+400), () => this.next());
   }
 
   advance() {

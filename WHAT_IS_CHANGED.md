@@ -3,6 +3,48 @@
 Keep this file cumulative. Each completed prompt adds a dated iteration with
 implemented work, validation and remaining limits. Preserve prior entries.
 
+## 18 October 2026 — cinematic echoes, moving bosses, voiced campaign and tap gait
+
+- Replaced ground-covering dialogue/prompt boxes with measured compact upper
+  captions and contextual controls. High platforms use a separate upper lane;
+  dialogue and boss HUD suppress redundant prompt boxes. Restart clears HUD owner.
+- Mara now drains to bones, holds the skeleton, collapses and blows away over8s.
+  First nearby natural expiry is protected/skippable; pause freezes it. Offscreen,
+  combat, rest, death and replacement do not force a camera takeover. Other echo
+  replays also dissolve slowly; the stall remains ruined after restoration.
+- Uploaded actual boss/hero sprites to the user-authorised ChatGPT asset chat;
+  imported a reference-matched36-frame Five-Hand sheet including independent
+  projectile frames. Kept the exact prompt/source and reproducible silhouette
+  packing. Added visible idle, hand shuffle, leap, casting, hurt/rage states.
+- Five-Hand leaps after8s of inactivity at card selection; first evade/retreat
+  returns it to the perch. Second timeout removes cards and combines physical
+  leaps and magic. Normal two-round card solution remains playable. Death resets
+  the whole attempt; saved victory remains. Moving damage/VFX track the actor.
+- Braced now takes damage in every phase/from either side, keeping its attacks,
+  summons and tendrils. Defeat opens the barrier even before a first charge.
+  Increased lever/brake interaction reach, added seized/aligned/locked feedback;
+  actual A,A,B + hold brake + crossing passed.
+- Added27 dedicated boss event edits,3 distinct original32s minor-key scores,
+  Rowan impact/recoil animation,82 bundled synthetic dialogue reads and an Eli
+  memory laugh. Boss voice overlap is bounded; music fades between encounters.
+  All loops/clips follow pause/mute/volume/shutdown. These are synthetic reads,
+  not claimed final emotional voice acting; listening judgment stays human-owned.
+- Fixed tap-driven sliding: walk/climb frames advance by distance and retain
+  their phase between releases. Repeated W climb and D walking taps passed.
+- Rechecked Act2/3 critical interactions: real treehouse jumps, drawing/cup,
+  mill ledge/wheel, permanent canal, three knocks, Old Road, unique hearth ember,
+  three bells, Warden intro/four hits, Eli remaining after expiry, home-to-credits.
+  Short independent fixtures/input sequences passed; no uninterrupted new-route
+  playthrough or subjective difficulty/audio acceptance is claimed.
+-37 Node tests + production build pass. Chrome1280×720/960×540 checks passed,
+  with no page errors or failed assets. Full evidence: docs/competition/TEST-LOG.md.
+  Human route/listening checklist: docs/competition/PLAYTEST-FEEDBACK.md.
+- User released the previous Claude claim during integration. Corrected the
+  TowerStory Mara/Tomas ember contradiction and regenerated its spoken line:
+  Mara is only a memory; Eli answers, and their hearth still remembers him.
+  Preserved Act3 paintings/geometry. Unrelated campaign draft and H: Syncthing/zip
+  files are not part of this commit.
+
 ## 18 October 2026 — Act 1 horror combat, memories and pixel presentation
 
 - Added X sword draw/retrieval and F sword combat. Rowan sets the lantern down;

@@ -24,6 +24,24 @@ export function prepareProductionAssets(scene) {
 }
 
 export function paintedBoss(scene, kind, x, floor, height) {
+  if(kind==='fivehand'&&scene.textures.exists('fivehand-motion')){
+    const sprite=scene.add.sprite(x,floor,'fivehand-motion',0).setOrigin(.5,1).setDepth(22);
+    sprite.pose=index=>sprite.setFrame([0,0,14,24][index]??0);
+    sprite.animateState=(state,elapsed,clock=elapsed)=>{
+      let frame;
+      if(state==='leap-tell')frame=12+Math.min(1,Math.floor(elapsed/425));
+      else if(state==='leap')frame=14+Math.min(3,Math.floor(elapsed/175));
+      else if(['magic-tell','punish'].includes(state))frame=18+Math.min(2,Math.floor(elapsed/300));
+      else if(state==='magic-cast')frame=21+Math.floor(elapsed/180)%3;
+      else if(state==='hunt-recover'||state==='hurt')frame=24+Math.min(2,Math.floor(elapsed/180));
+      else if(state==='enrage')frame=27+Math.min(2,Math.floor(elapsed/350));
+      else if(state==='shuffle')frame=6+Math.floor(clock/145)%6;
+      else if(state==='returning')frame=14+Math.floor(elapsed/150)%4;
+      else frame=Math.floor(clock/160)%6;
+      return sprite.setFrame(frame);
+    };
+    return sprite;
+  }
   if(kind==='braced'&&scene.textures.exists('boss-motion')){
     const sprite=scene.add.sprite(x,floor,'boss-motion',0).setOrigin(.5,1).setDepth(22);
     sprite.pose=()=>sprite;

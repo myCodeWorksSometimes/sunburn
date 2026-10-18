@@ -82,7 +82,7 @@ export function buildBridgeWorks(s) {
       m.restorationImmune=true;minions.push(m);s.enemies.push(m);
       const fx=s.add.sprite(x,GROUND-25,'fx_dissolve').setDepth(28).play('fx-dissolve');fx.once('animationcomplete',()=>fx.destroy());
     }
-    s.audio.cue('summon');s.cameras.main.shake(200,.003);
+    s.audio.bossCue('braced','magic');s.cameras.main.shake(200,.003);
   };
 
 
@@ -104,21 +104,21 @@ export function buildBridgeWorks(s) {
     summonClock+=delta;
     if(s.run.heardTomas&&p.x>BW.arenaMin-60&&p.x<BW.barrier+120&&!s.run.completedStory['intro-braced-shadow']) {
       if(s.cinematic.play({id:'braced-shadow',name:'THE BRACED SHADOW',subtitle:'Break the charge. Strike the exposed heart.',sprite,x:elite.x,y:GROUND-100,
-        onComplete:()=>s.audio.cue('monster-roar')}))return;
+        onComplete:()=>s.audio.bossCue('braced','idle')}))return;
     }
     hud.update(p.x>BW.arenaMin-90&&p.x<BW.barrier+30,elite.health,3,
-      elite.state==='stunned'?(elite.hitUsed?'Retreat · the darkness is gathering':'Exposed back · F'):elite.state==='lash'?'Tendril strike · move sideways':elite.state==='summon'?'Summoning · cut down its spawn':elite.state==='windup'?'Charge incoming · jump or use the ledge':elite.health===1?'Enraged · bait the charge':'Lure it into the cracked barrier');
+      elite.state==='stunned'?'Staggered · strike with F':elite.state==='lash'?'Tendril strike · move sideways':elite.state==='summon'?'Summoning · cut down its spawn':elite.state==='windup'?'Charge incoming · jump or use the ledge':elite.health===1?'Enraged · keep moving and strike':'F · strike at any time · evade the charge');
     elite.elapsed += delta;
     const sameLevel = Math.abs(p.feet - GROUND) < 60;
     perchClock=!sameLevel&&p.feet<GROUND&&p.feet>GROUND-220?perchClock+delta:0;
     const dx = p.x - elite.x;
     if (elite.state === 'idle') {
       elite.facing = Math.sign(dx) || elite.facing;
-      if(perchClock>1400){elite.lashX=p.x;go('lash');tell.setText('!').setVisible(true);s.audio.cue('snarl');}
-      else if(summonClock>8500&&minions.filter(m=>m.active&&m.alive).length<2){go('summon');tell.setText('◊').setVisible(true);s.audio.cue('snarl');}
+      if(perchClock>1400){elite.lashX=p.x;go('lash');tell.setText('!').setVisible(true);s.audio.bossCue('braced','windup');}
+      else if(summonClock>8500&&minions.filter(m=>m.active&&m.alive).length<2){go('summon');tell.setText('◊').setVisible(true);s.audio.bossCue('braced','magic');}
       // Only once Rowan is inside the arena (never while held at the refuge).
       else if (sameLevel && Math.abs(dx) < 900 && p.x > BW.arenaMin + 10 && run.heardTomas) {
-        elite.chargeDir = elite.facing; go('windup'); tell.setVisible(true); sprite.setTint(0xceb0e7); s.audio.cue('notice');
+        elite.chargeDir = elite.facing; go('windup'); tell.setVisible(true); sprite.setTint(0xceb0e7); s.audio.bossCue('braced','windup');
       }
     } else if(elite.state==='lash') {
       if(elite.elapsed>1050){perchClock=0;tell.setVisible(false);go('recover');}
@@ -126,13 +126,13 @@ export function buildBridgeWorks(s) {
       if(elite.elapsed>1250){summon();summonClock=0;tell.setText('!').setVisible(false);go('recover');}
     } else if (elite.state === 'windup') {
       tell.setAlpha(0.5 + Math.abs(Math.sin(elite.elapsed / 90)) * 0.5);
-      if (elite.elapsed > WINDUP_MS*(elite.health===1 ? .72 : 1)) { go('charge'); tell.setVisible(false); sprite.clearTint(); elite.hitDealt = false;s.audio.cue('monster-roar'); }
+      if (elite.elapsed > WINDUP_MS*(elite.health===1 ? .72 : 1)) { go('charge'); tell.setVisible(false); sprite.clearTint(); elite.hitDealt = false;s.audio.bossCue('braced','attack'); }
     } else if (elite.state === 'charge') {
       elite.x += elite.chargeDir * CHARGE_SPEED * (elite.health===1?1.25:1) * delta / 1000;
       if (elite.chargeDir > 0 && elite.x >= BW.barrier - 42) {
         // Slams into the barrier: it breaks, and the elite is stunned facing it.
         elite.x = BW.barrier - 42; go('stunned');
-        elite.hitUsed=false;sprite.setTint(0xffb276); s.cameras.main.shake(220, 0.006); s.audio.cue('impact');
+        elite.hitUsed=false;sprite.setTint(0xffb276); s.cameras.main.shake(220, 0.006); s.audio.bossCue('braced','stagger');
         if (!barrier.broken) {
           setBarrier(true);
           s.story('braced-barrier', { text: 'The barrier splinters. Its back is open — strike it!', color: '#ebd5b0' });
@@ -155,13 +155,12 @@ export function buildBridgeWorks(s) {
 
   elite.hit = (dir) => {
     if (!elite.alive) return false;
-    // Only its back is open, and only while stunned against the barrier.
-    const fromBehind = Math.sign(s.player.x - elite.x) === -elite.facing;
-    if (elite.state !== 'stunned' || !fromBehind || elite.hitUsed) {
-      s.notice('Its braced front turns the light aside. Bait it into the barrier.'); s.audio.cue('notice');
-      return false;
-    }
-    elite.health--;elite.hitUsed=true;s.audio.cue('monster-hit');
+    // User accessibility revision: every phase and either side can be damaged.
+    // A short hit guard prevents one slash from counting twice, without altering AI.
+    if((elite.hurtUntil??0)>s.time.now)return false;
+    elite.hurtUntil=s.time.now+400;
+    elite.health--;s.audio.bossCue('braced','hurt');
+    if(elite.health===1)s.audio.bossCue('braced','enrage');
     sprite.setTint(0xffffff); s.time.delayedCall(120, () => elite.alive && sprite.setTint(0xffb276));
     if (elite.health <= 0) defeat();
     return true;
@@ -169,11 +168,12 @@ export function buildBridgeWorks(s) {
 
   const defeat = () => {
     elite.alive = false; elite.state = 'gone';
+    setBarrier(true); // beating it before its first charge must still open the road
     setSeals(false);
     aura.setVisible(false);sigil.clear();
     clearMinions();smoke.stop();sprite.animateState?.('death',0);
     run.clearEncounter('braced-shadow');
-    hud.update(false,0,3,'');s.audio.cue('monster-death');
+    hud.update(false,0,3,'');s.audio.bossCue('braced','death');
     const fx = s.add.sprite(elite.x, GROUND - 20, 'fx_dissolve').setScale(0.7).setDepth(28).play('fx-dissolve');
     fx.once('animationcomplete', () => fx.destroy());
     const dying={t:0};s.tweens.add({targets:dying,t:1200,duration:1200,onUpdate:()=>sprite.animateState?.('death',dying.t),onComplete:()=>{sprite.setVisible(false);label.setVisible(false);}});
@@ -184,7 +184,7 @@ export function buildBridgeWorks(s) {
   };
   elite.resetEncounter = () => {
     if (!elite.alive) return;
-    elite.x = BW.elite; elite.health = 3; elite.facing = -1;elite.hitUsed=false; go('idle');
+    elite.x = BW.elite; elite.health = 3; elite.facing = -1;elite.hitUsed=false;elite.hurtUntil=0; go('idle');
     clearMinions();summonClock=0;perchClock=0;
     setSeals(false);
     sprite.clearTint().pose(1); tell.setVisible(false);
@@ -202,6 +202,7 @@ export function buildBridgeWorks(s) {
     return s.add.container(data.x,data.y,[image,mark]).setDepth(11);
   };
   const big=gear(BW.bigGear,'gear-large'),small=gear(BW.smallGear,'gear-small');
+  const gearStatus=s.addLabel((BW.leverA+BW.brake)/2,GROUND-265,'','#d9c294',15);
   // Fixed targets: a white arrow above each gear.
   const targets = s.add.graphics().setDepth(11).fillStyle(0xf3ead8);
   for (const g of [BW.bigGear, BW.smallGear]) targets.fillTriangle(g.x - 7, g.y - g.r - 22, g.x + 7, g.y - g.r - 22, g.x, g.y - g.r - 10);
@@ -213,6 +214,7 @@ export function buildBridgeWorks(s) {
   const showGears = () => {
     const alive = s.memory.isRestoredAt('bridge',BW.bigGear.x,BW.bigGear.y) || run.bridgeBrakeSet;
     big.setAlpha(alive ? 1 : 0.6); small.setAlpha(alive ? 1 : 0.6);
+    gearStatus.setText(run.bridgeBrakeSet?'BRAKE LOCKED':!alive?'REMEMBER THE BRIDGE FIRE':gears.big===0&&gears.small===0?'ALIGNED · HOLD E AT BRAKE':`A: BOTH · B: SMALL\n${gears.big===0?'◆':'◇'} LARGE   ${gears.small===0?'◆':'◇'} SMALL`);
   };
   setRotations(); showGears();
   s.addLabel(BW.leverA, GROUND - 108, 'A', '#e8d6b4', 14);
@@ -242,9 +244,9 @@ export function buildBridgeWorks(s) {
     turnTo(small,gears.small,-1);if(which==='A')turnTo(big,gears.big);
   };
   const inBay = () => eliteCleared() && barrier.broken && !run.bridgeBrakeSet;
-  s.addInteract({ id: 'bridge-lever-a', x: BW.leverA, floor: GROUND, range: 24, priority: 7, when: inBay, label: 'E: lever A — turns both gears', use: () => turn('A') });
-  s.addInteract({ id: 'bridge-lever-b', x: BW.leverB, floor: GROUND, range: 24, priority: 7, when: inBay, label: 'E: lever B — turns the small gear', use: () => turn('B') });
-  s.addInteract({ id: 'bridge-brake', x: BW.brake, floor: GROUND, range: 24, priority: 7, hold: 600, when: inBay, label: 'Hold E: set the brake',
+  s.addInteract({ id: 'bridge-lever-a', x: BW.leverA, floor: GROUND, range: 38, priority: 7, when: inBay, label: 'E: lever A — turns both gears', use: () => turn('A') });
+  s.addInteract({ id: 'bridge-lever-b', x: BW.leverB, floor: GROUND, range: 38, priority: 7, when: inBay, label: 'E: lever B — turns the small gear', use: () => turn('B') });
+  s.addInteract({ id: 'bridge-brake', x: BW.brake, floor: GROUND, range: 38, priority: 7, hold: 600, when: inBay, label: 'Hold E: set the brake',
     use: () => {
       if(turning)return;
       if(!s.memory.isRestoredAt('bridge',BW.brake,GROUND-30)){s.notice('Restore the bridge fire to engage the brake.');return;}

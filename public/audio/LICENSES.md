@@ -43,3 +43,29 @@ Additional horror revision files (same CC0 packs and release pages above):
 
 Reproducible processing: tools/build_horror_audio.py. Downloaded raw packs are
 ignored source material, not included in the shipped build.
+
+## Dedicated boss sets — 18 Oct playtest revision
+
+`tools/build_boss_audio.py` creates nine separate event edits per boss, using
+different recorded performances within each set. All sources are the Ogrebane
+CC0 release linked above. Event order is idle, intro, windup, attack, magic,
+hurt, stagger, enrage, death:
+
+| Prefix | Ogrebane monster-N.wav takes in event order |
+| --- | --- |
+| fivehand- | 2, 5, 7, 9, 14, 8, 11, 16, 13 |
+| braced- | 3, 1, 6, 10, 17, 4, 15, 14, 12 |
+| warden- | 4, 16, 2, 15, 11, 7, 8, 5, 17 |
+
+Each edit has its own Ogg, pitch/filter/envelope and normalization to −22 LUFS /
+−3 dBTP. Five-Hand has short doubled echoes; the Warden longer stone-room echoes.
+`rowan-hurt.ogg` is rubberduck sfx100v2_hit_02 (same CC0 pack), filtered body impact.
+
+`fivehand-score.ogg`, `braced-score.ogg`, `warden-score.ogg` are original
+32-second compositions authored in the build script: minor-key bowed harmonic
+layers, descending lament and a restrained low double pulse. They are not edits
+of franchise music or downloaded songs. Normalized to −24 LUFS / −3 dBTP, stereo
+44.1kHz. Human listening/difficulty judgment is still required for the final mix.
+
+Dialogue under public/voices is locally generated synthetic speech, separate from
+these CC0 recordings. See public/voices/README.md for profiles and reproduction.

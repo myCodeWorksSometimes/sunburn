@@ -150,7 +150,7 @@ export class WorldState {
     if (this.maraFreed && !this.villageGateOpen) return goal('Act 1: defeat Five-Hand in the Card Court', 'World', MARA_STALL.exitGate - 140);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardNia) return goal('Act 1: remember the Bridge Refuge hearth to find Mara’s family', 'World', REFUGE.hearth);
     if (!this.bridgeReturnOpen && this.maraFreed && !this.heardTomas) return goal('Act 1: talk to Tomas by the refuge hearth', 'World', REFUGE.tomas);
-    if (!this.bridgeReturnOpen && !this.clearedEncounters['braced-shadow']) return goal('Act 1: bait the Braced Shadow into the cracked barrier', 'World', BRIDGE_WORKS.crate[0]);
+    if (!this.bridgeReturnOpen && !this.clearedEncounters['braced-shadow']) return goal('Act 1: defeat the Braced Shadow in the abandoned foundry', 'World', BRIDGE_WORKS.elite);
     if (!this.bridgeReturnOpen && !this.bridgeBrakeSet) return goal('Act 1: restore the bridge fire, line up both gear marks, then set the brake', 'World', BRIDGE_WORKS.brake);
     if (!this.bridgeReturnOpen) return goal('Act 1: restore the bridge fire and cross before it falls apart', 'World', FIRES.find(f => f.id === 'bridge-fire').x);
     if (!this.refugeesRescued && !this.campReturnOpen) return goal('Act 1: return to the refuge fire; lead Tomas and Nia across with your lantern', 'World', REFUGE.hearth);

@@ -1,5 +1,26 @@
 # Canon — latest user-approved world rules
 
+## Latest playtest decisions — 18 Oct, moving bosses and readable scenes
+
+- Dialogue and contextual UI must leave the walk line, characters and objects
+  visible. Use compact upper captions; high galleries use the right upper lane.
+- Mara's expiry is a slow farewell: colour drains, bones remain long enough to
+  recognize, then her silhouette collapses into ash and wind carries it away.
+  The first nearby natural expiry can take a protected, skippable eight-second
+  cinematic. Do not steal the camera during combat or from an offscreen echo.
+- Five-Hand breathes/floats, moves its hands with the cards, and physically leaps
+  after eight seconds of inactivity during selection. Evading and retreating
+  lets the first timeout return to the game. A second timeout ends the card game
+  for that attempt and combines physical leaps with shadow magic. Death resets
+  the encounter; earned victory remains persistent.
+- Braced Shadow can be hurt from either side during every phase. Its charge,
+  summons and tendril patterns remain; a kill opens the barrier even if it never
+  completed a charge. This supersedes the old back-only/stun-only damage rule.
+- Bosses have distinct idle/intro/anticipation/attack/magic/hurt/stagger/rage/death
+  recordings and separate dramatic scores. Rowan needs a visible hurt response.
+  Character dialogue and Eli's remembered laugh are bundled synthetic reads,
+  pending human listening; they are not claimed to be final performed acting.
+
 ## Latest horror/story decision — 18 October 2026
 
 - Mara at the toy stall is dead. She is a replayed echo; she never walks to the

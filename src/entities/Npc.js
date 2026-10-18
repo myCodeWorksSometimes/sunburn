@@ -1,4 +1,5 @@
 import { FONT } from '../systems/Captions.js';
+import { makeEchoDissolution,ECHO_FAREWELL_MS } from '../systems/EchoDissolution.js';
 
 // Registered pixel-art survivors, with distinct civilian silhouettes.
 const LOOKS = {
@@ -32,17 +33,26 @@ export class Npc {
   get visible() { return this.sprite.visible; }
 
   updateEcho(on,delta) {
-    if(on){this.echoVisible=true;this.setVisible(true);this.sprite.setAlpha(.9);return;}
+    if(on){this.collapseTween?.stop();this.dissolution?.destroy();this.dissolution=null;this.echoVisible=true;this.setVisible(true);this.sprite.setAlpha(.9);return;}
     if(this.echoVisible){
       this.echoVisible=false;
       const s=this.scene;
       if(s.textures.exists('echo-motion')){
-        const row={mara:0,tomas:1,nia:2}[this.who];
-        const bones=s.add.sprite(this.x,this.baseY,'echo-motion',row*6).setOrigin(.5,1).setDepth(23);
-        const collapse={t:0};s.tweens.add({targets:collapse,t:5,duration:1100,onUpdate:()=>bones.setFrame(row*6+Math.floor(collapse.t)),onComplete:()=>bones.destroy()});
+        const effect=makeEchoDissolution(s,this);this.dissolution=effect;
+        const dispose=()=>{effect.destroy();if(this.dissolution===effect)this.dissolution=null;this.setVisible(false);};
+        const natural=s.memory.phase==='fading'||s.memory.lastEndReason==='expired';
+        const nearby=Math.abs(s.player.x-this.x)<500&&Math.abs(s.player.feet-this.baseY)<45
+          &&this.x>s.cameras.main.scrollX+70&&this.x<s.cameras.main.scrollX+1210;
+        const inFight=s.fiveHand&&!['waiting','defeated'].includes(s.fiveHand.state);
+        const cinematic=this.who==='mara'&&natural&&nearby&&!inFight&&!s.dead&&!s.leaving&&!s.player.frozen
+          &&s.cinematic.play({id:'mara-farewell',name:'A MEMORY, CARRIED AWAY',subtitle:'Only the wind leaves the stall.',sprite:this.sprite,x:this.x,y:this.baseY-55,
+            mode:'echo',duration:ECHO_FAREWELL_MS,onUpdate:ms=>effect.update(ms),onDispose:dispose});
+        if(!cinematic){
+          const clock={ms:0};this.collapseTween=s.tweens.add({targets:clock,ms:ECHO_FAREWELL_MS,duration:ECHO_FAREWELL_MS,onUpdate:()=>effect.update(clock.ms),onComplete:dispose});
+        }
+        effect.update(0);
       }
-      const ash=s.add.particles(this.x,this.baseY-this.visibleHeight*.5,'mote',{lifespan:1400,speedX:{min:25,max:80},speedY:{min:-35,max:5},scale:{start:.17,end:0},alpha:{start:.8,end:0},tint:[0xbcb4a7,0x5b5760],frequency:-1}).setDepth(26);
-      ash.explode(28);s.time.delayedCall(1500,()=>ash.destroy());s.audio.cue('memory-break');
+      if(!s.cinematic.active)s.audio.cue('memory-break');
     }
     this.setVisible(false);
   }

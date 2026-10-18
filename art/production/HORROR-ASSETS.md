@@ -1,5 +1,21 @@
 # Horror revision asset register — 18 October 2026
 
+## Five-Hand motion revision
+
+- New source: fivehand-motion-source.png, downloaded from the user-authorised
+  ChatGPT conversation below (8e6f30b9-cce7-46d9-9353-fc5d881fb339.png).
+- ACTUAL boss-atlas.png and hero_idle.png were uploaded before requesting this
+  sheet. Top-row Five-Hand supplied identity; the shielded bottom-row boss was
+  explicitly excluded. Exact prompt: CHATGPT-FIVEHAND-MOTION-PROMPT.txt.
+- Source1254×1254, six columns/six rows, inspected before import. Rows are idle,
+  hand shuffle, leap, magic cast, hurt/rage, independent magic projectile.
+- tools/import_fivehand_motion.py keys green and separates connected creature
+  silhouettes because attack hands cross nominal source cell boundaries. Pack
+  uses one scale/pivot registration,384×256 frames (2304×1536), no invented frames.
+  Thirty character states plus six projectile frames replace held attack poses.
+- Previous four-pose atlas is retained for source/reference and fallback. This
+  revision does not change any teammate-owned Act3 paintings or coordinates.
+
 Actual reference uploads, not filenames alone, were supplied to the signed-in
 Gemini conversation. Its original references were supplemented with hero_idle,
 hero_walk, shadow_idle, shadow_move, survivors-source, village lane/bridge and

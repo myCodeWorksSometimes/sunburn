@@ -1,5 +1,48 @@
 # Integration contracts
 
+## Playtest feedback revision — 18 Oct (supersedes older rules below)
+
+- Captions.layout keeps captions at248, or155/right lane for feet<410.
+  Frames measure the full line once; typewriter does not resize/jitter the plate.
+  Context prompt160 / progress198. Suppress redundant prompt visuals during
+  dialogue or an active boss HUD; E/R processing remains available. setup clears
+  activeBossHud on restart. panel.resizePanel updates the 9-slice and backing.
+- Player walk/climb frames advance with distance (22/20px), preserving gait
+  between taps. W/Up still jumps/climbs; A/D or arrows move horizontally.
+  Hurt freezes input360ms, applies knockback, recoil animation, tint and body cue.
+- EchoDissolution exports echoStage(ms) / ECHO_FAREWELL_MS=8000. First visible,
+  nearby natural Mara expiry uses BossIntroduction mode=echo and manual timeline.
+  Freeze physics/gameplay clocks; Enter skips; pause freezes the vignette. Hide
+  Rowan during closeup; restore camera/visibility/frozen state and destroy flakes.
+  Offscreen/rest/death/replaced echoes do not take the camera. Subsequent echoes
+  still dissolve over8s via ordinary tweens, without repeated mandatory closeups.
+- Five-Hand: six-column 384x256 frames; rows idle/shuffle/leap/cast/hurt-rage/
+  projectile. Source must use connected silhouettes: long hands cross nominal
+  source cells. Card selection inactivity8s resets on movement/jumping/attack;
+  first leap850ms tell+700ms travel, evade>150px to return900ms. Second timeout
+  rage1100ms removes cards; alternate leap/recovery1350ms with magic900ms tell,
+  550px/s moving front/1400ms travel. Two health;400ms hit guard (below520ms
+  sword recovery). First-timeout recovery asks for retreat, not an invalid hit. Death fully
+  resets phase/timeouts/hits; retreat preserves earned phase/hits; victory saves.
+- Braced retains3 health and existing AI. hit works in every state/from either
+  side,400ms duplicate-hit guard. Defeat opens barrier and clears seals/minions,
+  including a kill before first barrier impact. Controls range38; AAB and600ms
+  brake hold, restoration and persistent return rules remain unchanged.
+- AudioCues.bossCue(profile,event) uses BossAudio profiles/events, independent
+  recorded files, semantic cooldowns and one voice at a time per boss. Idle
+  never cuts an active attack voice. Three distinct original score loops fade
+  by encounter proximity/state. All6 loops and effects obey mute/pause/shutdown.
+- VoiceDirector exact speaker|text manifest preloads bundled Ogg. 82 synthetic
+  reads + one Eli laugh, Windows David/Zira profiles, pitch/rate/echo processing.
+  Shared effects volume/mute/pause applies immediately; caption skip/clear stops
+  previous read. Intro respects saved sound settings too. Rebuild changed text
+  with tools/build_dialogue_voices.py; --force regenerates existing reads.
+- User explicitly released the earlier Claude claim during this revision.
+  Act3 painting coordinates stay unchanged; TowerStory's obsolete Mara/Tomas
+  sentence now says Mara is only a memory, while Eli answers and the hearth
+  remembers him. Shared Crawler adds Warden intro/event audio. Regenerated the
+  corrected spoken line; never claim Mara was restored alive at the refuge.
+
 ## Act 1 horror revision — 18 October 2026 (supersedes old coordinates below)
 
 - Act2/3 coordinates unchanged, world width17470. Bridge region4850–8100,
