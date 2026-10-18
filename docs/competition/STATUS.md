@@ -20,7 +20,10 @@
   these are visual/footing checks, not fresh-campaign or difficulty acceptance.
 - Canonical http://127.0.0.1:4176/ serves frozen index-m7zl5Hdr.js,
   snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-BCvGSl, Node PID14732.
-  Publication and shared-checkout verification are the remaining handoff step.
+  Implementation a332155 is pushed to GitHub main; H:/projects/gameDev fast-forwarded
+  safely and passes46/46 tests/build with the same index-m7zl5Hdr.js bundle.
+  Canonical title/intro/map/satchel/test-jump smoke passed without page errors.
+  Owned temporary4177 server stopped; only4176 remains among game demo/dev ports.
   No active implementation claims; preserve unrelated draft/.stfolder/zip files.
 
 ## Latest integration — 18 Oct, post-bridge completion

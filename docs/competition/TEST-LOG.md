@@ -38,6 +38,11 @@ change or generated images. Presentation sources reuse supplied pixel paintings.
 - Human remaining: fresh uninterrupted campaign, escort timing/retries, subjective
   artwork continuity while moving, combat difficulty and listening. No perfection
   or competition-readiness claim. Publication/shared verification recorded in STATUS.
+- Publication a332155 pushed to main. H:/projects/gameDev safely fast-forwarded,
+ 46/46 tests/build pass with matching index-m7zl5Hdr.js. Canonical4176 title →
+  Intro → far bank → M/map → canal → I/satchel → home → interrupted Warden intro
+  → treehouse/H smoke passed with zero page errors. Only4176 remains; unrelated
+  draft and shared .stfolder/assets/backgrounds.zip were preserved.
 
 ## Latest — 18 Oct, connected post-bridge route and test tools
 

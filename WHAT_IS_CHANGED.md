@@ -1,5 +1,16 @@
 # What is changed — cumulative iteration history
 
+## 18 October 2026 — published full-map verification receipt
+
+- Implementation a332155 is published on GitHub main. Shared H:/projects/gameDev
+  safely fast-forwarded; its46/46 tests/build pass with matching index-m7zl5Hdr.js.
+- Canonical4176 title/intro/map/satchel/section-jump/interrupted-cinematic smoke
+  passed without page errors. Frozen snapshot BCvGSl / Node14732 stays stable as
+  source files change. Owned4177 test server stopped; stale demo snapshots remain
+  unserved. Unrelated draft and shared Syncthing/zip files remain untouched.
+- Remaining human acceptance: fresh full campaign, escort retries, moving visual
+  judgment and subjective difficulty/audio. Previous iteration history follows.
+
 ## 18 October 2026 — full-map scenery joins and grounded movement
 
 - Rebuilt outdoor scenery from complete architectural sections separated by open
