@@ -6,8 +6,8 @@ export const SCENERY_ISLANDS={
   lane:[['a1_lane',640,550,70,1,555],['a1_lane',640,550,900,1,555]],
   square:[['a1_square',380,145,70,1,545],['a1_square',540,750,650,1,545]],
   swings:[['a2_swings',0,535,70,1,535]],
-  treehouse:[['a2_treehouse',0,525,850,1,545]],
-  canal:[['a2_canal',0,530,950,1,535]],
+  treehouse:[['a2_treehouse',65,460,850,1,480]],
+  canal:[['a2_canal',0,525,950,1,510]],
 };
 export function sceneryProjection(r){
   if(r.id==='yard'){const scale=r.width/1290;return {x:r.x,y:GROUND-r.paintGround*scale,scale};}
@@ -31,6 +31,16 @@ export function outdoorPainting(scene,r,state){
     const src=source(art),v=document.createElement('canvas');v.width=Math.ceil(sw*scale);v.height=720;
     const vc=v.getContext('2d');vc.imageSmoothingEnabled=false;
     vc.drawImage(src,sx,0,sw,src.height,0,GROUND-floor*scale,sw*scale,src.height*scale);
+    if(art==='a2_canal'){
+      // Keep the complete foreground miller's house, not the slice of a second
+      // roof behind its right wall. Follow its eaves instead of a vertical cut.
+      vc.globalCompositeOperation='destination-in';vc.beginPath();
+      for(const [i,[px,py]]of [[0,0],[390,0],[390,45],[432,62],[507,204],[482,230],[492,475],[525,550],[0,550]].entries()){
+        const xx=(px-sx)*scale,yy=GROUND-floor*scale+py*scale;
+        if(i)vc.lineTo(xx,yy);else vc.moveTo(xx,yy);
+      }
+      vc.closePath();vc.fill();vc.globalCompositeOperation='source-over';
+    }
     // Only vegetation/open margins are feathered; no overlapping house halves.
     vc.globalCompositeOperation='destination-in';const g=vc.createLinearGradient(0,0,v.width,0);
     g.addColorStop(0,'transparent');g.addColorStop(Math.min(.1,22/v.width),'white');

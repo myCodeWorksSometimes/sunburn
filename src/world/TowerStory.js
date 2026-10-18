@@ -1,6 +1,7 @@
 import { GROUND, TOWER_WINDOW as WIN, OLD_ROAD_EAST as EAST } from './layout.js';
 import { saveSession } from './WorldState.js';
 import {stonePassage} from '../presentation/Act1Presentation.js';
+import {enterPassage} from '../presentation/PassageEntry.js';
 
 // Campaign Scene 10 ("Three knocks"): Eli behind a lattice window high on the
 // tower, seen from the courtyard. Answering three knocks proves he is alive, not
@@ -45,7 +46,9 @@ export function buildTowerStory(s) {
       : { speaker: 'Eli', text: 'You’ll come back? Promise?' }) });
 
   // The Old Road's east door, released from the tower side.
-  const door = stonePassage(s,EAST.door,GROUND,80,128).setTint(run.oldRoadOpen ? 0xffffff : 0x6d6878);
+  // The left arch is already painted into the courtyard. Do not paste a second
+  // small door over its entrance. The threshold recedes into the scene at540.
+  const door = painted?null:stonePassage(s,EAST.door,GROUND,80,128).setTint(run.oldRoadOpen ? 0xffffff : 0x6d6878);
   s.addLabel(EAST.door, GROUND - 150, 'OLD ROAD', '#a59f9a', 13);
   const lever = s.add.graphics().setDepth(22);
   const drawLever = (pulled) => {
@@ -57,14 +60,14 @@ export function buildTowerStory(s) {
     label: 'Hold E: release the Old Road gate',
     use: () => {
       if (!run.openOldRoad()) return;
-      drawLever(true); door.clearTint(); s.audio.cue('take');
+      drawLever(true); door?.clearTint(); s.audio.cue('take');
       s.story('old-road-open', { speaker: 'Rowan', text: 'The road the children escaped by. It runs straight to the refuge.' },
         { speaker: 'Rowan', text: 'Home is past the market. Hold on, Eli.' });
       saveSession(s);
     } });
   s.addInteract({ id: 'old-road-east', x: EAST.door, floor: GROUND, range: 40, priority: 5,
-    label: () => run.oldRoadOpen ? 'E: take the Old Road to the Bridge Refuge' : 'E: try the Old Road gate',
-    use: () => run.oldRoadOpen ? s.goTo('World', 'oldRoadWest')
+    label: () => run.oldRoadOpen ? 'E: enter the arch — Old Road to the refuge' : 'E: try the Old Road gate',
+    use: () => run.oldRoadOpen ? enterPassage(s,{x:EAST.door,threshold:540},'World', 'oldRoadWest')
       : s.captions.say(run.eliFound ? { text: 'Barred. The release is right beside it.', color: '#ebd5b0' }
         : { speaker: 'Rowan', text: 'The old road. Barred… there must be a release on this side.' }) });
 }

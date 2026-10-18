@@ -1,5 +1,14 @@
 # Live implementation status
 
+## Latest integration — Act 2 foundations, passage entry, Warden route and menus
+
+- Grounded the supplied treehouse/canal buildings and removed the cropped canal roof join. Mill control now uses matching painted gear/handle art and animation instead of the bare placeholder ring.
+- Old Road entry walks Rowan into the arch with collision disabled, then changes scenes. Removed the duplicate tiny door.
+- Warden wards visibly block premature entry. Three bells plus the hearth ember release the encounter; Eli stairs/gallery require Warden victory. Added four-hit boss HUD, charge/opening instructions and context-sensitive route help.
+- Pause tabs consistently route I/M/J; U mutes without stealing M from map. Controls Esc closes only the modal. New adventure now asks for confirmation and starts the prologue.
+- Verification: 49/49 Node tests and production build pass (index-B9dQeUkC.js). Actual input verified canal steps/wheel/crossing, knocks, passage transition, three bells, four sword hits, lantern retrieval, Eli stair climb/rescue (2 HP), with no page errors. Full menu runtime audit is in progress; not claimed complete in this publication. Fresh full campaign and subjective art/audio judgment remain human acceptance.
+- Trailer production is proceeding independently; no trailer binaries are committed. Previous history follows.
+
 ## Latest integration — 18 Oct, full-map scenery and footing
 
 - Complete-building scenery islands replace cropped/overlapped house edges.

@@ -70,3 +70,18 @@ export function tickAct2Art(s) {
   const open = s.run.hasDrawing;
   g.rubble.setVisible(!open); g.arch.setVisible(open);
 }
+
+// Supplied pixel-art ironwork, mounted on the mill's upper stone pier. The
+// painted waterwheel remains behind it; this is its small sluice control.
+export function buildSluiceControl(s,at){
+  s.add.image(at.x,at.y+24,'lever-base').setDisplaySize(48,32).setDepth(23);
+  const control=s.add.image(at.x,at.y,'gear-small').setDisplaySize(45,45).setDepth(24);
+  const handle=s.add.image(at.x,at.y,'lever-handle').setDisplaySize(8,27).setOrigin(.5,.9).setDepth(25);
+  control.setRotation(s.run.canalGateOpen?Math.PI:0);
+  handle.setRotation(s.run.canalGateOpen?.8:-.8);
+  return {control,turn(){
+    s.tweens.add({targets:control,rotation:control.rotation+Math.PI*2,duration:850,ease:'Cubic.out'});
+    s.tweens.add({targets:handle,rotation:.8,duration:500,ease:'Sine.inOut'});
+    s.cameras.main.shake(180,.0015);
+  }};
+}

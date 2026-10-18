@@ -8,16 +8,17 @@ export class Pause extends Phaser.Scene {
   init(data) { this.owner = data.owner; this.inventory = !!data.inventory; this.map = !!data.map; this.journal = !!data.journal; }
   create() {
     const source = this.scene.get(this.owner);
+    this.controlPanel=null;this.modalMode=null;this.turnJournal=null;
+    this.input.keyboard.on('keydown',event=>this.handleKey(event));
     this.add.rectangle(640, 360, 1280, 720, 0x080c15, .88);
     panel(this, 640, 348, 1020, 590, { fixed: false, depth: 0 });
     const text = (y, label, size = 24) => menuText(this, 640, y, label, size);
-    const tab = (x, title, data) => menuText(this,x,88,title,17,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.scene.restart({owner:this.owner,...data}));
+    const tab = (x, title, data) => menuText(this,x,88,title,17,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.changeView(data));
     tab(310,'I · Satchel',{inventory:true}); tab(510,'M · Map',{map:true}); tab(710,'J · Journal',{journal:true}); tab(910,'Pause',{});
     this.add.image(178,88,this.map?'kit-map':this.journal?'kit-journal':this.inventory?'kit-lantern':'kit-time').setDisplaySize(30,35);
 
     if (this.map || this.journal) {
       this.explorationView(source, text);
-      for (const key of ['ESC', 'M', 'J']) this.input.keyboard.on(`keydown-${key}`, () => this.resume());
       return;
     }
     if (this.inventory) {
@@ -59,10 +60,6 @@ export class Pause extends Phaser.Scene {
 
       menuText(this,1060,562,'← → Select',15,'#aaa294').setOrigin(1,.5);
       this.button(603, 'Esc · Return', () => this.resume());
-      this.input.keyboard.on('keydown-LEFT', () => this.select(this.selected - 1));
-      this.input.keyboard.on('keydown-RIGHT', () => this.select(this.selected + 1));
-      this.input.keyboard.on('keydown-ESC', () => this.resume());
-      this.input.keyboard.on('keydown-I', () => this.resume());
       return;
     }
     menuText(this,220,140,'Paused',36).setOrigin(0,.5).setFontFamily(UI.title).setColor(UI.gold);
@@ -77,12 +74,8 @@ export class Pause extends Phaser.Scene {
       for(const [x,amount,label] of [[620,-.1,'−'],[780,.1,'+']]) menuText(this,x,y,label,27,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>{source.audio.setVolume(channel,source.audio.settings[channel]+amount);this.updateVolumes(source);});
     }
     this.updateVolumes(source);
-    this.button(456, 'R · New adventure', () => this.restart());
+    this.button(456, 'R · New adventure', () => this.confirmRestart());
     this.button(540,'C · Controls',()=>this.showControls());
-    this.input.keyboard.on('keydown-C',()=>this.showControls());
-    this.input.keyboard.on('keydown-ESC', () => this.resume());
-    this.input.keyboard.on('keydown-M', () => this.mute());
-    this.input.keyboard.on('keydown-R', event => { if (!event.repeat) this.restart(); });
     this.source = source;
   }
   explorationView(source, text) {
@@ -149,7 +142,7 @@ export class Pause extends Phaser.Scene {
       const turn=dir=>{this.journalPage=(this.journalPage+dir+pages)%pages;show();};
       menuText(this,420,516,'← Earlier',15,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>turn(-1));
       menuText(this,860,516,'Later →',15,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>turn(1));
-      this.input.keyboard.on('keydown-LEFT',()=>turn(-1));this.input.keyboard.on('keydown-RIGHT',()=>turn(1));show();
+      this.turnJournal=turn;show();
 
     }
     this.button(604, 'Esc · Return', () => this.resume());
@@ -160,6 +153,7 @@ export class Pause extends Phaser.Scene {
   }
   showControls() {
     if(this.controlPanel?.active)return;
+    this.modalMode='controls';
     const box=this.add.container(0,0).setDepth(20);
     box.add(this.add.rectangle(640,360,1280,720,0x080b12,.85).setInteractive());
     box.add(panel(this,640,350,760,460,{depth:0,fixed:false}));
@@ -167,11 +161,47 @@ export class Pause extends Phaser.Scene {
     const rows=[['A / D','Move'],['Space','Jump'],['W / S','Climb'],['E','Interact / remember'],['F / X','Attack / draw sword'],['Q','Use oil'],['Hold R','Rest at a fire'],['I / M / J','Satchel / map / journal']];
     rows.forEach(([key,label],i)=>{const x=i<4?340:680,y=240+(i%4)*58;box.add(menuText(this,x,y,key,18,UI.gold).setOrigin(0,.5));box.add(menuText(this,x+100,y,label,18).setOrigin(0,.5));});
     box.add(menuText(this,640,479,'H · Show the next step and destination marker',16,UI.gold));
-    box.add(menuText(this,640,526,'Close',20,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>box.destroy(true)));
+    box.add(menuText(this,640,526,'Esc · Close',20,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.closeModal()));
     this.controlPanel=box;
   }
+  closeModal(){this.controlPanel?.destroy(true);this.controlPanel=null;this.modalMode=null;}
+  confirmRestart(){
+    if(this.controlPanel?.active)return;
+    this.modalMode='restart';
+    const box=this.add.container(0,0).setDepth(20);
+    box.add(this.add.rectangle(640,360,1280,720,0x080b12,.9).setInteractive());
+    box.add(panel(this,640,350,700,300,{depth:0,fixed:false}));
+    box.add(menuText(this,640,265,'Start a new adventure?',30,UI.gold));
+    box.add(menuText(this,640,325,'This replaces the current adventure.\nEsc returns without changing your progress.',20));
+    box.add(menuText(this,640,405,'Enter · Begin again',21,UI.gold).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.restart()));
+    box.add(menuText(this,640,458,'Esc · Keep playing',19).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.closeModal()));
+    this.controlPanel=box;
+  }
+  changeView(data){if(!this.modalMode)this.scene.restart({owner:this.owner,...data});}
+  handleKey(event){
+    if(event.repeat)return;
+    const key=event.code;
+    if(this.modalMode){
+      if(key==='Escape')this.closeModal();
+      else if(key==='Enter'&&this.modalMode==='restart')this.restart();
+      return;
+    }
+    if(key==='Escape'){this.resume();return;}
+    for(const [code,view]of [['KeyI','inventory'],['KeyM','map'],['KeyJ','journal']])if(key===code){
+      if(this[view])this.resume();else this.changeView({[view]:true});return;
+    }
+    if(key==='ArrowLeft'||key==='ArrowRight'){
+      const dir=key==='ArrowLeft'?-1:1;
+      if(this.inventory)this.select(this.selected+dir);else if(this.journal)this.turnJournal?.(dir);
+      return;
+    }
+    if(this.inventory||this.map||this.journal)return;
+    if(key==='KeyC')this.showControls();
+    else if(key==='KeyR')this.confirmRestart();
+    else if(key==='KeyU')this.mute();
+  }
   updateVolumes(source) { for(const channel of ['music','effects']) this.volumeLabels[channel].setText(`${Math.round(source.audio.settings[channel]*100)}%`); }
-  updateMute() { this.muteText.setText(`M · Sound ${this.scene.get(this.owner).audio.muted ? 'off' : 'on'}`); }
+  updateMute() { this.muteText.setText(`U · Sound ${this.scene.get(this.owner).audio.muted ? 'off' : 'on'}`); }
   mute() { this.scene.get(this.owner).audio.toggleMute(); this.updateMute(); }
   resume() {
     const source = this.scene.get(this.owner);
@@ -180,6 +210,6 @@ export class Pause extends Phaser.Scene {
   }
   restart() {
     this.scene.get(this.owner).audio.resume();
-    newSession(this); this.scene.stop(this.owner); this.scene.start('Hearth', { spawnId: 'cellar' });
+    newSession(this); this.scene.stop(this.owner); this.scene.start('Intro');
   }
 }

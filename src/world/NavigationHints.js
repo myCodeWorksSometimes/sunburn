@@ -1,4 +1,5 @@
 import {A3,RELAYS} from './layout.js';
+import {wardenInstruction} from './WardenEncounter.js';
 
 // Next physical action, not merely the final quest coordinate. Kept pure so
 // expired memories, backtracking and each staged test route can be checked.
@@ -41,7 +42,7 @@ export function navigationHint({run,x,feet=560,memory,weapon,swingX=9820}){
       return next?hint(Math.min(next[1]-25,next[0]+65),next[2],'Jump onto the next restored ledge. The bell is above.')
         :hint(bell.x,bell.floor,'Hold E beside the marked bell.');
     }
-    if(!run.clearedEncounters['bell-warden'])return hint(A3.warden.x,560,'The Warden is unbound. Dodge its charge, then F during recovery; X draws your sword.');
+    if(!run.clearedEncounters['bell-warden'])return wardenInstruction(run);
     return hint(A3.eli,A3.gallery[2],'Climb the raised stairs to Eli. Hold E to give him the ember.');
   }
   if(run.rescuedEli)return !run.completedStory['view-platform']?hint(A3.view+20,345,'Walk right along the gallery with Eli to see the view.')
