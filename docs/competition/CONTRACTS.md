@@ -487,3 +487,11 @@ its112px frame; name labels sit12px above the actual head line.
 - Verification: 49/49 Node tests and production build pass (index-B9dQeUkC.js). Actual input verified canal steps/wheel/crossing, knocks, passage transition, three bells, four sword hits, lantern retrieval, Eli stair climb/rescue (2 HP), with no page errors. Full menu runtime audit is in progress; not claimed complete in this publication. Fresh full campaign and subjective art/audio judgment remain human acceptance.
 - Trailer production is proceeding independently; no trailer binaries are committed. Previous history follows.
 
+## 18 October 2026 — published route/menu verification receipt
+
+- Gameplay/source iteration 6a5f034 reached GitHub main before 08:59 Asia/Karachi (push confirmed at 08:58:27). No force push; unrelated draft retained.
+- All-menu Chrome/Playwright checks pass at1280x720 and960x540: pause/resume, I/M/J tabs, satchel arrows, journal navigation, controls and modal-only Escape, mute, music adjustment buttons, restart cancellation and confirmation into Intro, Credits return. Canonical pointer Begin, Intro skip, normal-save Continue and pointer map tab also pass without page errors. Continue uses a fresh isolated browser save fixture, not the player's real save.
+- Browser plugin not available; used bundled Playwright and Chrome. Inspected controls layout at960px; no clipped or overlapping control rows. The initial harness stall returned a Phaser Scene graph; corrected the harness to return scalars, then reran successfully. No application runtime error was found in the menu audit.
+- Canonical http://127.0.0.1:4176/ serves frozen index-B9dQeUkC.js, snapshot C:/Users/owner/AppData/Local/Temp/embers-playtest-XT1y5p, Node PID2916. Source edits/builds do not change it.
+- Shared H:/projects/gameDev safely fast-forwarded to6a5f034 and passed49/49 tests plus matching production build. Preserved .stfolder/, assets/backgrounds.zip and trailer/. Temporary4177 QA and5173 trailer capture servers stopped after capture completed.
+- Previous publication's in-progress menu audit is now complete. Full fresh campaign, subjective art joins and difficulty/audio remain human acceptance. No claim of perfect visuals or competition outcome. Previous history follows.
